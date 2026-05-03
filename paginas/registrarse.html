@@ -47,21 +47,21 @@
             <div class="fila-input">
 
                 <div class="grupo-input">
-                    <input type="text" placeholder="Nombre">
+                    <input type="text" id="nombre" placeholder="Nombre">
                 </div>
 
                 <div class="grupo-input">
-                    <input type="text" placeholder="Apellido">
+                    <input type="text" id="apellido" placeholder="Apellido">
                 </div>
 
             </div>
 
             <div class="grupo-input">
-                <input type="email" placeholder="Correo electrónico">
+                <input type="email" id="email" placeholder="Correo electrónico">
             </div>
 
             <div class="grupo-input">
-                <input type="password" placeholder="Contraseña">
+                <input type="password" id="passsword" placeholder="Contraseña">
             </div>
 
             <div class="grupo-input">
@@ -101,6 +101,49 @@ const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
 const supabaseKey = "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE";
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+</script>
+
+    <script>
+document.getElementById("formRegistro").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombre").value;
+    const apellido = document.getElementById("apellido").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    // 🔐 REGISTRO EN AUTH
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+    });
+
+    if(error){
+        alert("Error: " + error.message);
+        return;
+    }
+
+    const user = data.user;
+
+    // 💾 GUARDAR EN TABLA
+    const { error: errorDB } = await supabase
+        .from("usuarios")
+        .insert([
+            {
+                id: user.id,
+                nombre: nombre,
+                apellido: apellido,
+                email: email
+            }
+        ]);
+
+    if(errorDB){
+        alert("Error guardando en tabla");
+        return;
+    }
+
+    alert("Usuario registrado correctamente ✅");
+});
 </script>
 </body>
 
