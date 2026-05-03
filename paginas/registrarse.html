@@ -100,6 +100,9 @@ document.addEventListener("DOMContentLoaded", function(){
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
+
+        console.log("PASS:", password);
+console.log("CONFIRM:", confirmPassword);
         
         // VALIDACIÓN CORRECTA
         if(password !== confirmPassword){
