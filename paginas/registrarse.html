@@ -42,30 +42,30 @@
 
         <h3>Crear Cuenta</h3>
 
-        <form>
+        <form id="formRegistro">
 
             <div class="fila-input">
 
                 <div class="grupo-input">
-                    <input type="text" placeholder="Nombre">
+                    <input type="text" id="nombre" placeholder="Nombre">
                 </div>
 
                 <div class="grupo-input">
-                    <input type="text" placeholder="Apellido">
+                    <input type="text" id="apellido" placeholder="Apellido">
                 </div>
 
             </div>
 
             <div class="grupo-input">
-                <input type="email" placeholder="Correo electrónico">
+                <input type="email" id="email" placeholder="Correo electrónico">
             </div>
 
             <div class="grupo-input">
-                <input type="password" placeholder="Contraseña">
+                <input type="password" id="password" placeholder="Contraseña">
             </div>
 
             <div class="grupo-input">
-                <input type="password" placeholder="Confirmar contraseña">
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña">
             </div>
 
             <button type="submit">Registrarme</button>
@@ -88,6 +88,7 @@
 
 <script src="/js/header_footer.js"></script>
 <script src="/js/login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
 
 </html>
