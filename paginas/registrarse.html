@@ -4,188 +4,99 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENIT Academy</title>
-
 <link rel="stylesheet" href="../css/registrarse.css">
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-.password-box{
-    position: relative;
-}
-.password-box input{
-    padding-right: 45px;
-}
-.password-box i{
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #777;
-}
-.password-box i:hover{
-    color:#111;
-}
-</style>
-
 </head>
 
 <body>
-
+<!-- ========================= -->
+<!--      INICIAR SESIÓN      -->
+<!-- ========================= -->
 <div id="header"></div>
 <div id="modal-container"></div>
+<!-- ========================= -->
+<!--        REGISTRARSE       -->
+<!-- ========================= -->
 
 <section class="seccion-register">
+
 <div class="register-box">
 
+    <!-- LADO IZQUIERDO -->
     <div class="lado-bienvenida">
+
         <h2>¡Únete hoy!</h2>
-        <p>Aprende inglés con cursos dinámicos y modernos.</p>
+
+        <p>
+            Crea tu cuenta y empieza a aprender inglés
+            con cursos dinámicos, modernos y fáciles.
+        </p>
+
     </div>
 
+
+    <!-- FORMULARIO -->
     <div class="lado-formulario">
 
         <h3>Crear Cuenta</h3>
 
-        <form id="formRegistro">
+        <form>
 
             <div class="fila-input">
-                <input type="text" id="nombre" placeholder="Nombre" required>
-                <input type="text" id="apellido" placeholder="Apellido" required>
+
+                <div class="grupo-input">
+                    <input type="text" placeholder="Nombre">
+                </div>
+
+                <div class="grupo-input">
+                    <input type="text" placeholder="Apellido">
+                </div>
+
             </div>
 
-            <input type="email" id="email" placeholder="Correo electrónico" required>
-
-            <!-- PASSWORD -->
-            <div class="password-box">
-                <input type="password" id="password" placeholder="Contraseña" autocomplete="off" required>
-                <i class="fa-solid fa-eye" id="togglePassword"></i>
+            <div class="grupo-input">
+                <input type="email" placeholder="Correo electrónico">
             </div>
 
-            <!-- CONFIRM -->
-            <div class="password-box">
-                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" autocomplete="off" required>
-                <i class="fa-solid fa-eye" id="toggleConfirm"></i>
+            <div class="grupo-input">
+                <input type="password" placeholder="Contraseña">
+            </div>
+
+            <div class="grupo-input">
+                <input type="password" placeholder="Confirmar contraseña">
+            </div>
+
+            <div class="acepto">
+                <label>
+                    <input type="checkbox">
+                    Acepto términos y condiciones
+                </label>
             </div>
 
             <button type="submit">Registrarme</button>
+
+            <p class="texto-login">
+                ¿Ya tienes cuenta?
+                <a href="../paginas/login.html">Inicia sesión</a>
+            </p>
 
         </form>
 
     </div>
 
 </div>
+
 </section>
+
 
 <div id="footer"></div>
 
 <script src="/js/header_footer.js"></script>
 <script src="/js/login.js"></script>
-
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script>
-const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
-const supabaseKey = "TU_KEY_AQUI"; // 👈 pega tu key real
-
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-
-    const form = document.getElementById("formRegistro");
-
-    // 👁 OJITOS (SIN TOCAR ESTILOS)
-    function toggle(inputId, icon){
-        const input = document.getElementById(inputId);
-
-        if(input.type === "password"){
-            input.type = "text";
-            icon.classList.replace("fa-eye", "fa-eye-slash");
-        } else {
-            input.type = "password";
-            icon.classList.replace("fa-eye-slash", "fa-eye");
-        }
-    }
-
-    document.getElementById("togglePassword").addEventListener("click", function(){
-        toggle("password", this);
-    });
-
-    document.getElementById("toggleConfirm").addEventListener("click", function(){
-        toggle("confirmPassword", this);
-    });
-
-    // 🚀 REGISTRO
-    form.addEventListener("submit", async function(e){
-        e.preventDefault();
-
-        const nombre = document.getElementById("nombre").value.trim();
-        const apellido = document.getElementById("apellido").value.trim();
-        const email = document.getElementById("email").value.trim();
-
-        // 🔥 SOLUCIÓN REAL (lee dentro del form)
-        const password = form.querySelector("#password").value.trim();
-        const confirmPassword = form.querySelector("#confirmPassword").value.trim();
-
-        // 🧪 DEBUG (puedes borrarlo luego)
-        console.log("PASS:", JSON.stringify(password));
-        console.log("CONFIRM:", JSON.stringify(confirmPassword));
-
-        // VALIDACIÓN
-        if(password !== confirmPassword){
-            alert("❌ Las contraseñas no coinciden");
-            return;
-        }
-
-        if(password.length < 6){
-            alert("❌ Mínimo 6 caracteres");
-            return;
-        }
-
-        // 🔐 SUPABASE
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password
-        });
-
-        if(error){
-            alert("Error: " + error.message);
-            return;
-        }
-
-        const user = data.user;
-
-        // 💾 GUARDAR
-        const { error: errorDB } = await supabase
-            .from("usuarios")
-            .insert([
-                {
-                    id: user.id,
-                    nombre: nombre,
-                    apellido: apellido,
-                    email: email
-                }
-            ]);
-
-        if(errorDB){
-            alert("Error guardando en base de datos");
-            return;
-        }
-
-        alert("✅ Usuario registrado correctamente");
-        form.reset();
-    });
-
-});
-</script>
-
 </body>
+
 </html>
 </body>
 </html>
