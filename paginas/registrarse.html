@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function(){
 console.log("CONFIRM:", confirmPassword);
         
         // VALIDACIÓN CORRECTA
-        if(password !== confirmPassword){
+        if(password.replace(/\s/g, '') !== confirmPassword.replace(/\s/g, '')){
             alert("Las contraseñas no coinciden");
             return;
         }
