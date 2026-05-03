@@ -4,164 +4,90 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENIT Academy</title>
-
 <link rel="stylesheet" href="../css/registrarse.css">
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-.password-container {
-    position: relative;
-}
-
-.password-container input {
-    width: 100%;
-    padding-right: 40px;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
-</style>
-
 </head>
 
 <body>
-
+<!-- ========================= -->
+<!--      INICIAR SESIÓN      -->
+<!-- ========================= -->
 <div id="header"></div>
+<div id="modal-container"></div>
+<!-- ========================= -->
+<!--        REGISTRARSE       -->
+<!-- ========================= -->
 
 <section class="seccion-register">
 
 <div class="register-box">
 
+    <!-- LADO IZQUIERDO -->
     <div class="lado-bienvenida">
+
         <h2>¡Únete hoy!</h2>
-        <p>Crea tu cuenta y empieza a aprender inglés</p>
+
+        <p>
+            Crea tu cuenta y empieza a aprender inglés
+            con cursos dinámicos, modernos y fáciles.
+        </p>
+
     </div>
 
+
+    <!-- FORMULARIO -->
     <div class="lado-formulario">
+
         <h3>Crear Cuenta</h3>
 
         <form>
 
-            <input type="text" name="nombre" placeholder="Nombre" required>
-            <input type="text" name="apellido" placeholder="Apellido" required>
-            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <div class="fila-input">
 
-            <div class="password-container">
-                <input type="password" name="password" id="password" placeholder="Contraseña" required>
-                <i class="fa-solid fa-eye toggle-password" data-target="password"></i>
+                <div class="grupo-input">
+                    <input type="text" placeholder="Nombre">
+                </div>
+
+                <div class="grupo-input">
+                    <input type="text" placeholder="Apellido">
+                </div>
+
             </div>
 
-            <div class="password-container">
-                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmar contraseña" required>
-                <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
+            <div class="grupo-input">
+                <input type="email" placeholder="Correo electrónico">
+            </div>
+
+            <div class="grupo-input">
+                <input type="password" placeholder="Contraseña">
+            </div>
+
+            <div class="grupo-input">
+                <input type="password" placeholder="Confirmar contraseña">
             </div>
 
             <button type="submit">Registrarme</button>
 
+            <p class="texto-login">
+                ¿Ya tienes cuenta?
+                <a href="../paginas/login.html">Inicia sesión</a>
+            </p>
+
         </form>
+
     </div>
 
 </div>
 
 </section>
 
+
 <div id="footer"></div>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const supabase = window.supabase.createClient(
-  "https://qrdxcsttzeqkufdmzllj.supabase.co",
-  "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE"
-);
-</script>
-
-<!-- TODO EL JS -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    // 👁️ OJITO
-    document.querySelectorAll(".toggle-password").forEach(icon => {
-        icon.addEventListener("click", () => {
-            const input = document.getElementById(icon.dataset.target);
-
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        });
-    });
-
-    // 📩 FORMULARIO
-    const form = document.querySelector("form");
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const nombre = form.nombre.value;
-        const apellido = form.apellido.value;
-        const email = form.email.value;
-        const password = form.password.value;
-        const confirmPassword = form.confirmPassword.value;
-
-        if (password !== confirmPassword) {
-            alert("Las contraseñas no coinciden");
-            return;
-        }
-
-        console.log("Registrando...");
-
-        // 🔐 REGISTRO
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password
-        });
-
-        console.log(data, error);
-
-        if (error) {
-            alert("Error: " + error.message);
-            return;
-        }
-
-        const user = data.user;
-
-        if (!user) {
-            alert("Revisa tu correo para confirmar tu cuenta 📩");
-            return;
-        }
-
-        // 💾 GUARDAR EN TABLA
-        const { error: insertError } = await supabase
-            .from("usuarios")
-            .insert([{
-                user_id: user.id,
-                nombre: nombre,
-                apellido: apellido,
-                email: email
-            }]);
-
-        if (insertError) {
-            alert("Error guardando datos: " + insertError.message);
-        } else {
-            alert("Usuario registrado correctamente 🚀");
-        }
-
-    });
-
-});
-</script>
-
+<script src="/js/header_footer.js"></script>
+<script src="/js/login.js"></script>
 </body>
+
 </html>
