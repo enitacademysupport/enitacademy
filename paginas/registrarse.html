@@ -9,11 +9,9 @@
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* 👁 OJITO */
 .password-box{
     position: relative;
 }
@@ -32,6 +30,7 @@
     color:#111;
 }
 </style>
+
 </head>
 
 <body>
@@ -54,27 +53,20 @@
         <form id="formRegistro">
 
             <div class="fila-input">
-                <div class="grupo-input">
-                    <input type="text" id="nombre" placeholder="Nombre" required>
-                </div>
-
-                <div class="grupo-input">
-                    <input type="text" id="apellido" placeholder="Apellido" required>
-                </div>
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="apellido" placeholder="Apellido" required>
             </div>
 
-            <div class="grupo-input">
-                <input type="email" id="email" placeholder="Correo electrónico" required>
-            </div>
+            <input type="email" id="email" placeholder="Correo electrónico" required>
 
             <!-- PASSWORD -->
-            <div class="grupo-input password-box">
+            <div class="password-box">
                 <input type="password" id="password" placeholder="Contraseña" autocomplete="off" required>
                 <i class="fa-solid fa-eye" id="togglePassword"></i>
             </div>
 
             <!-- CONFIRM -->
-            <div class="grupo-input password-box">
+            <div class="password-box">
                 <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" autocomplete="off" required>
                 <i class="fa-solid fa-eye" id="toggleConfirm"></i>
             </div>
@@ -98,16 +90,17 @@
 
 <script>
 const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
-const supabaseKey = "TU_KEY_AQUI"; // pega tu key real
+const supabaseKey = "TU_KEY_AQUI"; // 👈 pega tu key real
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 
-<!-- TODO FUNCIONANDO -->
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
-    // 👁 FUNCION OJITO
+    const form = document.getElementById("formRegistro");
+
+    // 👁 OJITOS (SIN FALLAS)
     function toggle(inputId, icon){
         const input = document.getElementById(inputId);
 
@@ -129,20 +122,21 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     // 🚀 REGISTRO
-    const form = document.getElementById("formRegistro");
-
     form.addEventListener("submit", async function(e){
         e.preventDefault();
 
-        const nombre = document.getElementById("nombre").value;
-        const apellido = document.getElementById("apellido").value;
-        const email = document.getElementById("email").value;
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
+        const email = document.getElementById("email").value.trim();
 
-        // 🔥 LIMPIEZA REAL (SOLUCION DEFINITIVA)
-        const password = document.getElementById("password").value.replace(/\s/g, '');
-        const confirmPassword = document.getElementById("confirmPassword").value.replace(/\s/g, '');
+        // 🔥 CLAVE: LEER DESDE EL FORM (EVITA ERRORES)
+        const password = form.querySelector("#password").value.trim();
+        const confirmPassword = form.querySelector("#confirmPassword").value.trim();
 
-        // VALIDACIONES
+        console.log("PASS:", JSON.stringify(password));
+        console.log("CONFIRM:", JSON.stringify(confirmPassword));
+
+        // VALIDACIÓN
         if(password !== confirmPassword){
             alert("❌ Las contraseñas no coinciden");
             return;
@@ -191,5 +185,7 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 
+</body>
+</html>
 </body>
 </html>
