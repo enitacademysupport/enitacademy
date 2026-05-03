@@ -4,73 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENIT Academy</title>
+
 <link rel="stylesheet" href="../css/registrarse.css">
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
-<!-- ========================= -->
-<!--      INICIAR SESIÓN      -->
-<!-- ========================= -->
+
 <div id="header"></div>
 <div id="modal-container"></div>
-<!-- ========================= -->
-<!--        REGISTRARSE       -->
-<!-- ========================= -->
 
 <section class="seccion-register">
 
 <div class="register-box">
 
-    <!-- LADO IZQUIERDO -->
+    <!-- IZQUIERDA -->
     <div class="lado-bienvenida">
-
         <h2>¡Únete hoy!</h2>
-
         <p>
             Crea tu cuenta y empieza a aprender inglés
             con cursos dinámicos, modernos y fáciles.
         </p>
-
     </div>
-
 
     <!-- FORMULARIO -->
     <div class="lado-formulario">
 
         <h3>Crear Cuenta</h3>
 
-        <form>
+        <!-- ✅ IMPORTANTE: ID -->
+        <form id="formRegistro">
 
             <div class="fila-input">
 
                 <div class="grupo-input">
-                    <input type="text" id="nombre" placeholder="Nombre">
+                    <input type="text" id="nombre" placeholder="Nombre" required>
                 </div>
 
                 <div class="grupo-input">
-                    <input type="text" id="apellido" placeholder="Apellido">
+                    <input type="text" id="apellido" placeholder="Apellido" required>
                 </div>
 
             </div>
 
             <div class="grupo-input">
-                <input type="email" id="email" placeholder="Correo electrónico">
+                <input type="email" id="email" placeholder="Correo electrónico" required>
             </div>
 
             <div class="grupo-input">
-                <input type="password" id="passsword" placeholder="Contraseña">
+                <input type="password" id="password" placeholder="Contraseña" required>
             </div>
 
             <div class="grupo-input">
-                <input type="password" placeholder="Confirmar contraseña">
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
             </div>
 
             <div class="acepto">
                 <label>
-                    <input type="checkbox">
+                    <input type="checkbox" required>
                     Acepto términos y condiciones
                 </label>
             </div>
@@ -90,61 +84,81 @@
 
 </section>
 
-
 <div id="footer"></div>
 
 <script src="/js/header_footer.js"></script>
 <script src="/js/login.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script>
+
+<!-- ✅ SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
 const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
 const supabaseKey = "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE";
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 
-    <script>
-document.getElementById("formRegistro").addEventListener("submit", async function(e){
-    e.preventDefault();
+<!-- ✅ REGISTRO FUNCIONAL -->
+<script>
+document.addEventListener("DOMContentLoaded", function(){
 
-    const nombre = document.getElementById("nombre").value;
-    const apellido = document.getElementById("apellido").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const form = document.getElementById("formRegistro");
 
-    // 🔐 REGISTRO EN AUTH
-    const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password
+    form.addEventListener("submit", async function(e){
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        // 🔒 Validar contraseñas
+        if(password !== confirmPassword){
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
+        // 🔐 REGISTRO EN AUTH
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password
+        });
+
+        if(error){
+            alert("Error: " + error.message);
+            return;
+        }
+
+        const user = data.user;
+
+        // 💾 GUARDAR EN TABLA
+        const { error: errorDB } = await supabase
+            .from("usuarios")
+            .insert([
+                {
+                    id: user.id,
+                    nombre: nombre,
+                    apellido: apellido,
+                    email: email
+                }
+            ]);
+
+        if(errorDB){
+            alert("Error guardando en tabla");
+            return;
+        }
+
+        alert("Usuario registrado correctamente ✅");
+
+        // 🔁 LIMPIAR FORM
+        form.reset();
+
     });
 
-    if(error){
-        alert("Error: " + error.message);
-        return;
-    }
-
-    const user = data.user;
-
-    // 💾 GUARDAR EN TABLA
-    const { error: errorDB } = await supabase
-        .from("usuarios")
-        .insert([
-            {
-                id: user.id,
-                nombre: nombre,
-                apellido: apellido,
-                email: email
-            }
-        ]);
-
-    if(errorDB){
-        alert("Error guardando en tabla");
-        return;
-    }
-
-    alert("Usuario registrado correctamente ✅");
 });
 </script>
-</body>
 
+</body>
 </html>
