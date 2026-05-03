@@ -8,7 +8,33 @@
 <link rel="stylesheet" href="../css/registrarse.css">
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
+
+<!-- ICONOS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* 👁 OJITO */
+.password-box{
+    position: relative;
+}
+
+.password-box input{
+    padding-right: 45px;
+}
+
+.password-box i{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+}
+
+.password-box i:hover{
+    color: #111;
+}
+</style>
 
 </head>
     
@@ -53,12 +79,16 @@
                 <input type="email" id="email" placeholder="Correo electrónico" required>
             </div>
 
-            <div class="grupo-input">
-                <input type="password" id="password" placeholder="Contraseña" autocomplete="new-password" required>
+            <!-- 🔐 PASSWORD -->
+            <div class="grupo-input password-box">
+                <input type="password" id="password" placeholder="Contraseña" autocomplete="off" required>
+                <i class="fa-solid fa-eye" id="togglePassword"></i>
             </div>
 
-            <div class="grupo-input">
-                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" autocomplete="new-password" required>
+            <!-- 🔐 CONFIRM PASSWORD -->
+            <div class="grupo-input password-box">
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" autocomplete="off" required>
+                <i class="fa-solid fa-eye" id="toggleConfirm"></i>
             </div>
 
             <button type="submit">Registrarme</button>
@@ -76,16 +106,41 @@
 <script src="/js/header_footer.js"></script>
 <script src="/js/login.js"></script>
 
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
 const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
-const supabaseKey = "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE"; // pega tu key
+const supabaseKey = "TU_KEY_AQUI"; // pega tu key
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 
-    <script>
+<!-- 👁 OJITO -->
+<script>
+function toggle(inputId, icon){
+    const input = document.getElementById(inputId);
+
+    if(input.type === "password"){
+        input.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+document.getElementById("togglePassword").addEventListener("click", function(){
+    toggle("password", this);
+});
+
+document.getElementById("toggleConfirm").addEventListener("click", function(){
+    toggle("confirmPassword", this);
+});
+</script>
+
+<!-- 🚀 REGISTRO -->
+<script>
 document.addEventListener("DOMContentLoaded", function(){
 
     const form = document.getElementById("formRegistro");
@@ -99,67 +154,55 @@ document.addEventListener("DOMContentLoaded", function(){
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
 
-        // 🔒 VALIDACIÓN SIMPLE Y SEGURA
+        // 🔒 VALIDACIÓN
         if(password !== confirmPassword){
             alert("❌ Las contraseñas no coinciden");
             return;
         }
 
         if(password.length < 6){
-            alert("❌ La contraseña debe tener mínimo 6 caracteres");
+            alert("❌ Mínimo 6 caracteres");
             return;
         }
 
-        try {
+        // 🔐 REGISTRO
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password
+        });
 
-            // 🔐 REGISTRO EN AUTH
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password
-            });
-
-            if(error){
-                alert("Error: " + error.message);
-                return;
-            }
-
-            const user = data.user;
-
-            if(!user){
-                alert("No se pudo crear el usuario");
-                return;
-            }
-
-            // 💾 GUARDAR EN TABLA
-            const { error: errorDB } = await supabase
-                .from("usuarios")
-                .insert([
-                    {
-                        id: user.id,
-                        nombre: nombre,
-                        apellido: apellido,
-                        email: email
-                    }
-                ]);
-
-            if(errorDB){
-                alert("Error guardando en base de datos");
-                return;
-            }
-
-            alert("✅ Usuario registrado correctamente");
-
-            form.reset();
-
-        } catch (err){
-            console.error(err);
-            alert("Error inesperado");
+        if(error){
+            alert("Error: " + error.message);
+            return;
         }
 
+        const user = data.user;
+
+        // 💾 GUARDAR EN TABLA
+        const { error: errorDB } = await supabase
+            .from("usuarios")
+            .insert([
+                {
+                    id: user.id,
+                    nombre: nombre,
+                    apellido: apellido,
+                    email: email
+                }
+            ]);
+
+        if(errorDB){
+            alert("Error guardando en base de datos");
+            return;
+        }
+
+        alert("✅ Usuario registrado correctamente");
+
+        form.reset();
     });
 
 });
 </script>
+
 </body>
 </html>
 
