@@ -76,18 +76,16 @@
 <script src="/js/header_footer.js"></script>
 <script src="/js/login.js"></script>
 
-<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
 const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
-const supabaseKey = "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE";
+const supabaseKey = "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE"; // pega tu key
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 
-<!-- REGISTRO -->
-<script>
+    <script>
 document.addEventListener("DOMContentLoaded", function(){
 
     const form = document.getElementById("formRegistro");
@@ -95,59 +93,73 @@ document.addEventListener("DOMContentLoaded", function(){
     form.addEventListener("submit", async function(e){
         e.preventDefault();
 
-        const nombre = document.getElementById("nombre").value.trim();
-        const apellido = document.getElementById("apellido").value.trim();
-        const email = document.getElementById("email").value.trim();
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+        const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
 
-        console.log("PASS:", password);
-console.log("CONFIRM:", confirmPassword);
-        
-        // VALIDACIÓN CORRECTA
-        if(password.replace(/\s/g, '') !== confirmPassword.replace(/\s/g, '')){
-            alert("Las contraseñas no coinciden");
+        // 🔒 VALIDACIÓN SIMPLE Y SEGURA
+        if(password !== confirmPassword){
+            alert("❌ Las contraseñas no coinciden");
             return;
         }
 
-        // REGISTRO
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password
-        });
-
-        if(error){
-            alert("Error: " + error.message);
+        if(password.length < 6){
+            alert("❌ La contraseña debe tener mínimo 6 caracteres");
             return;
         }
 
-        const user = data.user;
+        try {
 
-        // GUARDAR EN TABLA
-        const { error: errorDB } = await supabase
-            .from("usuarios")
-            .insert([
-                {
-                    id: user.id,
-                    nombre: nombre,
-                    apellido: apellido,
-                    email: email
-                }
-            ]);
+            // 🔐 REGISTRO EN AUTH
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password
+            });
 
-        if(errorDB){
-            alert("Error guardando en tabla");
-            return;
+            if(error){
+                alert("Error: " + error.message);
+                return;
+            }
+
+            const user = data.user;
+
+            if(!user){
+                alert("No se pudo crear el usuario");
+                return;
+            }
+
+            // 💾 GUARDAR EN TABLA
+            const { error: errorDB } = await supabase
+                .from("usuarios")
+                .insert([
+                    {
+                        id: user.id,
+                        nombre: nombre,
+                        apellido: apellido,
+                        email: email
+                    }
+                ]);
+
+            if(errorDB){
+                alert("Error guardando en base de datos");
+                return;
+            }
+
+            alert("✅ Usuario registrado correctamente");
+
+            form.reset();
+
+        } catch (err){
+            console.error(err);
+            alert("Error inesperado");
         }
 
-        alert("Usuario registrado correctamente ✅");
-
-        form.reset();
     });
 
 });
 </script>
-
 </body>
 </html>
 
