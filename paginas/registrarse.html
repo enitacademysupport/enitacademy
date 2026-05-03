@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
 
-<!-- ICONOS -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -17,11 +17,9 @@
 .password-box{
     position: relative;
 }
-
 .password-box input{
     padding-right: 45px;
 }
-
 .password-box i{
     position: absolute;
     right: 15px;
@@ -30,33 +28,25 @@
     cursor: pointer;
     color: #777;
 }
-
 .password-box i:hover{
-    color: #111;
+    color:#111;
 }
 </style>
-
 </head>
-    
+
 <body>
 
 <div id="header"></div>
 <div id="modal-container"></div>
 
 <section class="seccion-register">
-
 <div class="register-box">
 
-    <!-- IZQUIERDA -->
     <div class="lado-bienvenida">
         <h2>¡Únete hoy!</h2>
-        <p>
-            Crea tu cuenta y empieza a aprender inglés
-            con cursos dinámicos, modernos y fáciles.
-        </p>
+        <p>Aprende inglés con cursos dinámicos y modernos.</p>
     </div>
 
-    <!-- FORMULARIO -->
     <div class="lado-formulario">
 
         <h3>Crear Cuenta</h3>
@@ -64,7 +54,6 @@
         <form id="formRegistro">
 
             <div class="fila-input">
-
                 <div class="grupo-input">
                     <input type="text" id="nombre" placeholder="Nombre" required>
                 </div>
@@ -72,20 +61,19 @@
                 <div class="grupo-input">
                     <input type="text" id="apellido" placeholder="Apellido" required>
                 </div>
-
             </div>
 
             <div class="grupo-input">
                 <input type="email" id="email" placeholder="Correo electrónico" required>
             </div>
 
-            <!-- 🔐 PASSWORD -->
+            <!-- PASSWORD -->
             <div class="grupo-input password-box">
                 <input type="password" id="password" placeholder="Contraseña" autocomplete="off" required>
                 <i class="fa-solid fa-eye" id="togglePassword"></i>
             </div>
 
-            <!-- 🔐 CONFIRM PASSWORD -->
+            <!-- CONFIRM -->
             <div class="grupo-input password-box">
                 <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" autocomplete="off" required>
                 <i class="fa-solid fa-eye" id="toggleConfirm"></i>
@@ -98,7 +86,6 @@
     </div>
 
 </div>
-
 </section>
 
 <div id="footer"></div>
@@ -111,38 +98,37 @@
 
 <script>
 const supabaseUrl = "https://qrdxcsttzeqkufdmzllj.supabase.co";
-const supabaseKey = "TU_KEY_AQUI"; // pega tu key
+const supabaseKey = "TU_KEY_AQUI"; // pega tu key real
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 
-<!-- 👁 OJITO -->
-<script>
-function toggle(inputId, icon){
-    const input = document.getElementById(inputId);
-
-    if(input.type === "password"){
-        input.type = "text";
-        icon.classList.replace("fa-eye", "fa-eye-slash");
-    } else {
-        input.type = "password";
-        icon.classList.replace("fa-eye-slash", "fa-eye");
-    }
-}
-
-document.getElementById("togglePassword").addEventListener("click", function(){
-    toggle("password", this);
-});
-
-document.getElementById("toggleConfirm").addEventListener("click", function(){
-    toggle("confirmPassword", this);
-});
-</script>
-
-<!-- 🚀 REGISTRO -->
+<!-- TODO FUNCIONANDO -->
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
+    // 👁 FUNCION OJITO
+    function toggle(inputId, icon){
+        const input = document.getElementById(inputId);
+
+        if(input.type === "password"){
+            input.type = "text";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    }
+
+    document.getElementById("togglePassword").addEventListener("click", function(){
+        toggle("password", this);
+    });
+
+    document.getElementById("toggleConfirm").addEventListener("click", function(){
+        toggle("confirmPassword", this);
+    });
+
+    // 🚀 REGISTRO
     const form = document.getElementById("formRegistro");
 
     form.addEventListener("submit", async function(e){
@@ -151,10 +137,12 @@ document.addEventListener("DOMContentLoaded", function(){
         const nombre = document.getElementById("nombre").value;
         const apellido = document.getElementById("apellido").value;
         const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
 
-        // 🔒 VALIDACIÓN
+        // 🔥 LIMPIEZA REAL (SOLUCION DEFINITIVA)
+        const password = document.getElementById("password").value.replace(/\s/g, '');
+        const confirmPassword = document.getElementById("confirmPassword").value.replace(/\s/g, '');
+
+        // VALIDACIONES
         if(password !== confirmPassword){
             alert("❌ Las contraseñas no coinciden");
             return;
@@ -165,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function(){
             return;
         }
 
-        // 🔐 REGISTRO
+        // REGISTRO AUTH
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password
@@ -178,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         const user = data.user;
 
-        // 💾 GUARDAR EN TABLA
+        // GUARDAR EN TABLA
         const { error: errorDB } = await supabase
             .from("usuarios")
             .insert([
@@ -205,4 +193,3 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </body>
 </html>
-
