@@ -47,25 +47,25 @@
             <div class="fila-input">
 
                 <div class="grupo-input">
-                    <input type="text" placeholder="Nombre">
+                    <input type="text" name="nombre" placeholder="Nombre">
                 </div>
 
                 <div class="grupo-input">
-                    <input type="text" placeholder="Apellido">
+                    <input type="text"  name="apellido" placeholder="Apellido">
                 </div>
 
             </div>
 
             <div class="grupo-input">
-                <input type="email" placeholder="Correo electrónico">
+                <input type="email" name="email" placeholder="Correo electrónico">
             </div>
 
            <div class="grupo-input password-container">
-                <input type="password" placeholder="Contraseña" id="password">
+                <input type="password" name="password" placeholder="Contraseña" id="password">
             </div>
 
             <div class="grupo-input password-container">
-                <input type="password" placeholder="Confirmar contraseña" id="confirmPassword">
+                <input type="password" name="confirmPassword" placeholder="Confirmar contraseña" id="confirmPassword">
                 <i class="fa-solid fa-eye toggle-password" data-target="confirmPassword"></i>
             </div>
 
@@ -107,8 +107,50 @@
     });
 });
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+const supabase = window.supabase.createClient(
+  "https://qrdxcsttzeqkufdmzllj.supabase.co",
+  "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE"
+);
+</script>
+    <script>
+const form = document.querySelector("form");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = form.nombre.value;
+    const apellido = form.apellido.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
+
+    if (password !== confirmPassword) {
+        alert("Las contraseñas no coinciden");
+        return;
+    }
+
+    // Registro en Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: {
+                nombre: nombre,
+                apellido: apellido
+            }
+        }
+    });
+
+    if (error) {
+        alert("Error: " + error.message);
+    } else {
+        alert("Cuenta creada correctamente. Revisa tu correo 📩");
+    }
+});
+</script>
 </body>
 
 </html>
-</body>
-</html>
+
