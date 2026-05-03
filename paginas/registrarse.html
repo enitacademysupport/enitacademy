@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const form = document.getElementById("formRegistro");
 
-    // 👁 OJITOS (SIN FALLAS)
+    // 👁 OJITOS (SIN TOCAR ESTILOS)
     function toggle(inputId, icon){
         const input = document.getElementById(inputId);
 
@@ -129,10 +129,11 @@ document.addEventListener("DOMContentLoaded", function(){
         const apellido = document.getElementById("apellido").value.trim();
         const email = document.getElementById("email").value.trim();
 
-        // 🔥 CLAVE: LEER DESDE EL FORM (EVITA ERRORES)
+        // 🔥 SOLUCIÓN REAL (lee dentro del form)
         const password = form.querySelector("#password").value.trim();
         const confirmPassword = form.querySelector("#confirmPassword").value.trim();
 
+        // 🧪 DEBUG (puedes borrarlo luego)
         console.log("PASS:", JSON.stringify(password));
         console.log("CONFIRM:", JSON.stringify(confirmPassword));
 
@@ -147,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function(){
             return;
         }
 
-        // REGISTRO AUTH
+        // 🔐 SUPABASE
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password
@@ -160,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         const user = data.user;
 
-        // GUARDAR EN TABLA
+        // 💾 GUARDAR
         const { error: errorDB } = await supabase
             .from("usuarios")
             .insert([
@@ -178,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function(){
         }
 
         alert("✅ Usuario registrado correctamente");
-
         form.reset();
     });
 
