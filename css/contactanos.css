@@ -1,0 +1,170 @@
+/* ========================= */
+/* CONTACTO */
+/* ========================= */
+
+.seccion-contacto{
+    padding: 90px 60px;
+    background: linear-gradient(135deg,#faf7ff,#fff9df,#ffeef6);
+}
+
+.contenedor-contacto{
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    align-items: start;
+}
+
+/* ========================= */
+/* INFORMACIÓN */
+/* ========================= */
+
+.info-contacto{
+    background: white;
+    padding: 40px;
+    border-radius: 26px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.05);
+}
+
+.etiqueta-contacto{
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f0e3ff;
+    color: #7b4cb7;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.info-contacto h2{
+    font-size: 42px;
+    color: #111;
+    margin-bottom: 18px;
+}
+
+.texto-contacto{
+    font-size: 18px;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 28px;
+}
+
+.dato-contacto{
+    padding: 18px;
+    border-radius: 18px;
+    background: #fafafa;
+    margin-bottom: 15px;
+    border-left: 5px solid #d8b6ff;
+    transition: .3s;
+}
+
+.dato-contacto:hover{
+    transform: translateX(6px);
+}
+
+.dato-contacto h4{
+    font-size: 19px;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.dato-contacto p{
+    color: #555;
+    line-height: 1.6;
+}
+
+/* ========================= */
+/* FORMULARIO */
+/* ========================= */
+
+.formulario-contacto{
+    background: white;
+    padding: 40px;
+    border-radius: 26px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.05);
+}
+
+.formulario-contacto h3{
+    font-size: 32px;
+    color: #111;
+    margin-bottom: 25px;
+}
+
+.grupo-campo{
+    margin-bottom: 18px;
+}
+
+.grupo-campo input,
+.grupo-campo textarea{
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    font-size: 16px;
+    outline: none;
+    transition: .3s;
+    resize: none;
+}
+
+.grupo-campo textarea{
+    min-height: 150px;
+}
+
+.grupo-campo input:focus,
+.grupo-campo textarea:focus{
+    border-color: #d8b6ff;
+    box-shadow: 0 0 0 4px rgba(216,182,255,0.18);
+}
+
+button{
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg,#d2adff,#ffbfdc);
+    color: #111;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 22px rgba(0,0,0,0.08);
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media(max-width:950px){
+
+.contenedor-contacto{
+    grid-template-columns: 1fr;
+}
+
+.info-contacto h2{
+    font-size: 36px;
+}
+
+}
+
+@media(max-width:768px){
+
+.seccion-contacto{
+    padding: 60px 20px;
+}
+
+.info-contacto,
+.formulario-contacto{
+    padding: 28px;
+}
+
+.formulario-contacto h3{
+    font-size: 28px;
+}
+
+}

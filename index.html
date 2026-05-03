@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENIT Academy</title>
+
+<link rel="stylesheet" href="/css/inicio.css">
+<link rel="stylesheet" href="/css/header_footer.css">
+<link rel="stylesheet" href="/css/login.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<div id="header"></div>
+<div id="modal-container"></div>
+<!-- HERO -->
+<section class="hero contenedor">
+
+    <div class="hero-texto">
+        <h1>Aprende inglés paso a paso de manera divertida</h1>
+
+        <p>
+            Plataforma educativa para ayudarte a mejorar
+            tu vocabulario, gramática y pronunciación.
+        </p>
+
+        <a href="#" class="abrir-login">Empezar ahora</a>
+    </div>
+
+    <div class="hero-img">
+        <img src="../imagenes/hero.png" alt="Hero">
+    </div>
+
+</section>
+
+
+
+<!-- APRENDER -->
+<section class="contenedor1">
+
+    <h2 class="titulo">¿Qué aprenderás?</h2>
+
+    <div class="contenedor_ordenado">
+
+        <article class="aprender1">
+            <div class="texto">
+                <h3>Vocabulario</h3>
+                <p>Nuevas palabras prácticas de uso diario.</p>
+            </div>
+
+            <div class="imagen">
+                <img src="../imagenes/vocabulario.jpg" alt="Vocabulario">
+            </div>
+        </article>
+
+        <article class="aprender2">
+            <div class="texto">
+                <h3>Pronunciación</h3>
+                <p>Mejora sonidos y tu acento en inglés.</p>
+            </div>
+
+            <div class="imagen">
+                <img src="../imagenes/pronunciacion.jpg" alt="Pronunciación">
+            </div>
+        </article>
+
+        <article class="aprender3">
+            <div class="texto">
+                <h3>Gramática</h3>
+                <p>Aprende reglas básicas, verbos y tiempos verbales.</p>
+            </div>
+
+            <div class="imagen">
+                <img src="../imagenes/gramatica.jpg" alt="Gramática">
+            </div>
+        </article>
+
+        <article class="aprender4">
+            <div class="texto">
+                <h3>Conversaciones reales</h3>
+                <p>Frases útiles para situaciones cotidianas.</p>
+            </div>
+
+            <div class="imagen">
+                <img src="../imagenes/conversacion.png" alt="Conversaciones">
+            </div>
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- NIVELES -->
+<section class="seccion-niveles">
+
+    <h2 class="titulo-seccion">Elige tu nivel</h2>
+
+    <p class="descripcion-seccion">
+        Cada nivel tiene cursos especiales diseñados para ti.
+    </p>
+
+    <div class="lista-niveles">
+
+        <article class="tarjeta-basico">
+
+            <div class="contenedor-img">
+                <img src="../imagenes/1.png" alt="Básico">
+            </div>
+
+            <div class="contenido-info">
+                <h3>Básico</h3>
+                <p>Perfecto para aprender desde cero.</p>
+                <a href="#" class="abrir-login">Ver más →</a>
+            </div>
+
+        </article>
+
+
+        <article class="tarjeta-intermedio">
+
+            <div class="contenedor-img">
+                <img src="../imagenes/2.png" alt="Intermedio">
+            </div>
+
+            <div class="contenido-info">
+                <h3>Intermedio</h3>
+                <p>Ya hablas un poco, mejora tu fluidez.</p>
+                <a href="#" class="abrir-login">Ver más →</a>
+            </div>
+
+        </article>
+
+
+        <article class="tarjeta-avanzado">
+
+            <div class="contenedor-img">
+                <img src="../imagenes/3.png" alt="Avanzado">
+            </div>
+
+            <div class="contenido-info">
+                <h3>Avanzado</h3>
+                <p>Perfecciona gramática, fluidez y conversación.</p>
+                <a href="#" class="abrir-login">Ver más →</a>
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- COMENTARIOS -->
+<section class="seccion-opiniones">
+
+    <h2 class="titulo-seccion">Comentarios</h2>
+
+    <p class="descripcion-seccion">
+        Lo que opinan nuestros estudiantes.
+    </p>
+
+    <button class="boton-prev">&#10094;</button>
+    <button class="boton-next">&#10095;</button>
+
+    <div class="slider-comentarios">
+
+        <div class="slide activo">
+            <p>"Excelente plataforma, aprendí rápido y sin aburrirme."</p>
+            <h4>Adam Smith</h4>
+        </div>
+
+        <div class="slide">
+            <p>"Las clases son modernas, dinámicas y muy claras."</p>
+            <h4>Clara Martin</h4>
+        </div>
+
+        <div class="slide">
+            <p>"Me ayudó bastante en pronunciación y vocabulario."</p>
+            <h4>Richard James</h4>
+        </div>
+
+        <div class="slide">
+            <p>"La recomiendo para quienes empiezan desde cero."</p>
+            <h4>Emily Rose</h4>
+        </div>
+
+    </div>
+
+    <div class="puntos">
+        <span class="dot activo"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
+
+
+
+<script>
+
+let index = 0;
+
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+const next = document.querySelector(".boton-next");
+const prev = document.querySelector(".boton-prev");
+
+function mostrarSlide(n){
+
+    slides.forEach(slide =>
+        slide.classList.remove("activo")
+    );
+
+    dots.forEach(dot =>
+        dot.classList.remove("activo")
+    );
+
+    slides[n].classList.add("activo");
+    dots[n].classList.add("activo");
+
+}
+
+function siguiente(){
+
+    index++;
+
+    if(index >= slides.length){
+        index = 0;
+    }
+
+    mostrarSlide(index);
+}
+
+function anterior(){
+
+    index--;
+
+    if(index < 0){
+        index = slides.length - 1;
+    }
+
+    mostrarSlide(index);
+}
+
+next.addEventListener("click", siguiente);
+prev.addEventListener("click", anterior);
+
+setInterval(siguiente, 4000);
+
+</script>
+
+
+
+<div id="footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="/js/supabase.js"></script>
+<script src="/js/registro.js"></script>
+<script src="/js/header_footer.js"></script>
+<script src="/js/login.js"></script>
+</body>
+</html>

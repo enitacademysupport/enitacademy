@@ -1,0 +1,367 @@
+/* =================================================== */
+/* ESTILOS EXTRA PARA INDEX */
+/* NO MODIFICA HEADER / FOOTER / NAVBAR EXISTENTE */
+/* =================================================== */
+
+
+/* ============================= */
+/* HERO */
+/* ============================= */
+
+.hero{
+padding-left:60px;
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+gap:50px;
+background:linear-gradient(135deg,#faf7ff,#fff9df,#ffeef6);
+}
+
+.hero-texto h1{
+font-size:58px;
+line-height:1.2;
+color:#111;
+margin-bottom:20px;
+}
+
+.hero-texto p{
+font-size:20px;
+line-height:1.8;
+color:#555;
+margin-bottom:30px;
+max-width:550px;
+}
+
+.hero-img img{
+width:100%;
+max-width:500px;
+margin:auto;
+}
+
+
+/* ============================= */
+/* APRENDER */
+/* ============================= */
+
+.contenedor1{
+padding:80px 60px;
+background:white;
+}
+
+.titulo{
+font-size:42px;
+margin-bottom:35px;
+color:#111;
+text-align:center;
+}
+
+.contenedor_ordenado{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:22px;
+}
+
+.aprender1,
+.aprender2,
+.aprender3,
+.aprender4{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:28px;
+border-radius:22px;
+transition:.3s;
+}
+
+.aprender1{background:#ead5f7;}
+.aprender2{background:#fff3c8;}
+.aprender3{background:#f9efcf;}
+.aprender4{background:#ffd8ea;}
+
+.aprender1:hover,
+.aprender2:hover,
+.aprender3:hover,
+.aprender4:hover{
+transform:translateY(-8px);
+box-shadow:0 15px 28px rgba(0,0,0,.08);
+}
+
+.texto h3{
+font-size:28px;
+margin-bottom:10px;
+}
+
+.texto p{
+font-size:17px;
+line-height:1.7;
+color:#444;
+max-width:260px;
+}
+
+.imagen img{
+width:95px;
+}
+
+
+/* ============================= */
+/* NIVELES */
+/* ============================= */
+
+.seccion-niveles{
+padding:80px 60px;
+background:#fafafa;
+}
+
+.titulo-seccion{
+font-size:42px;
+text-align:center;
+margin-bottom:12px;
+color:#111;
+}
+
+.descripcion-seccion{
+text-align:center;
+font-size:18px;
+color:#666;
+margin-bottom:38px;
+}
+
+.lista-niveles{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:25px;
+}
+
+.tarjeta-basico,
+.tarjeta-intermedio,
+.tarjeta-avanzado{
+background:white;
+padding:32px 28px;
+border-radius:24px;
+text-align:center;
+box-shadow:0 15px 30px rgba(0,0,0,.05);
+transition:.3s;
+}
+
+.tarjeta-basico{border-top:6px solid #d9b6ff;}
+.tarjeta-intermedio{border-top:6px solid #ffe38e;}
+.tarjeta-avanzado{border-top:6px solid #ffb9d8;}
+
+.tarjeta-basico:hover,
+.tarjeta-intermedio:hover,
+.tarjeta-avanzado:hover{
+transform:translateY(-8px);
+}
+
+.contenedor-img img{
+width:110px;
+margin:auto auto 18px;
+}
+
+.contenido-info h3{
+font-size:28px;
+margin-bottom:12px;
+}
+
+.contenido-info p{
+font-size:17px;
+color:#555;
+line-height:1.7;
+margin-bottom:18px;
+}
+
+.contenido-info a{
+display:inline-block;
+padding:12px 22px;
+border-radius:12px;
+background:#111;
+color:white;
+font-size:15px;
+font-weight:bold;
+}
+
+
+/* ============================= */
+/* COMENTARIOS */
+/* ============================= */
+
+.seccion-opiniones{
+padding:80px 60px;
+background:white;
+text-align:center;
+position:relative;
+overflow:hidden;
+}
+
+.slider-comentarios{
+max-width:760px;
+margin:auto;
+min-height:260px;
+}
+
+.slide{
+display:none;
+background:#fff;
+padding:40px;
+border-radius:24px;
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+animation:fade .5s ease;
+}
+
+.slide.activo{
+display:block;
+}
+
+.slide p{
+font-size:21px;
+line-height:1.8;
+color:#444;
+}
+
+.slide h4{
+margin-top:20px;
+font-size:18px;
+color:#111;
+}
+
+.slide h4::before{
+content:"★★★★★";
+display:block;
+font-size:14px;
+letter-spacing:2px;
+color:#999;
+margin-bottom:8px;
+}
+
+/* flechas */
+
+.boton-prev,
+.boton-next{
+position:absolute;
+top:55%;
+transform:translateY(-50%);
+width:52px;
+height:52px;
+border:none;
+border-radius:50%;
+background:white;
+font-size:22px;
+cursor:pointer;
+box-shadow:0 10px 20px rgba(0,0,0,.08);
+transition:.3s;
+}
+
+.boton-prev{left:40px;}
+.boton-next{right:40px;}
+
+.boton-prev:hover,
+.boton-next:hover{
+background:#111;
+color:white;
+}
+
+/* dots */
+
+.puntos{
+margin-top:25px;
+}
+
+.dot{
+width:12px;
+height:12px;
+background:#d0d0d0;
+display:inline-block;
+margin:0 5px;
+border-radius:50%;
+transition:.3s;
+}
+
+.dot.activo{
+width:28px;
+border-radius:20px;
+background:#111;
+}
+
+/* animacion */
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(15px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media(max-width:1000px){
+
+.hero{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.hero-texto p{
+margin:auto auto 30px;
+}
+
+.contenedor_ordenado{
+grid-template-columns:1fr;
+}
+
+.lista-niveles{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+.hero,
+.contenedor1,
+.seccion-niveles,
+.seccion-opiniones{
+padding:60px 22px;
+}
+
+.hero-texto h1{
+font-size:38px;
+}
+
+.titulo,
+.titulo-seccion{
+font-size:32px;
+}
+
+.aprender1,
+.aprender2,
+.aprender3,
+.aprender4{
+flex-direction:column;
+text-align:center;
+gap:18px;
+}
+
+.boton-prev{
+left:8px;
+}
+
+.boton-next{
+right:8px;
+}
+
+.slide{
+padding:30px 20px;
+}
+
+.slide p{
+font-size:18px;
+}
+
+}

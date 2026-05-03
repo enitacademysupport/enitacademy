@@ -1,0 +1,433 @@
+/* =========================
+RESET GENERAL
+========================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#f7f7f7;
+color:#222;
+overflow-x:hidden;
+}
+
+a{
+text-decoration:none;
+transition:0.3s;
+}
+
+ul{
+list-style:none;
+}
+
+.contenedor{
+width:100%;
+margin:auto;
+}
+
+/* =========================
+BARRA SUPERIOR
+========================= */
+.barra-top{
+width:100%;
+height:25px;
+background:#1f2d35;
+}
+
+/* =========================
+NAVBAR
+SOLO RETOCADO LO NECESARIO
+========================= */
+
+.navbar{
+width:100%;
+background:#fff;
+padding:18px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.06);
+position:relative;
+z-index:9999;
+overflow:visible;   /* importante */
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:22px;
+font-weight:bold;
+color:#1e2a58;
+}
+
+.logo img{
+width:200px;
+}
+
+/* =========================
+MENU PRINCIPAL
+========================= */
+
+.menu{
+display:flex;
+align-items:center;
+gap:25px;
+overflow:visible;   /* agregado */
+}
+
+.menu li{
+position:relative;
+overflow:visible;   /* agregado */
+}
+
+.menu li a{
+display:block;
+padding:12px 15px;
+color:#222;
+font-size:15px;
+font-weight:600;
+white-space:nowrap;
+}
+
+.menu li a:hover{
+color:#9d00ff;
+}
+
+/* =========================
+DROPDOWN
+CORREGIDO
+========================= */
+
+.menu-vertical{
+position:absolute;
+top:100%;
+left:0;
+width:230px;
+background:#fff;
+display:none;
+border-radius:10px;
+box-shadow:0 12px 25px rgba(0,0,0,0.12);
+z-index:9999;
+overflow:visible;
+padding:6px 0;
+}
+
+.menu li:hover > .menu-vertical{
+display:block;
+}
+
+.menu-vertical li{
+position:relative;
+}
+
+.menu-vertical li a{
+display:block;
+padding:14px 18px;
+color:#222;
+background:white;
+}
+
+.menu-vertical li:hover > a{
+background:#f5f5f5;
+color:#9d00ff;
+}
+
+/* =========================
+SUBMENU LATERAL
+AQUI ESTABA EL PROBLEMA
+========================= */
+
+.submenu-lateral{
+position:absolute;
+top:0;
+left:100%;
+margin-left:6px;   /* separación pequeña */
+width:230px;
+background:#fff;
+display:none;
+border-radius:10px;
+box-shadow:0 12px 25px rgba(0,0,0,0.12);
+z-index:10000;
+padding:6px 0;
+}
+
+/* puente invisible para que no se cierre */
+.submenu-lateral::before{
+content:"";
+position:absolute;
+left:-8px;
+top:0;
+width:8px;
+height:100%;
+}
+
+.menu-vertical li:hover > .submenu-lateral{
+display:block;
+}
+
+.submenu-lateral li a{
+padding:14px 18px;
+display:block;
+color:#222;
+}
+
+.submenu-lateral li:hover a{
+background:#ead4f7;
+color:#9d00ff;
+}
+
+/* =========================
+BOTONES
+========================= */
+
+.botones{
+display:flex;
+gap:12px;
+}
+
+.btn{
+padding:11px 20px;
+border-radius:25px;
+font-size:14px;
+font-weight:bold;
+}
+
+.btn1{
+background:#d14cff;
+color:white;
+}
+
+.btn1:hover{
+background:#b100ff;
+}
+
+.btn2{
+background:#9d00ff;
+color:white;
+}
+
+.btn2:hover{
+background:#7900d0;
+}
+
+/* =========================
+FOOTER MODERNO
+========================= */
+
+.footer{
+width:100%;
+background:linear-gradient(135deg,#ead4f7,#f8f1ff,#fff5d8);
+padding:65px 50px 40px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:35px;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.footer-columna h3{
+font-size:30px;
+color:#1e2a58;
+margin-bottom:18px;
+}
+
+.footer-columna h4{
+font-size:22px;
+color:#1e2a58;
+margin-bottom:18px;
+}
+
+.footer-columna p{
+font-size:16px;
+line-height:1.8;
+color:#444;
+margin-bottom:8px;
+}
+
+.footer-columna a{
+color:#444;
+text-decoration:none;
+transition:.3s;
+}
+
+.footer-columna a:hover{
+color:#9d00ff;
+padding-left:5px;
+}
+
+.footer-columna:first-child p{
+max-width:260px;
+}
+
+.redes{
+display:flex;
+gap:14px;
+margin-top:10px;
+margin-bottom:18px;
+}
+
+.redes a{
+width:42px;
+height:42px;
+background:white;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:18px;
+color:#1e2a58;
+box-shadow:0 8px 18px rgba(0,0,0,0.06);
+transition:.3s;
+}
+
+.redes a:hover{
+background:#9d00ff;
+color:white;
+transform:translateY(-5px);
+padding-left:0;
+}
+
+.correo-footer{
+font-size:15px;
+color:#555;
+}
+
+.copy-footer{
+width:100%;
+text-align:center;
+padding:18px;
+font-size:15px;
+color:#555;
+background:#ffffff;
+border-top:1px solid rgba(0,0,0,0.05);
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+.footer{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+.footer{
+grid-template-columns:1fr;
+padding:50px 25px 30px;
+text-align:center;
+}
+
+.footer-columna:first-child p{
+margin:auto;
+}
+
+.redes{
+justify-content:center;
+}
+
+.footer-columna a:hover{
+padding-left:0;
+}
+
+.copy-footer{
+font-size:14px;
+padding:16px;
+}
+
+}
+
+
+/* =========================
+HAMBURGUESA
+========================= */
+
+.menu-toggle{
+    display:none;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+.navbar{
+    padding:15px 20px;
+}
+
+/* LOGO */
+.logo img{
+    width:150px;
+}
+
+/* MOSTRAR HAMBURGUESA */
+.menu-toggle{
+    display:block;
+    font-size:26px;
+    cursor:pointer;
+}
+
+/* MENÚ */
+.menu{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+    background:#fff;
+    flex-direction:column;
+    display:none;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.menu.activo{
+    display:flex;
+}
+
+.menu li{
+    width:100%;
+}
+
+.menu li a{
+    width:100%;
+    padding:15px 20px;
+    border-bottom:1px solid #eee;
+}
+
+/* DROPDOWN */
+.menu-vertical{
+    position:static;
+    width:100%;
+    display:none;
+    box-shadow:none;
+}
+
+.menu li.activo > .menu-vertical{
+    display:block;
+}
+
+/* SUBMENU */
+.submenu-lateral{
+    position:static;
+    width:100%;
+    display:none;
+    box-shadow:none;
+}
+
+.menu-vertical li.activo > .submenu-lateral{
+    display:block;
+}
+
+/* BOTONES */
+.botones{
+    display:none;
+}
+
+}

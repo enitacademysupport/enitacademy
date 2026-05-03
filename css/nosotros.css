@@ -1,0 +1,160 @@
+/* ========================= */
+/* NOSOTROS */
+/* ========================= */
+
+.seccion-nosotros{
+    padding: 90px 60px;
+    background: linear-gradient(135deg,#faf7ff,#fff9df,#ffeef6);
+}
+
+.contenedor-nosotros{
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    align-items: center;
+}
+
+/* TEXTO */
+
+.etiqueta{
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f0e4ff;
+    color: #7a4db5;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.lado-texto h2{
+    font-size: 48px;
+    color: #111;
+    margin-bottom: 18px;
+}
+
+.intro{
+    font-size: 18px;
+    color: #555;
+    line-height: 1.9;
+    margin-bottom: 30px;
+}
+
+/* CARDS */
+
+.card-info{
+    background: white;
+    padding: 24px;
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    margin-bottom: 18px;
+    transition: .3s;
+}
+
+.card-info:hover{
+    transform: translateY(-6px);
+}
+
+.card-info h3{
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.card-info p{
+    color: #555;
+    line-height: 1.7;
+}
+
+.card-mision{
+    border-left: 6px solid #d6b3ff;
+}
+
+.card-vision{
+    border-left: 6px solid #ffbfdc;
+}
+
+/* CTA */
+
+.cta-unete{
+    margin-top: 35px;
+    padding: 28px;
+    border-radius: 22px;
+    background: linear-gradient(135deg,#ead5f7,#fff3c8,#ffd7ea);
+}
+
+.cta-unete h4{
+    font-size: 26px;
+    margin-bottom: 18px;
+    color: #111;
+}
+
+.btn-empezar{
+    display: inline-block;
+    padding: 15px 28px;
+    background: #111;
+    color: white;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: .3s;
+}
+
+.btn-empezar:hover{
+    transform: translateY(-3px);
+    background: #333;
+}
+
+/* IMAGEN */
+
+.lado-imagen{
+    text-align: center;
+}
+
+.lado-imagen img{
+    width: 100%;
+    max-width: 470px;
+    animation: flotar 4s ease-in-out infinite;
+}
+
+@keyframes flotar{
+    0%{transform: translateY(0);}
+    50%{transform: translateY(-12px);}
+    100%{transform: translateY(0);}
+}
+
+/* RESPONSIVE */
+
+@media(max-width:950px){
+
+.contenedor-nosotros{
+    grid-template-columns: 1fr;
+}
+
+.lado-texto{
+    order:2;
+}
+
+.lado-imagen{
+    order:1;
+}
+
+.lado-texto h2{
+    font-size: 38px;
+}
+
+}
+
+@media(max-width:768px){
+
+.seccion-nosotros{
+    padding: 60px 22px;
+}
+
+.cta-unete h4{
+    font-size: 22px;
+}
+
+}

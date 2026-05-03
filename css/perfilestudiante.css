@@ -1,0 +1,140 @@
+/* =========================
+RESET
+========================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#f7f7f7;
+color:#222;
+}
+
+
+/* =========================
+LAYOUT
+========================= */
+.dashboard{
+display:flex;
+min-height:100vh;
+flex-direction:row; /* aside izquierda */
+}
+
+/* =========================
+SIDEBAR IZQUIERDO
+========================= */
+.sidebar{
+width:320px;
+background:linear-gradient(180deg,#ffffff,#f8f1ff,#fef8dc);
+padding:30px 25px;
+box-shadow:8px 0 20px rgba(0,0,0,0.06); /* sombra derecha */
+display:flex;
+flex-direction:column;
+gap:25px;
+}
+
+
+/* perfil */
+
+.perfil{
+text-align:center;
+padding:20px;
+background:white;
+border-radius:18px;
+box-shadow:0 8px 18px rgba(0,0,0,0.05);
+}
+
+.foto{
+width:75px;
+height:75px;
+border-radius:50%;
+margin:auto;
+background:linear-gradient(135deg,#d7adff,#ffbfdc);
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:30px;
+color:#1e2a58;
+margin-bottom:15px;
+}
+
+.perfil h3{
+font-size:22px;
+color:#1e2a58;
+margin-bottom:5px;
+}
+
+.perfil span{
+font-size:14px;
+color:#777;
+}
+
+/* =========================
+MENU PANEL
+========================= */
+.menu-panel{
+list-style:none;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.menu-panel li a{
+display:flex;
+align-items:center;
+gap:12px;
+padding:15px 16px;
+background:white;
+border-radius:14px;
+color:#333;
+font-weight:600;
+transition:.3s;
+box-shadow:0 6px 14px rgba(0,0,0,0.04);
+}
+
+.menu-panel li a i{
+width:22px;
+text-align:center;
+font-size:16px;
+}
+
+.menu-panel li a:hover{
+background:#f5ebff;
+color:#9d00ff;
+transform:translateX(-4px);
+}
+
+.menu-panel .activo a{
+background:#9d00ff;
+color:white;
+}
+
+
+/* =========================
+RESPONSIVE
+========================= */
+@media(max-width:1000px){
+
+.dashboard{
+flex-direction:column;
+}
+
+.sidebar{
+width:100%;
+box-shadow:none;
+}
+
+.tarjetas{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+
+
+}
