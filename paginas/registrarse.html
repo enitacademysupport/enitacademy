@@ -35,7 +35,6 @@
 
         <h3>Crear Cuenta</h3>
 
-        <!-- ✅ IMPORTANTE: ID -->
         <form id="formRegistro">
 
             <div class="fila-input">
@@ -55,11 +54,11 @@
             </div>
 
             <div class="grupo-input">
-                <input type="password" id="password" placeholder="Contraseña" required>
+                <input type="password" id="password" placeholder="Contraseña" autocomplete="new-password" required>
             </div>
 
             <div class="grupo-input">
-                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" autocomplete="new-password" required>
             </div>
 
             <div class="acepto">
@@ -70,11 +69,6 @@
             </div>
 
             <button type="submit">Registrarme</button>
-
-            <p class="texto-login">
-                ¿Ya tienes cuenta?
-                <a href="../paginas/login.html">Inicia sesión</a>
-            </p>
 
         </form>
 
@@ -89,7 +83,7 @@
 <script src="/js/header_footer.js"></script>
 <script src="/js/login.js"></script>
 
-<!-- ✅ SUPABASE -->
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
@@ -99,7 +93,7 @@ const supabaseKey = "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 
-<!-- ✅ REGISTRO FUNCIONAL -->
+<!-- REGISTRO -->
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -108,19 +102,19 @@ document.addEventListener("DOMContentLoaded", function(){
     form.addEventListener("submit", async function(e){
         e.preventDefault();
 
-        const nombre = document.getElementById("nombre").value;
-        const apellido = document.getElementById("apellido").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-        // 🔒 Validar contraseñas
+        // VALIDACIÓN CORRECTA
         if(password !== confirmPassword){
             alert("Las contraseñas no coinciden");
             return;
         }
 
-        // 🔐 REGISTRO EN AUTH
+        // REGISTRO
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password
@@ -133,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         const user = data.user;
 
-        // 💾 GUARDAR EN TABLA
+        // GUARDAR EN TABLA
         const { error: errorDB } = await supabase
             .from("usuarios")
             .insert([
@@ -152,13 +146,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
         alert("Usuario registrado correctamente ✅");
 
-        // 🔁 LIMPIAR FORM
         form.reset();
-
     });
 
 });
 </script>
 
+</body>
+</html>
 </body>
 </html>
