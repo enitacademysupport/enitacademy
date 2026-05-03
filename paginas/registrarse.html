@@ -114,6 +114,7 @@ const supabase = window.supabase.createClient(
   "sb_publishable_OdCflpNzeuD1K7Tv-ssC9A_IPx9VEoE"
 );
 </script>
+
     <script>
 const form = document.querySelector("form");
 
@@ -131,22 +132,41 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-    // Registro en Supabase Auth
+    // 1. Registro en Auth
     const { data, error } = await supabase.auth.signUp({
         email: email,
-        password: password,
-        options: {
-            data: {
-                nombre: nombre,
-                apellido: apellido
-            }
-        }
+        password: password
     });
 
     if (error) {
         alert("Error: " + error.message);
+        return;
+    }
+
+    // ⚠️ IMPORTANTE
+    const user = data.user;
+
+    if (!user) {
+        alert("Revisa tu correo para confirmar la cuenta antes de guardar datos");
+        return;
+    }
+
+    // 2. Insertar en tu tabla
+    const { error: insertError } = await supabase
+        .from("usuarios")
+        .insert([
+            {
+                user_id: user.id,
+                nombre: nombre,
+                apellido: apellido,
+                email: email
+            }
+        ]);
+
+    if (insertError) {
+        alert("Error guardando datos: " + insertError.message);
     } else {
-        alert("Cuenta creada correctamente. Revisa tu correo 📩");
+        alert("Usuario registrado correctamente 🚀");
     }
 });
 </script>
