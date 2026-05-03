@@ -236,3 +236,20 @@ button:hover{
 
 }
 
+abrir-login button{
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
+    color: #111;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+
+abrir-login button:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 22px rgba(0,0,0,0.08);
+}
