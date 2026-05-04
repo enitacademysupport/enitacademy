@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("JS CARGADO");
 
     const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
-    const supabaseKey = "TU_ANON_PUBLIC_KEY_AQUI"; // ⚠️ reemplaza esto
+    const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe"; // ⚠️ reemplaza esto
 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
