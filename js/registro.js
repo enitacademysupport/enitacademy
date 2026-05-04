@@ -43,11 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("ERROR:", error);
 
         if (error) {
-            alert("Error: " + error.message);
-        } else {
-            alert("Registro exitoso");
-            form.reset();
-        }
+    console.error("ERROR COMPLETO:", error);
+    alert("Error: " + error.message);
+} else {
+    alert("Registro exitoso");
+}
     });
 
 });
