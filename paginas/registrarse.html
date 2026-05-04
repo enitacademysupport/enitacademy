@@ -99,6 +99,64 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
     <script src="../js/login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+const supabaseUrl = "TU_URL";
+const supabaseKey = "TU_ANON_KEY";
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+</script>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const supabaseUrl = "TU_URL";
+    const supabaseKey = "TU_ANON_KEY";
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const form = document.getElementById("formRegistro");
+
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        // 🔐 Crear usuario en Auth
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            alert("Error: " + error.message);
+            return;
+        }
+
+        // 💾 Guardar en tabla usuarios
+        const { error: insertError } = await supabaseClient
+            .from("usuarios")
+            .insert([
+                {
+                    id: data.user.id,
+                    nombre: nombre,
+                    apellido: apellido,
+                    email: email
+                }
+            ]);
+
+        if (insertError) {
+            alert("Error guardando datos: " + insertError.message);
+            return;
+        }
+
+        alert("Usuario registrado correctamente 🎉");
+    });
+
+});
+</script>
+    
 </body>
 
 </html>
