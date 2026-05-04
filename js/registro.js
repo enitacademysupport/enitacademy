@@ -1,51 +1,38 @@
-document.addEventListener("DOMContentLoaded", () => {
+const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
+const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe";
 
-    console.log("JS CARGADO");
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
-    const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe"; // ⚠️ reemplaza esto
+document.getElementById("formRegistro").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    const { createClient } = supabase;
-    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    const nombre = document.getElementById("nombre").value;
+    const apellido = document.getElementById("apellido").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    console.log("SUPABASE:", supabaseClient);
-
-    const form = document.getElementById("formRegistro");
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        console.log("CLICK");
-
-        const nombre = document.getElementById("nombre").value.trim();
-        const apellido = document.getElementById("apellido").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-        console.log("PASS:", password);
-        console.log("CONFIRM:", confirmPassword);
-
-        if (password !== confirmPassword) {
-            alert("Las contraseñas no coinciden");
-            return;
-        }
-
-        const { data, error } = await supabaseClient
-            .from("usuarios")
-            .insert([
-                { nombre, apellido, email, password }
-            ]);
-
-        console.log("DATA:", data);
-        console.log("ERROR:", error);
-
-        if (error) {
-            alert("Error: " + error.message);
-        } else {
-            alert("Registro exitoso");
-            form.reset();
-        }
+    // 1. Crear usuario en Auth (seguro)
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
     });
 
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    // 2. Guardar datos extra en tu tabla
+    const user = data.user;
+
+    await supabase.from("usuarios").insert([
+        {
+            id: user.id,
+            nombre,
+            apellido,
+            email
+        }
+    ]);
+
+    alert("Registro exitoso. Revisa tu correo.");
 });
