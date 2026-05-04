@@ -1,6 +1,4 @@
-/* =========================
-RESET
-========================= */
+
 *{
 margin:0;
 padding:0;
@@ -14,18 +12,13 @@ color:#222;
 }
 
 
-/* =========================
-LAYOUT
-========================= */
 .dashboard{
 display:flex;
 min-height:100vh;
 flex-direction:row; /* aside izquierda */
 }
 
-/* =========================
-SIDEBAR IZQUIERDO
-========================= */
+
 .sidebar{
 width:320px;
 background:linear-gradient(180deg,#ffffff,#f8f1ff,#fef8dc);
@@ -37,7 +30,6 @@ gap:25px;
 }
 
 
-/* perfil */
 
 .perfil{
 text-align:center;
@@ -72,9 +64,7 @@ font-size:14px;
 color:#777;
 }
 
-/* =========================
-MENU PANEL
-========================= */
+
 .menu-panel{
 list-style:none;
 display:flex;
@@ -113,9 +103,6 @@ color:white;
 }
 
 
-/* =========================
-RESPONSIVE
-========================= */
 @media(max-width:1000px){
 
 .dashboard{
