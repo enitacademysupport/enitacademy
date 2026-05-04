@@ -45,7 +45,7 @@ align-items:center;
 box-shadow:0 4px 12px rgba(0,0,0,0.06);
 position:relative;
 z-index:9999;
-overflow:visible;   
+overflow:visible;   /* importante */
 }
 
 .logo{
@@ -62,17 +62,17 @@ width:200px;
 }
 
 
-
 .menu{
 display:flex;
 align-items:center;
 gap:25px;
-overflow:visible;   
+overflow:visible;   /* agregado */
 }
 
 .menu li{
 position:relative;
-overflow:visible;   
+overflow:visible;   /* agregado */
+}
 
 .menu li a{
 display:block;
@@ -86,7 +86,6 @@ white-space:nowrap;
 .menu li a:hover{
 color:#9d00ff;
 }
-
 
 
 .menu-vertical{
@@ -124,12 +123,11 @@ color:#9d00ff;
 }
 
 
-
 .submenu-lateral{
 position:absolute;
 top:0;
 left:100%;
-margin-left:6px;   
+margin-left:6px;   /* separación pequeña */
 width:230px;
 background:#fff;
 display:none;
@@ -329,14 +327,12 @@ padding:16px;
 }
 
 
-
 @media(max-width:900px){
 
 .navbar{
     padding:15px 20px;
 }
 
-/* LOGO */
 .logo img{
     width:150px;
 }
