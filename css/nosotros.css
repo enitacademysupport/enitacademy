@@ -1,6 +1,4 @@
-/* ========================= */
-/* NOSOTROS */
-/* ========================= */
+
 
 .seccion-nosotros{
     padding: 90px 60px;
@@ -16,7 +14,6 @@
     align-items: center;
 }
 
-/* TEXTO */
 
 .etiqueta{
     display: inline-block;
@@ -42,7 +39,6 @@
     margin-bottom: 30px;
 }
 
-/* CARDS */
 
 .card-info{
     background: white;
@@ -76,7 +72,6 @@
     border-left: 6px solid #ffbfdc;
 }
 
-/* CTA */
 
 .cta-unete{
     margin-top: 35px;
@@ -107,7 +102,6 @@
     background: #333;
 }
 
-/* IMAGEN */
 
 .lado-imagen{
     text-align: center;
@@ -125,7 +119,6 @@
     100%{transform: translateY(0);}
 }
 
-/* RESPONSIVE */
 
 @media(max-width:950px){
 
