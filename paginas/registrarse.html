@@ -78,10 +78,10 @@
 
 <div id="footer"></div>
 
-    <script>
+  <script>
 document.getElementById("formRegistro").addEventListener("submit", function(e) {
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
     if (password !== confirmPassword) {
         e.preventDefault();
