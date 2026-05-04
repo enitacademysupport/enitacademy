@@ -1,4 +1,3 @@
-console.log("JS cargado");
 const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
 const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe";
 
