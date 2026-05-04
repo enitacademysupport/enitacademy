@@ -1,54 +1,51 @@
-console.log("JS CARGADO");
 document.addEventListener("DOMContentLoaded", () => {
 
+    console.log("JS CARGADO");
+
     const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
-    const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe"; // ⚠️ pon tu key correcta
+    const supabaseKey = "TU_ANON_PUBLIC_KEY_AQUI"; // ⚠️ reemplaza esto
 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+    console.log("SUPABASE:", supabaseClient);
 
     const form = document.getElementById("formRegistro");
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const nombre = document.getElementById("nombre").value;
-        const apellido = document.getElementById("apellido").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        console.log("CLICK");
 
-        // 🔍 DEBUG (puedes quitar luego)
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
         console.log("PASS:", password);
         console.log("CONFIRM:", confirmPassword);
 
-        // ✅ Validación correcta
-        if (password.trim() !== confirmPassword.trim()) {
+        if (password !== confirmPassword) {
             alert("Las contraseñas no coinciden");
             return;
         }
 
-        // 🚀 Insertar en Supabase
         const { data, error } = await supabaseClient
             .from("usuarios")
             .insert([
-                {
-                    nombre: nombre.trim(),
-                    apellido: apellido.trim(),
-                    email: email.trim(),
-                    password: password.trim()
-                }
+                { nombre, apellido, email, password }
             ]);
 
         console.log("DATA:", data);
         console.log("ERROR:", error);
 
         if (error) {
-    console.error("ERROR COMPLETO:", error);
-    alert("Error: " + error.message);
-} else {
-    alert("Registro exitoso");
-}
+            alert("Error: " + error.message);
+        } else {
+            alert("Registro exitoso");
+            form.reset();
+        }
     });
 
 });
