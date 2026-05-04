@@ -81,15 +81,21 @@
  
 <script src="../js/header_footer.js"></script>    
 
-     <script>
-document.getElementById("formRegistro").addEventListener("submit", function(e) {
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+   <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirmPassword");
 
-    if (password !== confirmPassword) {
-        e.preventDefault();
-        alert("Las contraseñas no coinciden");
+    function validarPasswords() {
+        if (confirmInput.value !== passwordInput.value) {
+            confirmInput.setCustomValidity("Las contraseñas no coinciden");
+        } else {
+            confirmInput.setCustomValidity("");
+        }
     }
+
+    passwordInput.addEventListener("input", validarPasswords);
+    confirmInput.addEventListener("input", validarPasswords);
 });
 </script>
     <script src="../js/login.js"></script>
