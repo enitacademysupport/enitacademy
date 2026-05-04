@@ -1,3 +1,4 @@
+console.log("JS CARGADO");
 document.addEventListener("DOMContentLoaded", () => {
 
     const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
