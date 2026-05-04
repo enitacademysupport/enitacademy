@@ -1,8 +1,7 @@
 const supabaseUrl = "...";
 const supabaseKey = "...";
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
+const supabase = window.supabaseClient;
 document.addEventListener("DOMContentLoaded", () => {
     console.log("registro.js OK");
 
