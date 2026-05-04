@@ -78,6 +78,17 @@
 
 <div id="footer"></div>
 
+    <script>
+document.getElementById("formRegistro").addEventListener("submit", function(e) {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert("Las contraseñas no coinciden");
+    }
+});
+</script>
 <script src="../js/header_footer.js"></script>    
 <script src="../js/login.js"></script>
 </body>
