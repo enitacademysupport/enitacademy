@@ -1,6 +1,4 @@
-/* =========================
-RESET GENERAL
-========================= */
+
 *{
 margin:0;
 padding:0;
@@ -28,19 +26,14 @@ width:100%;
 margin:auto;
 }
 
-/* =========================
-BARRA SUPERIOR
-========================= */
+
 .barra-top{
 width:100%;
 height:25px;
 background:#1f2d35;
 }
 
-/* =========================
-NAVBAR
-SOLO RETOCADO LO NECESARIO
-========================= */
+
 
 .navbar{
 width:100%;
@@ -52,7 +45,7 @@ align-items:center;
 box-shadow:0 4px 12px rgba(0,0,0,0.06);
 position:relative;
 z-index:9999;
-overflow:visible;   /* importante */
+overflow:visible;   
 }
 
 .logo{
@@ -68,21 +61,18 @@ color:#1e2a58;
 width:200px;
 }
 
-/* =========================
-MENU PRINCIPAL
-========================= */
+
 
 .menu{
 display:flex;
 align-items:center;
 gap:25px;
-overflow:visible;   /* agregado */
+overflow:visible;   
 }
 
 .menu li{
 position:relative;
-overflow:visible;   /* agregado */
-}
+overflow:visible;   
 
 .menu li a{
 display:block;
@@ -97,10 +87,7 @@ white-space:nowrap;
 color:#9d00ff;
 }
 
-/* =========================
-DROPDOWN
-CORREGIDO
-========================= */
+
 
 .menu-vertical{
 position:absolute;
@@ -136,16 +123,13 @@ background:#f5f5f5;
 color:#9d00ff;
 }
 
-/* =========================
-SUBMENU LATERAL
-AQUI ESTABA EL PROBLEMA
-========================= */
+
 
 .submenu-lateral{
 position:absolute;
 top:0;
 left:100%;
-margin-left:6px;   /* separación pequeña */
+margin-left:6px;   
 width:230px;
 background:#fff;
 display:none;
@@ -155,7 +139,6 @@ z-index:10000;
 padding:6px 0;
 }
 
-/* puente invisible para que no se cierre */
 .submenu-lateral::before{
 content:"";
 position:absolute;
@@ -180,9 +163,7 @@ background:#ead4f7;
 color:#9d00ff;
 }
 
-/* =========================
-BOTONES
-========================= */
+
 
 .botones{
 display:flex;
@@ -214,9 +195,7 @@ color:white;
 background:#7900d0;
 }
 
-/* =========================
-FOOTER MODERNO
-========================= */
+
 
 .footer{
 width:100%;
@@ -305,9 +284,7 @@ background:#ffffff;
 border-top:1px solid rgba(0,0,0,0.05);
 }
 
-/* =========================
-RESPONSIVE
-========================= */
+
 
 @media(max-width:1000px){
 
@@ -345,17 +322,13 @@ padding:16px;
 }
 
 
-/* =========================
-HAMBURGUESA
-========================= */
+
 
 .menu-toggle{
     display:none;
 }
 
-/* =========================
-RESPONSIVE
-========================= */
+
 
 @media(max-width:900px){
 
@@ -368,14 +341,12 @@ RESPONSIVE
     width:150px;
 }
 
-/* MOSTRAR HAMBURGUESA */
 .menu-toggle{
     display:block;
     font-size:26px;
     cursor:pointer;
 }
 
-/* MENÚ */
 .menu{
     position:absolute;
     top:100%;
@@ -401,7 +372,6 @@ RESPONSIVE
     border-bottom:1px solid #eee;
 }
 
-/* DROPDOWN */
 .menu-vertical{
     position:static;
     width:100%;
@@ -413,7 +383,6 @@ RESPONSIVE
     display:block;
 }
 
-/* SUBMENU */
 .submenu-lateral{
     position:static;
     width:100%;
@@ -425,7 +394,6 @@ RESPONSIVE
     display:block;
 }
 
-/* BOTONES */
 .botones{
     display:none;
 }
