@@ -1,18 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
-    const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe";
+    const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe"; // ⚠️ pon tu key correcta
 
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
     const form = document.getElementById("formRegistro");
 
-    console.log("FORM:", form); // 👈 prueba
-
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        console.log("CLICK"); // 👈 prueba
 
         const nombre = document.getElementById("nombre").value;
         const apellido = document.getElementById("apellido").value;
@@ -20,14 +17,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
 
-        if (password !== confirmPassword) {
+        // 🔍 DEBUG (puedes quitar luego)
+        console.log("PASS:", password);
+        console.log("CONFIRM:", confirmPassword);
+
+        // ✅ Validación correcta
+        if (password.trim() !== confirmPassword.trim()) {
             alert("Las contraseñas no coinciden");
             return;
         }
 
-        const { data, error } = await supabase
+        // 🚀 Insertar en Supabase
+        const { data, error } = await supabaseClient
             .from("usuarios")
-            .insert([{ nombre, apellido, email, password }]);
+            .insert([
+                {
+                    nombre: nombre.trim(),
+                    apellido: apellido.trim(),
+                    email: email.trim(),
+                    password: password.trim()
+                }
+            ]);
 
         console.log("DATA:", data);
         console.log("ERROR:", error);
