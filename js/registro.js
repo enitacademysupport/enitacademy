@@ -1,36 +1,43 @@
-const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
-const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe";
+document.addEventListener("DOMContentLoaded", () => {
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
+    const supabaseKey = "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe";
 
-const form = document.getElementById("formRegistro");
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    const form = document.getElementById("formRegistro");
 
-    const nombre = document.getElementById("nombre").value;
-    const apellido = document.getElementById("apellido").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    console.log("FORM:", form); // 👈 prueba
 
-    if (password !== confirmPassword) {
-        alert("Las contraseñas no coinciden");
-        return;
-    }
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    // Guardar en Supabase
-    const { data, error } = await supabase
-        .from("usuarios")
-        .insert([
-            { nombre, apellido, email, password }
-        ]);
+        console.log("CLICK"); // 👈 prueba
 
-    if (error) {
-        console.error(error);
-        alert("Error al registrar");
-    } else {
-        alert("Registro exitoso");
-        form.reset();
-    }
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
+        const { data, error } = await supabase
+            .from("usuarios")
+            .insert([{ nombre, apellido, email, password }]);
+
+        console.log("DATA:", data);
+        console.log("ERROR:", error);
+
+        if (error) {
+            alert("Error: " + error.message);
+        } else {
+            alert("Registro exitoso");
+            form.reset();
+        }
+    });
+
 });
