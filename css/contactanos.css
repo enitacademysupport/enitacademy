@@ -1,7 +1,3 @@
-/* ========================= */
-/* CONTACTO */
-/* ========================= */
-
 .seccion-contacto{
     padding: 90px 60px;
     background: linear-gradient(135deg,#faf7ff,#fff9df,#ffeef6);
@@ -15,10 +11,6 @@
     gap: 35px;
     align-items: start;
 }
-
-/* ========================= */
-/* INFORMACIÓN */
-/* ========================= */
 
 .info-contacto{
     background: white;
@@ -75,9 +67,6 @@
     line-height: 1.6;
 }
 
-/* ========================= */
-/* FORMULARIO */
-/* ========================= */
 
 .formulario-contacto{
     background: white;
@@ -136,9 +125,6 @@ button:hover{
     box-shadow: 0 12px 22px rgba(0,0,0,0.08);
 }
 
-/* ========================= */
-/* RESPONSIVE */
-/* ========================= */
 
 @media(max-width:950px){
 
