@@ -1,92 +1,70 @@
-<div id="modalLogin" class="modal">
+<section id="modalLogin" class="modal">
 
-    <div class="modal-contenido">
+    <section class="modal-contenido">
 
         <span class="cerrar">&times;</span>
 
-        <div class="login-box">
+        <section class="login-box">
 
-            <div class="lado-info">
+            <article>
                 <h2>Bienvenid@</h2>
-                <p>
-                    Continúa aprendiendo inglés con clases modernas,
-                    dinámicas y diseñadas para ti.
-                </p>
-            </div>
+                <p>Inicia sesión para continuar</p>
+            </article>
 
-            <div class="lado-formulario">
+            <form id="formLogin">
 
-                <h3>Iniciar Sesión</h3>
+                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
 
-                <form id="formLogin">
+                <section class="password-box">
+                    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                    <i class="fa-solid fa-eye" id="togglePassword"></i>
+                </section>
 
-                    <div class="grupo-input">
-                        <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
-                    </div>
+                <button type="submit">Ingresar</button>
 
-                    <div class="grupo-input password-box">
-                        <input type="password" id="loginPassword" placeholder="Contraseña" required>
-                        <i class="fa-solid fa-eye" id="togglePassword"></i>
-                    </div>
+            </form>
 
-                    <div class="opciones-login">
-                        <label>
-                            <input type="checkbox">
-                            Recordarme
-                        </label>
+        </section>
 
-                        <a href="#">¿Olvidaste tu contraseña?</a>
-                    </div>
+    </section>
 
-                    <button type="submit">Ingresar</button>
+</section>
 
-                    <p class="crear-cuenta">
-                        ¿No tienes cuenta?
-                        <a href="../paginas/registrarse.html">Regístrate</a>
-                    </p>
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const formLogin = document.getElementById("formLogin");
+    const supabaseClient = supabase.createClient(
+        "https://ugjgpirjcmyjfsgspajd.supabase.co",
+        ""eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnamdwaXJqY215amZzZ3NwYWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NDI2MDAsImV4cCI6MjA5MzQxODYwMH0.OuERi9MUuFbxnC2Jvj_bjO4W90FbHagBKmvPSsd6Hm4""
+    );
 
-    if (formLogin) {
-        formLogin.addEventListener("submit", async function(e) {
-            e.preventDefault();
+    const form = document.getElementById("formLogin");
+    const password = document.getElementById("loginPassword");
+    const toggle = document.getElementById("togglePassword");
 
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value.trim();
+    // 👁 ojito
+    toggle.onclick = () => {
+        password.type = password.type === "password" ? "text" : "password";
+        toggle.classList.toggle("fa-eye-slash");
+    };
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+    // 🔐 login
+    form.onsubmit = async (e) => {
+        e.preventDefault();
 
-            if (error) {
-                alert("Error: " + error.message);
-                return;
-            }
+        const email = document.getElementById("loginEmail").value.trim();
 
-            alert("Bienvenido 🎉");
-
-            // cerrar modal (opcional)
-            document.getElementById("modalLogin").style.display = "none";
-
-            // redirigir
-            window.location.href = "perfilestudiante.html";
+        const { error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password: password.value
         });
-    }
+
+        if (error) return alert(error.message);
+
+        window.location.href = "perfilestudiante.html";
+    };
 
 });
 </script>
