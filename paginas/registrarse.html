@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const apellido = document.getElementById("apellido").value.trim();
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
 
         // 🔐 Crear usuario en Auth
         const { data, error } = await supabaseClient.auth.signUp({
@@ -155,14 +156,15 @@ document.addEventListener("DOMContentLoaded", function() {
         // 💾 Guardar en tabla usuarios
         const { error: insertError } = await supabaseClient
             .from("usuarios")
-            .insert([
-                {
-                    id: data.user.id,
-                    nombre: nombre,
-                    apellido: apellido,
-                    email: email
-                }
-            ]);
+          .insert([
+    {
+        id: data.user.id,
+        nombre: nombre,
+        apellido: apellido,
+        email: email,
+        telefono: telefono
+    }
+]);
 
         if (insertError) {
             alert("Error guardando datos: " + insertError.message);
@@ -170,6 +172,30 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         alert("Usuario registrado correctamente 🎉");
+    });
+
+});
+</script>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggles = document.querySelectorAll(".toggle-password");
+
+    toggles.forEach(icon => {
+        icon.addEventListener("click", function () {
+            const input = this.previousElementSibling;
+
+            if (input.type === "password") {
+                input.type = "text";
+                this.classList.remove("fa-eye");
+                this.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                this.classList.remove("fa-eye-slash");
+                this.classList.add("fa-eye");
+            }
+        });
     });
 
 });
