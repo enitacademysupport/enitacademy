@@ -16,13 +16,10 @@
 <header id="header"></header>
 <div id="modal-container"></div>
 
-<!-- SECCIÓN PRINCIPAL -->
 <section class="seccion-register">
 
-    <!-- CONTENEDOR -->
     <section class="register-box">
 
-        <!-- BIENVENIDA -->
         <article class="lado-bienvenida">
             <h2>¡Únete hoy!</h2>
             <p>
@@ -31,16 +28,13 @@
             </p>
         </article>
 
-        <!-- FORMULARIO -->
         <article class="lado-formulario">
 
             <h3>Crear Cuenta</h3>
 
             <form id="formRegistro">
 
-                <!-- NOMBRES -->
                 <section class="fila-input">
-
                     <article class="grupo-input">
                         <label>Nombres Completos *</label>
                         <input type="text" id="nombre" placeholder="Piero Fernando" required>
@@ -50,10 +44,8 @@
                         <label>Apellidos Completos *</label>
                         <input type="text" id="apellido" placeholder="Pérez Bernal" required>
                     </article>
-
                 </section>
 
-                <!-- EMAIL -->
                 <section>
                     <article class="grupo-input">
                         <label>Correo Electrónico *</label>
@@ -61,7 +53,6 @@
                     </article>
                 </section>
 
-                <!-- TELÉFONO -->
                 <section>
                     <article class="grupo-input">
                         <label>Teléfono (Opcional)</label>
@@ -69,27 +60,24 @@
                     </article>
                 </section>
 
-                <!-- PASSWORD -->
                 <section>
                     <article class="grupo-input">
                         <label>Contraseña *</label>
                         <small>Mínimo 6 caracteres</small>
 
                         <section class="input-wrapper">
-                            <input type="password" id="password" placeholder="Contraseña segura" required>
+                            <input type="password" id="password" required>
                             <i class="fa-solid fa-eye toggle-password"></i>
                         </section>
                     </article>
                 </section>
 
-                <!-- CONFIRM PASSWORD -->
                 <section>
                     <article class="grupo-input">
                         <label>Confirmar Contraseña *</label>
-                        <small>Repite tu contraseña</small>
 
                         <section class="input-wrapper">
-                            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+                            <input type="password" id="confirmPassword" required>
                             <i class="fa-solid fa-eye toggle-password"></i>
                         </section>
                     </article>
@@ -121,14 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const supabaseClient = supabase.createClient(
         "https://ugjgpirjcmyjfsgspajd.supabase.co",
-        "sb_publishable_ZtIzJy0I3EVeYTslg48MXQ_9QFdpahe"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnamdwaXJqY215amZzZ3NwYWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NDI2MDAsImV4cCI6MjA5MzQxODYwMH0.OuERi9MUuFbxnC2Jvj_bjO4W90FbHagBKmvPSsd6Hm4"
     );
 
     const form = document.getElementById("formRegistro");
     const password = document.getElementById("password");
     const confirm = document.getElementById("confirmPassword");
 
-    // 👁 Toggle password
+    // 👁 Mostrar / ocultar contraseña
     document.querySelectorAll(".toggle-password").forEach(icon => {
         icon.addEventListener("click", () => {
             const input = icon.previousElementSibling;
@@ -138,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Validación
+    // Validar contraseñas
     function validar() {
         confirm.setCustomValidity(
             confirm.value !== password.value ? "Las contraseñas no coinciden" : ""
@@ -152,6 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        // Validación extra
+        if (password.value.length < 6) {
+            alert("La contraseña debe tener mínimo 6 caracteres");
+            return;
+        }
+
         const dataForm = {
             nombre: nombre.value.trim(),
             apellido: apellido.value.trim(),
@@ -159,26 +153,36 @@ document.addEventListener("DOMContentLoaded", () => {
             telefono: telefono.value.trim()
         };
 
+        // 🔐 Auth
         const { data, error } = await supabaseClient.auth.signUp({
             email: dataForm.email,
-            password: dataForm.password
+            password: password.value
         });
 
-        if (error) return alert(error.message);
+        if (error) {
+            alert(error.message);
+            return;
+        }
 
+        // 💾 Guardar usuario
         const { error: insertError } = await supabaseClient
             .from("usuarios")
-            .insert([{ id: data.user.id, ...dataForm }]);
+            .insert([{
+                id: data.user.id,
+                ...dataForm
+            }]);
 
-        if (insertError) return alert(insertError.message);
+        if (insertError) {
+            alert(insertError.message);
+            return;
+        }
 
-        alert("Usuario registrado 🎉");
+        alert("Usuario registrado correctamente 🎉");
+
     });
 
 });
 </script>
 
-</body>
-</html>
 </body>
 </html>
