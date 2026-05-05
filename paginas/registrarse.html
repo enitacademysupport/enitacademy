@@ -4,199 +4,169 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENIT Academy</title>
+
 <link rel="stylesheet" href="../css/registrarse.css">
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
 
-<div id="header"></div>
+<header id="header"></header>
 <div id="modal-container"></div>
 
 <section class="seccion-register">
 
-<div class="register-box">
+    <article class="register-box">
 
-    <div class="lado-bienvenida">
+        <!-- BIENVENIDA -->
+        <article class="lado-bienvenida">
+            <h2>¡Únete hoy!</h2>
+            <p>
+                Crea tu cuenta y empieza a aprender inglés
+                con cursos dinámicos, modernos y fáciles.
+            </p>
+        </article>
 
-        <h2>¡Únete hoy!</h2>
+        <!-- FORMULARIO -->
+        <article class="lado-formulario">
 
-        <p>
-            Crea tu cuenta y empieza a aprender inglés
-            con cursos dinámicos, modernos y fáciles.
-        </p>
+            <h3>Crear Cuenta</h3>
 
-    </div>
+            <form id="formRegistro">
 
+                <section class="fila-input">
+                    <article class="grupo-input">
+                        <label>Nombres Completos *</label>
+                        <input type="text" id="nombre" placeholder="Piero Fernando" required>
+                    </article>
 
-    <div class="lado-formulario">
+                    <article class="grupo-input">
+                        <label>Apellidos Completos *</label>
+                        <input type="text" id="apellido" placeholder="Pérez Bernal" required>
+                    </article>
+                </section>
 
-        <h3>Crear Cuenta</h3>
+                <article class="grupo-input">
+                    <label>Correo Electrónico *</label>
+                    <input type="email" id="email" placeholder="pieroperez@email.com" required>
+                </article>
 
-       <form id="formRegistro">
+                <article class="grupo-input">
+                    <label>Teléfono (Opcional)</label>
+                    <input type="tel" id="telefono" placeholder="+51 982 525 999">
+                </article>
 
-    <div class="fila-input">
+                <!-- PASSWORD -->
+                <article class="grupo-input">
+                    <label>Contraseña *</label>
+                    <small>Mínimo 6 caracteres</small>
 
-        <div class="grupo-input">
-            <label>Nombres Completos *</label>
-            <input type="text" id="nombre" placeholder="Piero Fernando" required>
-        </div>
+                    <section class="input-wrapper">
+                        <input type="password" id="password" placeholder="Contraseña segura" required>
+                        <i class="fa-solid fa-eye toggle-password"></i>
+                    </section>
+                </article>
 
-        <div class="grupo-input">
-            <label>Apellidos Completos *</label>
-            <input type="text" id="apellido" placeholder="Pérez Bernal" required>
-        </div>
+                <!-- CONFIRM -->
+                <article class="grupo-input">
+                    <label>Confirmar Contraseña *</label>
+                    <small>Repite tu contraseña</small>
 
-    </div>
+                    <section class="input-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+                        <i class="fa-solid fa-eye toggle-password"></i>
+                    </section>
+                </article>
 
-    <div class="grupo-input">
-        <label>Correo Electrónico *</label>
-        <input type="email" id="email" placeholder="pieroperez@email.com" required>
-    </div>
+                <button type="submit">Registrarme</button>
 
-    <div class="grupo-input">
-        <label>Teléfono (Opcional)</label>
-        <input type="tel" id="telefono" placeholder="+51 982 525 999">
-    </div>
+                <p class="texto-login">
+                    ¿Ya tienes cuenta?
+                    <a href="#" class="abrir-login">Inicia sesión</a>
+                </p>
 
-    <div class="grupo-input password-container">
-        <label>Contraseña *</label>
-        <small>Mínimo 6 caracteres</small>
-        <input type="password" id="password" placeholder="Contraseña segura" required>
+            </form>
 
-        <i class="fa-solid fa-eye toggle-password"
-           style="position:absolute; right:10px; top:38px; cursor:pointer;"></i>
-    </div>
+        </article>
 
-   <div class="grupo-input password-container">
-        <label>Confirmar Contraseña *</label>
-        <small>Repite tu contraseña</small>
-        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
-
-        <i class="fa-solid fa-eye toggle-password"
-           style="position:absolute; right:10px; top:38px; cursor:pointer;"></i>
-    </div>
-
-    <button type="submit">Registrarme</button>
-
-    <p class="texto-login">
-        ¿Ya tienes cuenta?
-        <a href="#" class="abrir-login">Inicia sesión</a>
-    </p>
-
-</form>
-
-    </div>
-
-</div>
+    </article>
 
 </section>
 
-<div id="footer"></div>
+<footer id="footer"></footer>
 
- 
-<script src="../js/header_footer.js"></script>    
+<script src="../js/header_footer.js"></script>
+<script src="../js/login.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-   <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const passwordInput = document.getElementById("password");
-    const confirmInput = document.getElementById("confirmPassword");
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-    function validarPasswords() {
-        if (confirmInput.value !== passwordInput.value) {
-            confirmInput.setCustomValidity("Las contraseñas no coinciden");
-        } else {
-            confirmInput.setCustomValidity("");
-        }
-    }
-
-    passwordInput.addEventListener("input", validarPasswords);
-    confirmInput.addEventListener("input", validarPasswords);
-});
-</script>
-    <script src="../js/login.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- 
-
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-
-    const supabaseUrl = "https://ugjgpirjcmyjfsgspajd.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnamdwaXJqY215amZzZ3NwYWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NDI2MDAsImV4cCI6MjA5MzQxODYwMH0.OuERi9MUuFbxnC2Jvj_bjO4W90FbHagBKmvPSsd6Hm4";
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = supabase.createClient(
+        "https://ugjgpirjcmyjfsgspajd.supabase.co",
+        "TU_ANON_KEY"
+    );
 
     const form = document.getElementById("formRegistro");
+    const password = document.getElementById("password");
+    const confirm = document.getElementById("confirmPassword");
 
-    form.addEventListener("submit", async function(e) {
+    // 👁 Toggle password
+    document.querySelectorAll(".toggle-password").forEach(icon => {
+        icon.addEventListener("click", () => {
+            const input = icon.previousElementSibling;
+            input.type = input.type === "password" ? "text" : "password";
+            icon.classList.toggle("fa-eye");
+            icon.classList.toggle("fa-eye-slash");
+        });
+    });
+
+    // Validación contraseñas
+    function validar() {
+        confirm.setCustomValidity(
+            confirm.value !== password.value ? "Las contraseñas no coinciden" : ""
+        );
+    }
+
+    password.addEventListener("input", validar);
+    confirm.addEventListener("input", validar);
+
+    // Registro
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const nombre = document.getElementById("nombre").value.trim();
-        const apellido = document.getElementById("apellido").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const telefono = document.getElementById("telefono").value.trim();
+        const dataForm = {
+            nombre: nombre.value.trim(),
+            apellido: apellido.value.trim(),
+            email: email.value.trim(),
+            password: password.value.trim(),
+            telefono: telefono.value.trim()
+        };
 
-        // 🔐 Crear usuario en Auth
         const { data, error } = await supabaseClient.auth.signUp({
-            email: email,
-            password: password
+            email: dataForm.email,
+            password: dataForm.password
         });
 
-        if (error) {
-            alert("Error: " + error.message);
-            return;
-        }
+        if (error) return alert(error.message);
 
-        // 💾 Guardar en tabla usuarios
         const { error: insertError } = await supabaseClient
             .from("usuarios")
-          .insert([
-    {
-        id: data.user.id,
-        nombre: nombre,
-        apellido: apellido,
-        email: email,
-        telefono: telefono
-    }
-]);
+            .insert([{ 
+                id: data.user.id,
+                ...dataForm 
+            }]);
 
-        if (insertError) {
-            alert("Error guardando datos: " + insertError.message);
-            return;
-        }
+        if (insertError) return alert(insertError.message);
 
-        alert("Usuario registrado correctamente 🎉");
+        alert("Usuario registrado 🎉");
     });
 
 });
 </script>
 
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const toggles = document.querySelectorAll(".toggle-password");
-
-    toggles.forEach(icon => {
-        icon.addEventListener("click", function () {
-            const input = this.previousElementSibling;
-
-            if (input.type === "password") {
-                input.type = "text";
-                this.classList.remove("fa-eye");
-                this.classList.add("fa-eye-slash");
-            } else {
-                input.type = "password";
-                this.classList.remove("fa-eye-slash");
-                this.classList.add("fa-eye");
-            }
-        });
-    });
-
-});
-</script>
-    
 </body>
-
 </html>
