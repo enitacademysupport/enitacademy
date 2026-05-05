@@ -35,11 +35,6 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    const supabaseClient = supabase.createClient(
-        "https://ugjgpirjcmyjfsgspajd.supabase.co",
-        "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnamdwaXJqY215amZzZ3NwYWpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NDI2MDAsImV4cCI6MjA5MzQxODYwMH0.OuERi9MUuFbxnC2Jvj_bjO4W90FbHagBKmvPSsd6Hm4"
-    );
-
     const form = document.getElementById("formLogin");
     const password = document.getElementById("loginPassword");
     const toggle = document.getElementById("togglePassword");
@@ -56,10 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const email = document.getElementById("loginEmail").value.trim();
 
-        const { error } = await supabaseClient.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email,
             password: password.value
         });
+
+        console.log(data, error); // 🔥 para debug
 
         if (error) return alert(error.message);
 
