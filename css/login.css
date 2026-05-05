@@ -1,15 +1,14 @@
-
+/* ===== MODAL ===== */
 .modal{
     display: none;
     position: fixed;
     inset: 0;
     z-index: 9999;
-
     justify-content: center;
     align-items: center;
 }
 
-/* Fondo oscuro transparente */
+/* Fondo oscuro */
 .modal::before{
     content:"";
     position:absolute;
@@ -17,162 +16,124 @@
     background: rgba(0,0,0,0.6);
 }
 
-
+/* Contenedor */
 .modal-contenido{
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 1100px;
+    max-width: 900px;
     animation: aparecer .3s ease;
 }
 
-
+/* ===== CAJA LOGIN ===== */
 .login-box{
-    width: 100%;
-    background: white;
-    border-radius: 28px;
+    background: #fff;
+    border-radius: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
 
-
-
-.lado-info{
-    padding: 60px;
+/* ===== INFO ===== */
+.login-box article:first-child{
+    padding: 50px;
     background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.lado-info h2{
-    font-size: 44px;
-    margin-bottom: 20px;
-    color: #111;
+.login-box article:first-child h2{
+    font-size: 36px;
+    margin-bottom: 15px;
 }
 
-.lado-info p{
-    font-size: 18px;
-    line-height: 1.8;
+.login-box article:first-child p{
+    font-size: 16px;
     color: #444;
 }
 
-
-.lado-formulario{
-    padding: 60px;
+/* ===== FORM ===== */
+.login-box form{
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
 }
 
-.lado-formulario h3{
-    font-size: 34px;
-    margin-bottom: 30px;
-    color: #111;
+.login-box form h3{
+    font-size: 28px;
+    margin-bottom: 25px;
 }
 
-.grupo-input{
-    margin-bottom: 18px;
-}
-
-.grupo-input input{
+/* Inputs */
+form input{
     width: 100%;
-    padding: 16px 18px;
+    padding: 14px 16px;
     border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 15px;
     outline: none;
-    transition: .3s;
-    box-sizing: border-box;
+    transition: .25s;
 }
 
-.grupo-input input:focus{
-    border-color: #d8b6ff;
-    box-shadow: 0 0 0 4px rgba(216,182,255,0.18);
+form input:focus{
+    border-color: #cfa8ff;
+    box-shadow: 0 0 0 3px rgba(207,168,255,0.2);
 }
 
-
-
+/* ===== PASSWORD ===== */
 .password-box{
     position: relative;
 }
 
 .password-box input{
-    padding-right: 50px;
+    padding-right: 40px;
 }
 
 .password-box i{
     position: absolute;
-    right: 15px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #777;
-    font-size: 18px;
-
-    /* 🔥 CLAVE para evitar doble icono */
-    display: block;
-    line-height: 1;
+    font-size: 16px;
 }
 
 .password-box i:hover{
     color: #111;
 }
 
-
-
-.opciones-login{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    margin-bottom: 25px;
-}
-
-
+/* ===== BOTÓN ===== */
 button{
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     border: none;
-    border-radius: 14px;
+    border-radius: 12px;
     background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
-    color: #111;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    transition: .3s;
+    transition: .25s;
 }
 
 button:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 12px 22px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
 }
 
-
-
-.crear-cuenta{
-    margin-top: 24px;
-    text-align: center;
-    color: #555;
-}
-
-.crear-cuenta a{
-    text-decoration: none;
-    color: #111;
-    font-weight: bold;
-}
-
-
+/* ===== CERRAR ===== */
 .cerrar{
     position: absolute;
     top: 15px;
-    right: 20px;
-    font-size: 28px;
+    right: 18px;
+    font-size: 26px;
     cursor: pointer;
-    color: #333;
 }
 
-
-
+/* ===== ANIMACIÓN ===== */
 @keyframes aparecer{
     from{
         transform: scale(0.85);
@@ -184,21 +145,21 @@ button:hover{
     }
 }
 
-
-
+/* ===== RESPONSIVE ===== */
 @media(max-width:900px){
 
-.login-box{
-    grid-template-columns: 1fr;
-}
+    .login-box{
+        grid-template-columns: 1fr;
+    }
 
-.lado-info{
-    text-align: center;
-    padding: 40px 25px;
-}
+    .login-box article:first-child{
+        text-align: center;
+        padding: 30px 20px;
+    }
 
-.lado-formulario{
-    padding: 40px 25px;
+    .login-box form{
+        padding: 30px 20px;
+    }
 }
 
 }
