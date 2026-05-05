@@ -35,40 +35,62 @@
 
         <h3>Crear Cuenta</h3>
 
-        <form id="formRegistro">
+       <form id="formRegistro">
 
-            <div class="fila-input">
+    <div class="fila-input">
 
-                <div class="grupo-input">
-                    <input type="text" id="nombre" placeholder="Nombre" required>
-                </div>
+        <div class="grupo-input">
+            <label>Nombres Completos *</label>
+            <small>Ej: Juan Carlos</small>
+            <input type="text" id="nombre" placeholder="Ingresa tus nombres" required>
+        </div>
 
-                <div class="grupo-input">
-                    <input type="text" id="apellido" placeholder="Apellido" required>
-                </div>
+        <div class="grupo-input">
+            <label>Apellidos Completos *</label>
+            <small>Ej: Pérez García</small>
+            <input type="text" id="apellido" placeholder="Ingresa tus apellidos" required>
+        </div>
 
-            </div>
+    </div>
 
-            <div class="grupo-input">
-                <input type="email" id="email" placeholder="Correo electrónico" required>
-            </div>
+    <div class="grupo-input">
+        <label>Correo Electrónico *</label>
+        <small>Ej: correo@gmail.com</small>
+        <input type="email" id="email" placeholder="tu@email.com" required>
+    </div>
 
-            <div class="grupo-input">
-                <input type="password" id="password" placeholder="Contraseña" required>
-            </div>
+    <div class="grupo-input">
+        <label>Teléfono (Opcional)</label>
+        <small>Ej: +51 999 999 999</small>
+        <input type="tel" id="telefono" placeholder="+51 999 999 999">
+    </div>
 
-            <div class="grupo-input">
-                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
-            </div>
+    <div class="grupo-input" style="position: relative;">
+        <label>Contraseña *</label>
+        <small>Mínimo 6 caracteres</small>
+        <input type="password" id="password" placeholder="Contraseña segura" required>
 
-            <button type="submit">Registrarme</button>
+        <i class="fa-solid fa-eye toggle-password"
+           style="position:absolute; right:10px; top:38px; cursor:pointer;"></i>
+    </div>
 
-            <p class="texto-login">
-                ¿Ya tienes cuenta?
-                <a href="#" class="abrir-login">Inicia sesión</a>
-            </p>
+    <div class="grupo-input" style="position: relative;">
+        <label>Confirmar Contraseña *</label>
+        <small>Repite tu contraseña</small>
+        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
 
-        </form>
+        <i class="fa-solid fa-eye toggle-password"
+           style="position:absolute; right:10px; top:38px; cursor:pointer;"></i>
+    </div>
+
+    <button type="submit">Registrarme</button>
+
+    <p class="texto-login">
+        ¿Ya tienes cuenta?
+        <a href="#" class="abrir-login">Inicia sesión</a>
+    </p>
+
+</form>
 
     </div>
 
