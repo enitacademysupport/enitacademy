@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="../css/header_footer.css">
 <link rel="stylesheet" href="../css/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
 
 <body>
@@ -17,9 +16,11 @@
 <header id="header"></header>
 <div id="modal-container"></div>
 
+<!-- SECCIÓN PRINCIPAL -->
 <section class="seccion-register">
 
-    <article class="register-box">
+    <!-- CONTENEDOR -->
+    <section class="register-box">
 
         <!-- BIENVENIDA -->
         <article class="lado-bienvenida">
@@ -37,7 +38,9 @@
 
             <form id="formRegistro">
 
+                <!-- NOMBRES -->
                 <section class="fila-input">
+
                     <article class="grupo-input">
                         <label>Nombres Completos *</label>
                         <input type="text" id="nombre" placeholder="Piero Fernando" required>
@@ -47,39 +50,50 @@
                         <label>Apellidos Completos *</label>
                         <input type="text" id="apellido" placeholder="Pérez Bernal" required>
                     </article>
+
                 </section>
 
-                <article class="grupo-input">
-                    <label>Correo Electrónico *</label>
-                    <input type="email" id="email" placeholder="pieroperez@email.com" required>
-                </article>
+                <!-- EMAIL -->
+                <section>
+                    <article class="grupo-input">
+                        <label>Correo Electrónico *</label>
+                        <input type="email" id="email" placeholder="pieroperez@email.com" required>
+                    </article>
+                </section>
 
-                <article class="grupo-input">
-                    <label>Teléfono (Opcional)</label>
-                    <input type="tel" id="telefono" placeholder="+51 982 525 999">
-                </article>
+                <!-- TELÉFONO -->
+                <section>
+                    <article class="grupo-input">
+                        <label>Teléfono (Opcional)</label>
+                        <input type="tel" id="telefono" placeholder="+51 982 525 999">
+                    </article>
+                </section>
 
                 <!-- PASSWORD -->
-                <article class="grupo-input">
-                    <label>Contraseña *</label>
-                    <small>Mínimo 6 caracteres</small>
+                <section>
+                    <article class="grupo-input">
+                        <label>Contraseña *</label>
+                        <small>Mínimo 6 caracteres</small>
 
-                    <section class="input-wrapper">
-                        <input type="password" id="password" placeholder="Contraseña segura" required>
-                        <i class="fa-solid fa-eye toggle-password"></i>
-                    </section>
-                </article>
+                        <section class="input-wrapper">
+                            <input type="password" id="password" placeholder="Contraseña segura" required>
+                            <i class="fa-solid fa-eye toggle-password"></i>
+                        </section>
+                    </article>
+                </section>
 
-                <!-- CONFIRM -->
-                <article class="grupo-input">
-                    <label>Confirmar Contraseña *</label>
-                    <small>Repite tu contraseña</small>
+                <!-- CONFIRM PASSWORD -->
+                <section>
+                    <article class="grupo-input">
+                        <label>Confirmar Contraseña *</label>
+                        <small>Repite tu contraseña</small>
 
-                    <section class="input-wrapper">
-                        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
-                        <i class="fa-solid fa-eye toggle-password"></i>
-                    </section>
-                </article>
+                        <section class="input-wrapper">
+                            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+                            <i class="fa-solid fa-eye toggle-password"></i>
+                        </section>
+                    </article>
+                </section>
 
                 <button type="submit">Registrarme</button>
 
@@ -92,7 +106,7 @@
 
         </article>
 
-    </article>
+    </section>
 
 </section>
 
@@ -124,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Validación contraseñas
+    // Validación
     function validar() {
         confirm.setCustomValidity(
             confirm.value !== password.value ? "Las contraseñas no coinciden" : ""
@@ -155,10 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const { error: insertError } = await supabaseClient
             .from("usuarios")
-            .insert([{ 
-                id: data.user.id,
-                ...dataForm 
-            }]);
+            .insert([{ id: data.user.id, ...dataForm }]);
 
         if (insertError) return alert(insertError.message);
 
@@ -168,5 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+</body>
+</html>
 </body>
 </html>
