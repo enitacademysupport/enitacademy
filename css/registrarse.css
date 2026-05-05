@@ -172,5 +172,187 @@ button:hover{
     .fila-input{
         grid-template-columns: 1fr;
     }
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.seccion-register{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background: linear-gradient(135deg,#f8f4ff,#fff7d9,#ffe8f2);
+}
+
+/* ===== CAJA ===== */
+.register-box{
+    width: 100%;
+    max-width: 1100px;
+    background: #fff;
+    border-radius: 26px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* ===== BIENVENIDA ===== */
+.lado-bienvenida{
+    padding: 60px;
+    background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lado-bienvenida h2{
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.lado-bienvenida p{
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* ===== FORMULARIO ===== */
+.lado-formulario{
+    padding: 60px;
+}
+
+.lado-formulario h3{
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+/* ===== FILAS (NOMBRES/APELLIDOS) ===== */
+.fila-input{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+/* ===== GRUPOS ===== */
+.grupo-input{
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label */
+.grupo-input label{
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* Texto ayuda */
+.grupo-input small{
+    font-size: 11px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+/* Inputs */
+.grupo-input input{
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: .25s;
+    outline: none;
+}
+
+/* Focus */
+.grupo-input input:focus{
+    border-color: #cfa8ff;
+    box-shadow: 0 0 0 3px rgba(207,168,255,0.2);
+}
+
+/* ===== INPUT + ICONO ===== */
+.input-wrapper{
+    position: relative;
+}
+
+.input-wrapper input{
+    padding-right: 40px;
+}
+
+/* 👁 Ojito */
+.toggle-password{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 15px;
+    color: #888;
+    transition: .2s;
+}
+
+.toggle-password:hover{
+    color: #111;
+}
+
+/* ===== BOTÓN ===== */
+button{
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .25s;
+}
+
+button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* ===== TEXTO LOGIN ===== */
+.texto-login{
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+}
+
+.texto-login a{
+    color: #111;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.texto-login a:hover{
+    text-decoration: underline;
+}
+
+/* ===== ESPACIADO ENTRE SECCIONES DEL FORM ===== */
+form > section{
+    margin-bottom: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+
+    .register-box{
+        grid-template-columns: 1fr;
+    }
+
+    .lado-bienvenida{
+        padding: 35px 20px;
+        text-align: center;
+    }
+
+    .lado-formulario{
+        padding: 35px 20px;
+    }
+
+    .fila-input{
+        grid-template-columns: 1fr;
+    }
 
 }
