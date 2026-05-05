@@ -1,4 +1,4 @@
-
+/* ===== CONTENEDOR GENERAL ===== */
 .seccion-register{
     min-height: 100vh;
     display: flex;
@@ -8,6 +8,7 @@
     background: linear-gradient(135deg,#f8f4ff,#fff7d9,#ffe8f2);
 }
 
+/* ===== CAJA PRINCIPAL ===== */
 .register-box{
     width: 100%;
     max-width: 1100px;
@@ -19,8 +20,7 @@
     box-shadow: 0 20px 45px rgba(0,0,0,0.08);
 }
 
-
-
+/* ===== LADO IZQUIERDO ===== */
 .lado-bienvenida{
     padding: 60px;
     background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
@@ -30,88 +30,138 @@
 }
 
 .lado-bienvenida h2{
-    font-size: 44px;
-    margin-bottom: 20px;
+    font-size: 42px;
+    margin-bottom: 18px;
     color: #111;
 }
 
 .lado-bienvenida p{
-    font-size: 18px;
-    line-height: 1.8;
+    font-size: 17px;
+    line-height: 1.7;
     color: #444;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .lado-bienvenida img{
     width: 85%;
-    max-width: 330px;
+    max-width: 320px;
 }
 
-
-
+/* ===== LADO FORMULARIO ===== */
 .lado-formulario{
     padding: 60px;
 }
 
 .lado-formulario h3{
-    font-size: 34px;
-    margin-bottom: 30px;
+    font-size: 32px;
+    margin-bottom: 25px;
     color: #111;
 }
 
+/* ===== FILAS ===== */
 .fila-input{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
 }
 
+/* ===== GRUPOS ===== */
 .grupo-input{
     margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Labels */
+.grupo-input label{
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #222;
+}
+
+/* Texto de ayuda */
+.grupo-input small{
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 6px;
+}
+
+/* Inputs */
 .grupo-input input{
     width: 100%;
-    padding: 16px 18px;
+    padding: 15px 16px;
     border: 1px solid #ddd;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 15px;
     outline: none;
-    transition: .3s;
+    transition: all .25s ease;
+    background: #fff;
 }
 
+/* Focus elegante */
 .grupo-input input:focus{
     border-color: #d8b6ff;
-    box-shadow: 0 0 0 4px rgba(216,182,255,0.18);
+    box-shadow: 0 0 0 3px rgba(216,182,255,0.18);
 }
 
+/* ===== PASSWORD ===== */
+.password-container{
+    position: relative;
+}
+
+.password-container input{
+    padding-right: 45px;
+}
+
+/* Ojito */
+.toggle-password{
+    position: absolute;
+    right: 15px;
+    top: 66%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+    transition: .2s;
+}
+
+.toggle-password:hover{
+    color: #111;
+}
+
+/* ===== CHECKBOX ===== */
 .acepto{
-    margin: 10px 0 22px;
+    margin: 10px 0 20px;
     font-size: 14px;
     color: #555;
 }
 
+/* ===== BOTÓN ===== */
 button{
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     border: none;
     border-radius: 14px;
     background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
     color: #111;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: .3s;
+    transition: all .25s ease;
 }
 
 button:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 12px 22px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
+/* ===== LOGIN TEXTO ===== */
 .texto-login{
-    margin-top: 24px;
+    margin-top: 22px;
     text-align: center;
     color: #555;
+    font-size: 14px;
 }
 
 .texto-login a{
@@ -120,50 +170,32 @@ button:hover{
     font-weight: bold;
 }
 
+.texto-login a:hover{
+    text-decoration: underline;
+}
 
+/* ===== RESPONSIVE ===== */
 @media(max-width:900px){
 
-.register-box{
-    grid-template-columns: 1fr;
-}
+    .register-box{
+        grid-template-columns: 1fr;
+    }
 
-.lado-bienvenida{
-    text-align: center;
-    padding: 40px 25px;
-}
+    .lado-bienvenida{
+        text-align: center;
+        padding: 40px 25px;
+    }
 
-.lado-bienvenida img{
-    margin: auto;
-}
+    .lado-bienvenida img{
+        margin: auto;
+    }
 
-.lado-formulario{
-    padding: 40px 25px;
-}
+    .lado-formulario{
+        padding: 40px 25px;
+    }
 
-.fila-input{
-    grid-template-columns: 1fr;
-}
+    .fila-input{
+        grid-template-columns: 1fr;
+    }
 
-}
-
-.password-container {
-    position: relative;
-}
-
-.password-container input {
-    width: 100%;
-    padding-right: 40px;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #888;
-}
-
-.toggle-password:hover {
-    color: #333;
 }
