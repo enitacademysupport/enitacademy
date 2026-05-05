@@ -8,7 +8,7 @@
     align-items: center;
 }
 
-/* Fondo oscuro */
+/* Fondo */
 .modal::before{
     content:"";
     position:absolute;
@@ -21,59 +21,60 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
     animation: aparecer .3s ease;
 }
 
-/* ===== CAJA LOGIN ===== */
+/* ===== CAJA ===== */
 .login-box{
-    background: #fff;
-    border-radius: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    background: #fff;
+    border-radius: 26px;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
 
-/* ===== INFO ===== */
-.login-box article:first-child{
-    padding: 50px;
+/* ===== LADO INFO ===== */
+.login-box > article:first-child{
+    padding: 60px;
     background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.login-box article:first-child h2{
-    font-size: 36px;
+.login-box > article:first-child h2{
+    font-size: 38px;
     margin-bottom: 15px;
 }
 
-.login-box article:first-child p{
+.login-box > article:first-child p{
     font-size: 16px;
     color: #444;
+    line-height: 1.6;
 }
 
 /* ===== FORM ===== */
 .login-box form{
-    padding: 50px;
+    padding: 60px;
     display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 
 .login-box form h3{
-    font-size: 28px;
-    margin-bottom: 25px;
+    font-size: 30px;
+    margin-bottom: 10px;
 }
 
-/* Inputs */
+/* ===== INPUTS ===== */
 form input{
     width: 100%;
-    padding: 14px 16px;
+    padding: 15px 16px;
     border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 14px;
-    margin-bottom: 15px;
+    border-radius: 12px;
+    font-size: 15px;
     outline: none;
     transition: .25s;
 }
@@ -89,12 +90,12 @@ form input:focus{
 }
 
 .password-box input{
-    padding-right: 40px;
+    padding-right: 45px;
 }
 
 .password-box i{
     position: absolute;
-    right: 12px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
@@ -109,11 +110,11 @@ form input:focus{
 /* ===== BOTÓN ===== */
 button{
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: .25s;
@@ -121,22 +122,23 @@ button{
 
 button:hover{
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
 /* ===== CERRAR ===== */
 .cerrar{
     position: absolute;
     top: 15px;
-    right: 18px;
+    right: 20px;
     font-size: 26px;
     cursor: pointer;
+    color: #333;
 }
 
 /* ===== ANIMACIÓN ===== */
 @keyframes aparecer{
     from{
-        transform: scale(0.85);
+        transform: scale(0.9);
         opacity: 0;
     }
     to{
@@ -152,15 +154,12 @@ button:hover{
         grid-template-columns: 1fr;
     }
 
-    .login-box article:first-child{
+    .login-box > article:first-child{
         text-align: center;
-        padding: 30px 20px;
+        padding: 35px 20px;
     }
 
     .login-box form{
-        padding: 30px 20px;
+        padding: 35px 20px;
     }
 }
-
-}
-
