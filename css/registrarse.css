@@ -42,12 +42,7 @@
     margin-bottom: 30px;
 }
 
-.lado-bienvenida img{
-    width: 85%;
-    max-width: 320px;
-}
-
-/* ===== LADO FORMULARIO ===== */
+/* ===== FORMULARIO ===== */
 .lado-formulario{
     padding: 60px;
 }
@@ -72,7 +67,6 @@
     flex-direction: column;
 }
 
-/* Labels */
 .grupo-input label{
     font-size: 14px;
     font-weight: 600;
@@ -80,14 +74,12 @@
     color: #222;
 }
 
-/* Texto de ayuda */
 .grupo-input small{
     font-size: 12px;
     color: #777;
     margin-bottom: 6px;
 }
 
-/* Inputs */
 .grupo-input input{
     width: 100%;
     padding: 15px 16px;
@@ -96,29 +88,31 @@
     font-size: 15px;
     outline: none;
     transition: all .25s ease;
-    background: #fff;
 }
 
-/* Focus elegante */
+/* Focus */
 .grupo-input input:focus{
     border-color: #d8b6ff;
     box-shadow: 0 0 0 3px rgba(216,182,255,0.18);
 }
 
-/* ===== PASSWORD ===== */
-.password-container{
+/* ===== INPUT CON ICONO ===== */
+.input-wrapper{
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.password-container input{
+.input-wrapper input{
+    width: 100%;
     padding-right: 45px;
 }
 
-/* Ojito */
+/* 👁 Ojito */
 .toggle-password{
     position: absolute;
     right: 15px;
-    top: 66%;
+    top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #888;
@@ -128,13 +122,6 @@
 
 .toggle-password:hover{
     color: #111;
-}
-
-/* ===== CHECKBOX ===== */
-.acepto{
-    margin: 10px 0 20px;
-    font-size: 14px;
-    color: #555;
 }
 
 /* ===== BOTÓN ===== */
@@ -156,7 +143,7 @@ button:hover{
     box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
-/* ===== LOGIN TEXTO ===== */
+/* ===== TEXTO LOGIN ===== */
 .texto-login{
     margin-top: 22px;
     text-align: center;
@@ -184,10 +171,6 @@ button:hover{
     .lado-bienvenida{
         text-align: center;
         padding: 40px 25px;
-    }
-
-    .lado-bienvenida img{
-        margin: auto;
     }
 
     .lado-formulario{
