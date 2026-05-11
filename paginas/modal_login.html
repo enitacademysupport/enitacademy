@@ -11,18 +11,53 @@
                 <p>Inicia sesión para continuar</p>
             </article>
 
-            <form id="formLogin">
+<form id="formLogin">
 
-                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+    <input 
+    type="email" 
+    id="loginEmail" 
+    placeholder="Correo electrónico" 
+    required>
 
-                <section class="password-box">
-                    <input type="password" id="loginPassword" placeholder="Contraseña" required>
-                    <i class="fa-solid fa-eye" id="togglePassword"></i>
-                </section>
+    <section class="password-box">
 
-                <button type="submit">Ingresar</button>
+        <input 
+        type="password" 
+        id="loginPassword" 
+        placeholder="Contraseña" 
+        required>
 
-            </form>
+        <i class="fa-solid fa-eye" id="togglePassword"></i>
+
+    </section>
+
+    <!-- OPCIONES -->
+
+    <div class="extra-login">
+
+        <a href="#" class="forgot-password">
+            ¿Olvidaste tu contraseña?
+        </a>
+
+    </div>
+
+    <button type="submit">
+        Ingresar
+    </button>
+
+    <!-- CREAR CUENTA -->
+
+    <p class="crear-cuenta">
+
+        ¿No tienes cuenta?
+
+        <a href="#">
+            Crear cuenta
+        </a>
+
+    </p>
+
+</form>
 
         </section>
 
