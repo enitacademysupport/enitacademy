@@ -15,6 +15,212 @@
 
 <div id="header"></div>
 <div id="modal-container"></div>
+<!-- ================= POPUP ANUNCIOS ================= -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+    <div class="popup-slider">
+
+        <!-- BOTÓN CERRAR -->
+
+        <button class="cerrar-popup" id="cerrarPopup">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- BARRA SUPERIOR -->
+
+        <div class="barras-tiempo">
+
+            <div class="barra">
+                <span class="progreso activo"></span>
+            </div>
+
+            <div class="barra">
+                <span class="progreso"></span>
+            </div>
+
+            <div class="barra">
+                <span class="progreso"></span>
+            </div>
+
+            <div class="barra">
+                <span class="progreso"></span>
+            </div>
+
+            <div class="barra">
+                <span class="progreso"></span>
+            </div>
+
+        </div>
+
+        <!-- SLIDES -->
+
+        <div class="popup-slide activo">
+
+            <div class="popup-texto">
+
+                <span class="etiqueta-popup">
+                    NUEVO
+                </span>
+
+                <h2>
+                    Aprende inglés de forma divertida 🚀
+                </h2>
+
+                <p>
+                    Clases modernas diseñadas para mejorar
+                    pronunciación, vocabulario y conversación.
+                </p>
+
+                <button class="btn-popup abrir-login">
+                    Empezar ahora
+                </button>
+
+            </div>
+
+            <div class="popup-img">
+                <img src="../imagenes/hero.png" alt="">
+            </div>
+
+        </div>
+
+        <!-- 2 -->
+
+        <div class="popup-slide">
+
+            <div class="popup-texto">
+
+                <span class="etiqueta-popup">
+                    PRONUNCIACIÓN
+                </span>
+
+                <h2>
+                    Habla inglés con más confianza 🎧
+                </h2>
+
+                <p>
+                    Mejora sonidos, acento y fluidez con ejercicios
+                    interactivos.
+                </p>
+
+                <button class="btn-popup abrir-login">
+                    Ver clases
+                </button>
+
+            </div>
+
+            <div class="popup-img">
+                <img src="../imagenes/pronunciacion.jpg" alt="">
+            </div>
+
+        </div>
+
+        <!-- 3 -->
+
+        <div class="popup-slide">
+
+            <div class="popup-texto">
+
+                <span class="etiqueta-popup">
+                    VOCABULARIO
+                </span>
+
+                <h2>
+                    Aprende palabras útiles todos los días 📚
+                </h2>
+
+                <p>
+                    Frases reales y vocabulario práctico para
+                    situaciones cotidianas.
+                </p>
+
+                <button class="btn-popup abrir-login">
+                    Descubrir
+                </button>
+
+            </div>
+
+            <div class="popup-img">
+                <img src="../imagenes/vocabulario.jpg" alt="">
+            </div>
+
+        </div>
+
+        <!-- 4 -->
+
+        <div class="popup-slide">
+
+            <div class="popup-texto">
+
+                <span class="etiqueta-popup">
+                    CLASES
+                </span>
+
+                <h2>
+                    Profesores dinámicos y modernos ✨
+                </h2>
+
+                <p>
+                    Aprende con métodos modernos adaptados a tu ritmo.
+                </p>
+
+                <button class="btn-popup abrir-login">
+                    Explorar
+                </button>
+
+            </div>
+
+            <div class="popup-img">
+                <img src="../imagenes/conversacion.png" alt="">
+            </div>
+
+        </div>
+
+        <!-- 5 -->
+
+        <div class="popup-slide">
+
+            <div class="popup-texto">
+
+                <span class="etiqueta-popup">
+                    EMPIEZA HOY
+                </span>
+
+                <h2>
+                    Tu inglés puede mejorar desde hoy 🌍
+                </h2>
+
+                <p>
+                    Únete a cientos de estudiantes que ya están
+                    aprendiendo con ENIT Academy.
+                </p>
+
+                <button class="btn-popup abrir-login">
+                    Registrarme
+                </button>
+
+            </div>
+
+            <div class="popup-img">
+                <img src="../imagenes/gramatica.jpg" alt="">
+            </div>
+
+        </div>
+
+        <!-- BOTONES -->
+
+        <button class="popup-prev">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <button class="popup-next">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+    </div>
+
+</div>
+    
 
     <section class="hero contenedor">
 
@@ -249,7 +455,169 @@ setInterval(siguiente, 4000);
 
 </script>
 
+<script>
 
+/* ================= POPUP ANUNCIOS ================= */
+
+const popupOverlay =
+document.getElementById("popupOverlay");
+
+const popupSlides =
+document.querySelectorAll(".popup-slide");
+
+const barras =
+document.querySelectorAll(".progreso");
+
+const btnNext =
+document.querySelector(".popup-next");
+
+const btnPrev =
+document.querySelector(".popup-prev");
+
+const cerrarPopup =
+document.getElementById("cerrarPopup");
+
+let popupIndex = 0;
+
+let duracion = 5000;
+
+let progresoInterval;
+let autoSlide;
+
+/* ABRIR POPUP */
+
+setTimeout(() => {
+
+    popupOverlay.classList.add("activo");
+
+    iniciarBarra();
+
+}, 1500);
+
+/* MOSTRAR */
+
+function mostrarPopup(n){
+
+    popupSlides.forEach(slide =>
+        slide.classList.remove("activo")
+    );
+
+    popupSlides[n].classList.add("activo");
+
+    barras.forEach(barra => {
+
+        barra.style.width = "0%";
+
+    });
+
+}
+
+/* BARRA */
+
+function iniciarBarra(){
+
+    clearInterval(progresoInterval);
+    clearTimeout(autoSlide);
+
+    let ancho = 0;
+
+    mostrarPopup(popupIndex);
+
+    progresoInterval = setInterval(() => {
+
+        ancho += 2;
+
+        barras[popupIndex].style.width =
+        ancho + "%";
+
+        if(ancho >= 100){
+
+            clearInterval(progresoInterval);
+
+        }
+
+    }, duracion / 50);
+
+    autoSlide = setTimeout(() => {
+
+        siguientePopup();
+
+    }, duracion);
+
+}
+
+/* SIGUIENTE */
+
+function siguientePopup(){
+
+    popupIndex++;
+
+    if(popupIndex >= popupSlides.length){
+
+        popupIndex = 0;
+    }
+
+    iniciarBarra();
+}
+
+/* ANTERIOR */
+
+function anteriorPopup(){
+
+    popupIndex--;
+
+    if(popupIndex < 0){
+
+        popupIndex =
+        popupSlides.length - 1;
+    }
+
+    iniciarBarra();
+}
+
+/* EVENTOS */
+
+btnNext.addEventListener(
+"click",
+siguientePopup
+);
+
+btnPrev.addEventListener(
+"click",
+anteriorPopup
+);
+
+cerrarPopup.addEventListener(
+"click",
+() => {
+
+popupOverlay.classList.remove("activo");
+
+clearInterval(progresoInterval);
+
+clearTimeout(autoSlide);
+
+});
+
+/* CERRAR AFUERA */
+
+popupOverlay.addEventListener(
+"click",
+(e) => {
+
+if(e.target === popupOverlay){
+
+popupOverlay.classList.remove("activo");
+
+clearInterval(progresoInterval);
+
+clearTimeout(autoSlide);
+
+}
+
+});
+
+</script>
 
 <div id="footer"></div>
 
