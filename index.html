@@ -1,146 +1,766 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ENIT Academy</title>
 
-<link rel="stylesheet" href="/css/inicio.css">
-<link rel="stylesheet" href="/css/header_footer.css">
-<link rel="stylesheet" href="/css/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<style>
+
+/* ================= RESET ================= */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+    radial-gradient(circle at top left,
+    rgba(37,99,235,.15),
+    transparent 30%),
+
+    radial-gradient(circle at bottom right,
+    rgba(147,51,234,.15),
+    transparent 30%),
+
+    #0f172a;
+
+    color: white;
+
+    overflow-x: hidden;
+}
+
+img{
+    width: 100%;
+    display: block;
+}
+
+a{
+    text-decoration: none;
+}
+
+button{
+    font-family: inherit;
+}
+
+/* ================= CONTENEDOR ================= */
+
+.contenedor{
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 50px;
+
+    position: relative;
+}
+
+/* EFECTOS */
+
+.hero::before{
+
+    content: "";
+
+    position: absolute;
+
+    width: 400px;
+    height: 400px;
+
+    background: rgba(37,99,235,.25);
+
+    border-radius: 50%;
+
+    filter: blur(120px);
+
+    top: -120px;
+    left: -120px;
+
+    z-index: -1;
+}
+
+.hero::after{
+
+    content: "";
+
+    position: absolute;
+
+    width: 350px;
+    height: 350px;
+
+    background: rgba(147,51,234,.25);
+
+    border-radius: 50%;
+
+    filter: blur(120px);
+
+    bottom: -120px;
+    right: -120px;
+
+    z-index: -1;
+}
+
+/* TEXTO HERO */
+
+.hero-texto h1{
+
+    font-size: 65px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+}
+
+.hero-texto p{
+
+    font-size: 18px;
+
+    color: #cbd5e1;
+
+    line-height: 1.8;
+
+    margin-bottom: 30px;
+
+    max-width: 550px;
+}
+
+/* BOTÓN */
+
+.abrir-login{
+
+    padding: 16px 35px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    background:
+    linear-gradient(135deg,#2563eb,#9333ea);
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .4s;
+
+    box-shadow:
+    0 10px 30px rgba(37,99,235,.3);
+}
+
+.abrir-login:hover{
+
+    transform:
+    translateY(-5px)
+    scale(1.03);
+
+    box-shadow:
+    0 20px 40px rgba(147,51,234,.4);
+}
+
+/* IMAGEN HERO */
+
+.hero-img img{
+
+    max-width: 520px;
+
+    animation: flotar 4s ease-in-out infinite;
+}
+
+@keyframes flotar{
+
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-15px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+}
+
+/* ================= SECCIONES ================= */
+
+section{
+    padding: 100px 0;
+}
+
+/* TÍTULOS */
+
+.titulo-seccion{
+
+    font-size: 42px;
+
+    text-align: center;
+
+    margin-bottom: 15px;
+}
+
+.descripcion{
+
+    text-align: center;
+
+    color: #cbd5e1;
+
+    margin-bottom: 60px;
+}
+
+/* ================= TARJETAS ================= */
+
+.tarjetas{
+
+    display: grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+    gap: 30px;
+}
+
+.tarjeta{
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.1);
+
+    backdrop-filter: blur(15px);
+
+    border-radius: 25px;
+
+    overflow: hidden;
+
+    transition: .4s;
+}
+
+.tarjeta:hover{
+
+    transform: translateY(-10px);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.35);
+}
+
+.tarjeta img{
+    height: 220px;
+    object-fit: cover;
+}
+
+.tarjeta-contenido{
+    padding: 25px;
+}
+
+.tarjeta h3{
+
+    font-size: 24px;
+
+    margin-bottom: 15px;
+}
+
+.tarjeta p{
+
+    color: #cbd5e1;
+
+    line-height: 1.7;
+}
+
+/* ================= NIVELES ================= */
+
+.niveles{
+
+    display: grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+    gap: 30px;
+}
+
+.nivel{
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.1);
+
+    border-radius: 25px;
+
+    overflow: hidden;
+
+    transition: .4s;
+}
+
+.nivel:hover{
+
+    transform: translateY(-10px);
+}
+
+.nivel-info{
+    padding: 25px;
+}
+
+.nivel h3{
+
+    font-size: 28px;
+
+    margin-bottom: 10px;
+}
+
+.nivel p{
+
+    color: #cbd5e1;
+
+    margin-bottom: 20px;
+}
+
+/* ================= OPINIONES ================= */
+
+.seccion-opiniones{
+    position: relative;
+}
+
+.slider-comentarios{
+
+    max-width: 750px;
+
+    margin: auto;
+
+    position: relative;
+}
+
+.slide{
+
+    display: none;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.1);
+
+    padding: 40px;
+
+    border-radius: 25px;
+
+    text-align: center;
+
+    backdrop-filter: blur(10px);
+}
+
+.slide.activo{
+    display: block;
+}
+
+.slide p{
+
+    font-size: 20px;
+
+    line-height: 1.8;
+}
+
+.slide h4{
+
+    margin-top: 20px;
+
+    color: #60a5fa;
+}
+
+/* BOTONES */
+
+.boton-prev,
+.boton-next{
+
+    position: absolute;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background:
+    rgba(255,255,255,.08);
+
+    color: white;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+.boton-prev:hover,
+.boton-next:hover{
+
+    background: #2563eb;
+}
+
+.boton-prev{
+    left: 50px;
+}
+
+.boton-next{
+    right: 50px;
+}
+
+/* DOTS */
+
+.puntos{
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.dot{
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    background: #64748b;
+}
+
+.dot.activo{
+    background: #2563eb;
+}
+
+/* ================= POPUP ================= */
+
+.popup-overlay{
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+    rgba(0,0,0,.75);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .4s;
+}
+
+.popup-overlay.activo{
+
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-anuncio{
+
+    width: 90%;
+    max-width: 950px;
+
+    background:
+    linear-gradient(135deg,#111827,#1e293b);
+
+    border-radius: 30px;
+
+    overflow: hidden;
+
+    border:
+    1px solid rgba(255,255,255,.1);
+
+    position: relative;
+
+    animation: entradaPopup .5s ease;
+}
+
+@keyframes entradaPopup{
+
+    from{
+
+        transform: scale(.7);
+
+        opacity: 0;
+    }
+
+    to{
+
+        transform: scale(1);
+
+        opacity: 1;
+    }
+}
+
+.popup-contenido{
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding: 50px;
+}
+
+.popup-texto h2{
+
+    font-size: 45px;
+
+    margin: 15px 0;
+}
+
+.popup-texto p{
+
+    color: #cbd5e1;
+
+    line-height: 1.8;
+
+    margin-bottom: 25px;
+}
+
+.etiqueta-popup{
+
+    background: #2563eb;
+
+    padding: 8px 15px;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+.popup-imagen img{
+    width: 350px;
+}
+
+.btn-popup{
+
+    background:
+    linear-gradient(135deg,#2563eb,#9333ea);
+
+    border: none;
+
+    padding: 15px 30px;
+
+    border-radius: 40px;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.btn-popup-secundario{
+
+    background: transparent;
+
+    border:
+    1px solid rgba(255,255,255,.2);
+
+    padding: 15px 30px;
+
+    border-radius: 40px;
+
+    color: white;
+
+    cursor: pointer;
+
+    margin-left: 10px;
+}
+
+.cerrar-popup{
+
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background:
+    rgba(255,255,255,.1);
+
+    color: white;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .hero{
+
+        flex-direction: column;
+
+        text-align: center;
+
+        padding-top: 50px;
+    }
+
+    .hero-texto h1{
+        font-size: 42px;
+    }
+
+    .popup-contenido{
+
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+    .popup-imagen img{
+        width: 250px;
+    }
+
+    .boton-prev,
+    .boton-next{
+        display: none;
+    }
+}
+
+</style>
+
 </head>
+
 <body>
 
-<div id="header"></div>
-<div id="modal-container"></div>
+<!-- ================= HERO ================= -->
 
-    <section class="hero contenedor">
+<section class="hero contenedor">
 
     <div class="hero-texto">
-        <h1>Aprende inglés paso a paso de manera divertida</h1>
+
+        <h1>
+            Aprende inglés paso a paso de manera divertida
+        </h1>
 
         <p>
             Plataforma educativa para ayudarte a mejorar
             tu vocabulario, gramática y pronunciación.
         </p>
 
-       <button class="abrir-login">Empezar ahora</button>
+        <button class="abrir-login">
+            Empezar ahora
+        </button>
+
     </div>
 
     <div class="hero-img">
-        <img src="../imagenes/hero.png" alt="Hero">
-    </div>
 
-</section>
-
-
-<section class="contenedor1">
-
-    <h2 class="titulo">¿Qué aprenderás?</h2>
-
-    <div class="contenedor_ordenado">
-
-        <article class="aprender1">
-            <div class="texto">
-                <h3>Vocabulario</h3>
-                <p>Nuevas palabras prácticas de uso diario.</p>
-            </div>
-
-            <div class="imagen">
-                <img src="../imagenes/vocabulario.jpg" alt="Vocabulario">
-            </div>
-        </article>
-
-        <article class="aprender2">
-            <div class="texto">
-                <h3>Pronunciación</h3>
-                <p>Mejora sonidos y tu acento en inglés.</p>
-            </div>
-
-            <div class="imagen">
-                <img src="../imagenes/pronunciacion.jpg" alt="Pronunciación">
-            </div>
-        </article>
-
-        <article class="aprender3">
-            <div class="texto">
-                <h3>Gramática</h3>
-                <p>Aprende reglas básicas, verbos y tiempos verbales.</p>
-            </div>
-
-            <div class="imagen">
-                <img src="../imagenes/gramatica.jpg" alt="Gramática">
-            </div>
-        </article>
-
-        <article class="aprender4">
-            <div class="texto">
-                <h3>Conversaciones reales</h3>
-                <p>Frases útiles para situaciones cotidianas.</p>
-            </div>
-
-            <div class="imagen">
-                <img src="../imagenes/conversacion.png" alt="Conversaciones">
-            </div>
-        </article>
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="">
 
     </div>
 
 </section>
 
+<!-- ================= APRENDERÁS ================= -->
 
-<section class="seccion-niveles">
+<section class="contenedor">
 
-    <h2 class="titulo-seccion">Elige tu nivel</h2>
+    <h2 class="titulo-seccion">
+        ¿Qué aprenderás?
+    </h2>
 
-    <p class="descripcion-seccion">
-        Cada nivel tiene cursos especiales diseñados para ti.
+    <p class="descripcion">
+        Aprende inglés de forma moderna y dinámica.
     </p>
 
-    <div class="lista-niveles">
+    <div class="tarjetas">
 
-        <article class="tarjeta-basico">
+        <article class="tarjeta">
 
-            <div class="contenedor-img">
-                <img src="../imagenes/1.png" alt="Básico">
-            </div>
+            <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1200&auto=format&fit=crop">
 
-            <div class="contenido-info">
-                <h3>Básico</h3>
-                <p>Perfecto para aprender desde cero.</p>
-                <a href="#" class="abrir-login">Ver más →</a>
-            </div>
+            <div class="tarjeta-contenido">
 
-        </article>
+                <h3>Vocabulario</h3>
 
+                <p>
+                    Nuevas palabras prácticas para situaciones reales.
+                </p>
 
-        <article class="tarjeta-intermedio">
-
-            <div class="contenedor-img">
-                <img src="../imagenes/2.png" alt="Intermedio">
-            </div>
-
-            <div class="contenido-info">
-                <h3>Intermedio</h3>
-                <p>Ya hablas un poco, mejora tu fluidez.</p>
-                <a href="#" class="abrir-login">Ver más →</a>
             </div>
 
         </article>
 
+        <article class="tarjeta">
 
-        <article class="tarjeta-avanzado">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop">
 
-            <div class="contenedor-img">
-                <img src="../imagenes/3.png" alt="Avanzado">
+            <div class="tarjeta-contenido">
+
+                <h3>Pronunciación</h3>
+
+                <p>
+                    Mejora tu pronunciación y habla más natural.
+                </p>
+
             </div>
 
-            <div class="contenido-info">
-                <h3>Avanzado</h3>
-                <p>Perfecciona gramática, fluidez y conversación.</p>
-                <a href="#" class="abrir-login">Ver más →</a>
+        </article>
+
+        <article class="tarjeta">
+
+            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1200&auto=format&fit=crop">
+
+            <div class="tarjeta-contenido">
+
+                <h3>Gramática</h3>
+
+                <p>
+                    Aprende tiempos verbales y reglas fácilmente.
+                </p>
+
             </div>
 
         </article>
@@ -149,75 +769,238 @@
 
 </section>
 
+<!-- ================= NIVELES ================= -->
+
+<section class="contenedor">
+
+    <h2 class="titulo-seccion">
+        Elige tu nivel
+    </h2>
+
+    <p class="descripcion">
+        Cursos especiales diseñados para cada estudiante.
+    </p>
+
+    <div class="niveles">
+
+        <article class="nivel">
+
+            <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?q=80&w=1200&auto=format&fit=crop">
+
+            <div class="nivel-info">
+
+                <h3>Básico</h3>
+
+                <p>
+                    Ideal para aprender desde cero.
+                </p>
+
+                <button class="abrir-login">
+                    Ver más
+                </button>
+
+            </div>
+
+        </article>
+
+        <article class="nivel">
+
+            <img src="https://images.unsplash.com/photo-1522202222206-b7500569b935?q=80&w=1200&auto=format&fit=crop">
+
+            <div class="nivel-info">
+
+                <h3>Intermedio</h3>
+
+                <p>
+                    Mejora tu fluidez y comprensión.
+                </p>
+
+                <button class="abrir-login">
+                    Ver más
+                </button>
+
+            </div>
+
+        </article>
+
+        <article class="nivel">
+
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop">
+
+            <div class="nivel-info">
+
+                <h3>Avanzado</h3>
+
+                <p>
+                    Perfecciona tu inglés profesional.
+                </p>
+
+                <button class="abrir-login">
+                    Ver más
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+<!-- ================= OPINIONES ================= -->
 
 <section class="seccion-opiniones">
 
-    <h2 class="titulo-seccion">Comentarios</h2>
+    <h2 class="titulo-seccion">
+        Comentarios
+    </h2>
 
-    <p class="descripcion-seccion">
+    <p class="descripcion">
         Lo que opinan nuestros estudiantes.
     </p>
 
-    <button class="boton-prev">&#10094;</button>
-    <button class="boton-next">&#10095;</button>
+    <button class="boton-prev">
+        &#10094;
+    </button>
+
+    <button class="boton-next">
+        &#10095;
+    </button>
 
     <div class="slider-comentarios">
 
         <div class="slide activo">
-            <p>"Excelente plataforma, aprendí rápido y sin aburrirme."</p>
+
+            <p>
+                "Excelente plataforma, aprendí rápido y sin aburrirme."
+            </p>
+
             <h4>Adam Smith</h4>
+
         </div>
 
         <div class="slide">
-            <p>"Las clases son modernas, dinámicas y muy claras."</p>
+
+            <p>
+                "Las clases son modernas y fáciles de entender."
+            </p>
+
             <h4>Clara Martin</h4>
+
         </div>
 
         <div class="slide">
-            <p>"Me ayudó bastante en pronunciación y vocabulario."</p>
+
+            <p>
+                "Me ayudó bastante en pronunciación y vocabulario."
+            </p>
+
             <h4>Richard James</h4>
-        </div>
 
-        <div class="slide">
-            <p>"La recomiendo para quienes empiezan desde cero."</p>
-            <h4>Emily Rose</h4>
         </div>
 
     </div>
 
     <div class="puntos">
+
         <span class="dot activo"></span>
         <span class="dot"></span>
         <span class="dot"></span>
-        <span class="dot"></span>
+
     </div>
 
 </section>
 
+<!-- ================= POPUP ================= -->
 
+<div class="popup-overlay" id="popupOverlay">
+
+    <div class="popup-anuncio">
+
+        <button class="cerrar-popup" id="cerrarPopup">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="popup-contenido">
+
+            <div class="popup-texto">
+
+                <span class="etiqueta-popup">
+                    NUEVO
+                </span>
+
+                <h2>
+                    Aprende inglés de forma moderna 🚀
+                </h2>
+
+                <p>
+                    Accede a ejercicios interactivos,
+                    pronunciación y cursos dinámicos.
+                </p>
+
+                <div>
+
+                    <button class="btn-popup">
+                        Empezar ahora
+                    </button>
+
+                    <button class="btn-popup-secundario" id="cerrarPopup2">
+                        Más tarde
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="popup-imagen">
+
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= JS ================= -->
 
 <script>
 
+/* ================= SLIDER ================= */
+
 let index = 0;
 
-const slides = document.querySelectorAll(".slide");
-const dots = document.querySelectorAll(".dot");
-const next = document.querySelector(".boton-next");
-const prev = document.querySelector(".boton-prev");
+const slides =
+document.querySelectorAll(".slide");
+
+const dots =
+document.querySelectorAll(".dot");
+
+const next =
+document.querySelector(".boton-next");
+
+const prev =
+document.querySelector(".boton-prev");
 
 function mostrarSlide(n){
 
-    slides.forEach(slide =>
-        slide.classList.remove("activo")
-    );
+    slides.forEach(slide => {
 
-    dots.forEach(dot =>
-        dot.classList.remove("activo")
-    );
+        slide.classList.remove("activo");
+
+    });
+
+    dots.forEach(dot => {
+
+        dot.classList.remove("activo");
+
+    });
 
     slides[n].classList.add("activo");
-    dots[n].classList.add("activo");
 
+    dots[n].classList.add("activo");
 }
 
 function siguiente(){
@@ -225,6 +1008,7 @@ function siguiente(){
     index++;
 
     if(index >= slides.length){
+
         index = 0;
     }
 
@@ -236,6 +1020,7 @@ function anterior(){
     index--;
 
     if(index < 0){
+
         index = slides.length - 1;
     }
 
@@ -243,19 +1028,50 @@ function anterior(){
 }
 
 next.addEventListener("click", siguiente);
+
 prev.addEventListener("click", anterior);
 
 setInterval(siguiente, 4000);
 
+/* ================= POPUP ================= */
+
+const popup =
+document.getElementById("popupOverlay");
+
+const cerrarPopup =
+document.getElementById("cerrarPopup");
+
+const cerrarPopup2 =
+document.getElementById("cerrarPopup2");
+
+setTimeout(() => {
+
+    popup.classList.add("activo");
+
+}, 2000);
+
+cerrarPopup.addEventListener("click", () => {
+
+    popup.classList.remove("activo");
+
+});
+
+cerrarPopup2.addEventListener("click", () => {
+
+    popup.classList.remove("activo");
+
+});
+
+popup.addEventListener("click", (e) => {
+
+    if(e.target === popup){
+
+        popup.classList.remove("activo");
+    }
+
+});
+
 </script>
 
-
-
-<div id="footer"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script src="../js/header_footer.js"></script>
-<script src="../js/login.js"></script>
 </body>
 </html>
