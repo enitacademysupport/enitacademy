@@ -656,3 +656,134 @@ display:none;
 }
 
 }
+
+/* ================= RESPONSIVE EXTRA POPUP ================= */
+
+@media(max-width:768px){
+
+.popup-slider{
+
+width:94%;
+
+max-height:92vh;
+
+overflow-y:auto;
+
+border-radius:28px;
+}
+
+.popup-slide{
+
+padding:75px 22px 35px;
+
+flex-direction:column;
+
+text-align:center;
+
+gap:28px;
+}
+
+.popup-texto{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.popup-texto h2{
+
+font-size:32px;
+
+line-height:1.2;
+
+margin-bottom:15px;
+}
+
+.popup-texto p{
+
+font-size:16px;
+
+line-height:1.8;
+
+max-width:100%;
+}
+
+.popup-img img{
+
+max-width:240px;
+
+border-radius:20px;
+}
+
+.btn-popup{
+
+width:100%;
+
+max-width:260px;
+
+padding:15px 20px;
+
+font-size:15px;
+}
+
+.popup-prev,
+.popup-next{
+
+display:none;
+}
+
+.cerrar-popup{
+
+top:12px;
+right:12px;
+
+width:42px;
+height:42px;
+
+font-size:16px;
+}
+
+.barras-tiempo{
+
+padding:14px 14px 0;
+
+gap:6px;
+}
+
+.barra{
+
+height:4px;
+}
+
+}
+
+/* CELULARES PEQUEÑOS */
+
+@media(max-width:480px){
+
+.popup-slide{
+
+padding:70px 18px 30px;
+}
+
+.popup-texto h2{
+
+font-size:27px;
+}
+
+.popup-texto p{
+
+font-size:15px;
+}
+
+.popup-img img{
+
+max-width:200px;
+}
+
+.btn-popup{
+
+font-size:14px;
+}
+
+}
