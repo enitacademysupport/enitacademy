@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         alert("Registro exitoso");
-        window.location.href = "../paginas/index.html";
+        window.location.href = "../index.html";
     });
 
 });
