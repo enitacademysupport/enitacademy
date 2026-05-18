@@ -3,11 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 a{
     text-decoration: none;
 }
-
 :root{
     --rosa: #ff4fa0;
     --lila: #8b5cf6;
@@ -25,9 +23,6 @@ body{
     color: var(--texto);
     overflow-x: hidden;
     line-height: 1.5;
-
-    /* 🔥 FIX HEADER FIJO */
-    padding-top: 90px;
 }
 
 img{
@@ -36,9 +31,9 @@ img{
     object-fit: cover;
 }
 
-/* =========================
-   HERO
-========================= */
+
+
+/* HERO */
 
 .hero{
     display: flex;
@@ -48,10 +43,19 @@ img{
     gap: 60px;
     padding: 100px 8%;
 
-    background: linear-gradient(270deg,var(--rosa),var(--lila),var(--rosa));
+    background:
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    );
+
     background-size: 600% 600%;
     animation: moverGradient 10s ease infinite;
 }
+
+/* HERO TEXTO */
 
 .hero-texto{
     flex: 1;
@@ -60,6 +64,7 @@ img{
 
 .hero-texto h1{
     font-size: 60px;
+    max-width: 760px;
     font-weight: 900;
     color: var(--blanco);
 }
@@ -68,17 +73,115 @@ img{
     font-size: 25px;
     font-weight: bold;
     color: var(--texto);
+    max-width: 560px;
     margin: 28px 0;
 }
 
-/* =========================
-   ORDEN
-========================= */
+/* TITULO EFECTO */
+
+.titulo-hover{
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.palabra{
+    display: flex;
+    transition: .4s ease;
+}
+
+.palabra:hover{
+    transform:
+    translateY(-12px)
+    scale(1.05);
+}
+
+.palabra:nth-child(odd):hover{
+    color: var(--rosa);
+
+    text-shadow:
+    0 0 10px var(--negro),
+    0 0 20px var(--negro),
+    0 0 35px rgba(255,0,136,.9);
+}
+
+.palabra:nth-child(even):hover{
+    color: var(--lila);
+
+    text-shadow:
+    0 0 10px var(--negro),
+    0 0 20px var(--negro),
+    0 0 35px rgba(139,92,246,.9);
+}
+
+.palabra span{
+    cursor: pointer;
+
+    transition:
+    transform .25s ease,
+    color .25s ease,
+    text-shadow .25s ease;
+}
+
+.palabra span:hover{
+    color: var(--amarillo);
+
+    transform: translateY(-6px);
+
+    text-shadow:
+    0 0 10px var(--negro),
+    0 0 20px var(--negro),
+    0 0 25px rgba(255,217,0,.9);
+}
+
+/* BOTON */
+
+.hero-texto a{
+    font-size: 20px;
+    display: inline-block;
+    padding: 17px 40px;
+    border-radius: 50px;
+    background: var(--negro);
+    color: white;
+    font-weight: bold;
+    transition: .3s ease;
+}
+
+.hero-texto a:hover{
+    transform: translateY(-5px);
+
+    background: var(--blanco);
+
+    color: var(--texto);
+
+    box-shadow:
+    0 10px 20px rgba(0,0,0,.15);
+}
+
+/* HERO IMG */
+
+.hero-img{
+    flex: 1;
+    max-width: 560px;
+    min-width: 300px;
+
+    animation: flotar 4s ease-in-out infinite;
+}
+
+.hero-img img{
+    filter:
+    drop-shadow(
+        0 20px 35px rgba(139,92,246,.2)
+    );
+}
+
+/* ORDENES */
 
 .orden{
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 40px;
+    align-items: start;
     width: 100%;
     padding: 100px 8%;
 }
@@ -89,9 +192,21 @@ img{
     gap: 30px;
 }
 
-/* =========================
-   QUE APRENDERÁS
-========================= */
+main{
+    width: 100%;
+}
+
+/* QUE APRENDERÁS */
+
+.queaprenderas{
+    width: 100%;
+    text-align: center;
+}
+
+.queaprenderas h2{
+    font-size: 45px;
+    margin-bottom: 50px;
+}
 
 .contenedor-queaprenderas{
     display: grid;
@@ -99,54 +214,118 @@ img{
     gap: 30px;
 }
 
+/* CARD */
+
 .aprender{
+    width: 100%;
     padding: 25px;
     border-radius: 25px;
     text-align: center;
+
     background: rgba(255,255,255,.7);
+
     border: 2px solid rgba(255,255,255,.4);
+
+    overflow: hidden;
+
     transition: .5s ease;
 }
 
-.aprender:hover{
-    transform: translateY(-10px) scale(1.03);
-    border: 2px solid transparent;
-    background: linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
-                linear-gradient(270deg,var(--rosa),var(--lila),var(--rosa)) border-box;
-    animation: moverGradient 4s ease infinite;
+.aprender h3{
+    font-size: 28px;
+    margin-bottom: 15px;
 }
 
-/* =========================
-   BENEFICIOS (FIX ICONOS)
-========================= */
+.aprender p{
+    color: var(--gris);
+    margin-bottom: 20px;
+}
+
+.aprender img{
+    width: 170px;
+    height: 220px;
+    border-radius: 20px;
+    margin: auto;
+}
+
+.aprender:hover{
+    transform:
+    translateY(-10px)
+    scale(1.03);
+
+    border: 2px solid transparent;
+
+    background:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    ) border-box;
+
+    background-size: 400% 400%;
+
+    animation: moverGradient 4s ease infinite;
+
+    box-shadow:
+    0 0 25px rgba(255,0,136,.35),
+    0 0 45px rgba(139,92,246,.35);
+}
+
+/* BENEFICIOS */
+
+.beneficios{
+    text-align: center;
+}
 
 .lista-beneficios{
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2,2fr);
     gap: 30px;
+    margin-top: 60px;
+    width: 100%;
 }
 
 .lista-beneficios article{
+    width: 100%;
     padding: 35px 25px;
     border-radius: 30px;
     background: rgba(255,255,255,.7);
     border: 2px solid rgba(255,255,255,.4);
-    text-align: center;
     transition: .4s ease;
+    text-align: center;
 }
 
 .lista-beneficios article:hover{
-    transform: translateY(-10px) scale(1.03);
+    transform:
+    translateY(-10px)
+    scale(1.03);
+
     border: 2px solid transparent;
-    background: linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
-                linear-gradient(270deg,var(--rosa),var(--lila),var(--rosa)) border-box;
+
+    background:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    ) border-box;
+
+    background-size: 400% 400%;
+
     animation: moverGradient 4s ease infinite;
-    box-shadow: 0 0 25px rgba(255,0,136,.2),
-                0 0 45px rgba(139,92,246,.2);
+
+    box-shadow:
+    0 0 25px rgba(255,0,136,.2),
+    0 0 45px rgba(139,92,246,.2);
 }
 
-/* 🔥 ICONOS EN BLANCO AL HOVER (CORREGIDO BIEN) */
-.lista-beneficios article:hover i{
+.lista-beneficios article:hover .fa-headphones,
+.lista-beneficios article:hover .fa-video,
+.lista-beneficios article:hover .fa-mobile-screen,
+.lista-beneficios article:hover .fa-certificate {
     color: var(--blanco);
 }
 
@@ -156,51 +335,120 @@ img{
     color: var(--rosa);
 }
 
-/* =========================
-   NIVEL
-========================= */
+.lista-beneficios h3{
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.lista-beneficios p{
+    color: var(--gris);
+}
+
+
+/* NIVELES */
+
+.niveles{
+    padding: 100px 8%;
+    text-align: center;
+}
+
+.niveles h2{
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.niveles p{
+    color: var(--gris);
+    margin-bottom: 50px;
+}
 
 .contenedor-niveles{
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+
+    grid-template-columns:
+    repeat(3,1fr);
+
     gap: 30px;
 }
 
-/* =========================
-   FAQ
-========================= */
+.nivel{
+    width: 100%;
 
-.lista-faq details{
-    background: rgba(255,255,255,.7);
-    border-radius: 25px;
-    padding: 25px;
-}
+    padding: 30px 25px;
 
-/* =========================
-   UBICACION / CONTADOR
-========================= */
-
-.contador,
-.ubicacion{
-    margin: 20px 0; /* 🔥 FIX IMPORTANTE */
-    padding: 35px;
     border-radius: 30px;
+
+    text-align: center;
+
     background: rgba(255,255,255,.7);
+
+    border: 2px solid rgba(255,255,255,.4);
+
+    overflow: hidden;
+
+    transition: .4s ease;
 }
 
-/* =========================
-   ANIMACIONES
-========================= */
-
-@keyframes moverGradient{
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
+.nivel img{
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    transition: .4s ease;
+    margin: auto;
 }
 
-/* =========================
-   TABLET
-========================= */
+.nivel h3{
+    font-size: 28px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.nivel p{
+    color: var(--gris);
+}
+
+.nivel a{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 13px 30px;
+    border-radius: 50px;
+    background: var(--negro);
+    color: white;
+    font-weight: bold;
+    transition: .3s ease;
+}
+
+.nivel a:hover{
+    transform: translateY(-4px);
+    background: var(--rosa);
+}
+
+.nivel:hover{
+    transform:
+    translateY(-10px)
+    scale(1.03);
+
+    border: 2px solid transparent;
+
+    background:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    ) border-box;
+
+    background-size: 400% 400%;
+
+    animation: moverGradient 5s ease infinite;
+
+    box-shadow:
+    0 0 25px rgba(255,0,136,.25),
+    0 0 45px rgba(139,92,246,.25);
+}
+
+/* RESPONSIVE */
 
 @media(max-width:1100px){
 
@@ -209,49 +457,320 @@ img{
     }
 
     .orden2{
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
-    .contenedor-niveles{
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    .lista-beneficios{
-        grid-template-columns: 1fr;
-    }
 }
 
-/* =========================
-   CELULAR
-========================= */
-
 @media(max-width:768px){
-
-    body{
-        padding-top: 100px; /* header fijo */
-    }
 
     .hero{
         flex-direction: column;
         text-align: center;
-        padding: 60px 5%;
+        padding: 70px 5%;
     }
 
     .hero-texto h1{
-        font-size: 34px;
+        font-size: 38px;
+    }
+
+    .hero-texto p{
+        font-size: 18px;
+    }
+
+    .queaprenderas h2,
+    .niveles h2{
+        font-size: 32px;
+    }
+
+    .contenedor-queaprenderas{
+        grid-template-columns: 1fr;
+    }
+
+    .orden2{
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .hero-texto h1{
+        font-size: 30px;
     }
 
     .hero-texto p{
         font-size: 16px;
     }
 
+}
+
+/* =========================
+   FAQ
+========================= */
+
+.faq{
+    padding: 100px 8%;
+    text-align: center;
+}
+
+.lista-faq{
+    max-width: 900px;
+    margin: 50px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.lista-faq details{
+    background: rgba(255,255,255,.7);
+    border: 2px solid rgba(255,255,255,.4);
+    border-radius: 25px;
+    padding: 25px;
+    text-align: left;
+    transition: .4s ease;
+}
+
+.lista-faq details:hover{
+    transform: translateY(-6px);
+    border: 2px solid transparent;
+
+    background:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    ) border-box;
+
+    background-size: 400% 400%;
+    animation: moverGradient 4s ease infinite;
+
+    box-shadow:
+    0 0 25px rgba(255,0,136,.2),
+    0 0 45px rgba(139,92,246,.2);
+}
+
+.lista-faq summary{
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+}
+
+.lista-faq summary::-webkit-details-marker{
+    display: none;
+}
+
+.lista-faq summary::after{
+    content: "+";
+    float: right;
+    color: var(--rosa);
+    font-size: 24px;
+}
+
+.lista-faq details[open] summary::after{
+    content: "×";
+}
+
+.lista-faq p{
+    margin-top: 20px;
+    color: var(--gris);
+    line-height: 1.7;
+}
+
+/* =========================
+   OPINIONES
+========================= */
+
+.seccion-opiniones{
+    max-width: 1200px;
+    margin: 100px ;
+    text-align: center;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.comentarios-scroll{
+    display: flex;
+    gap: 25px;
+    width: max-content;
+    animation: moverComentarios 35s linear infinite;
+}
+
+.comentarios-scroll:hover{
+    animation-play-state: paused;
+}
+
+.slide{
+    width: 280px;
+    min-width: 280px;
+
+    padding: 30px;
+
+    border-radius: 30px;
+
+    text-align: left;
+
+    background: rgba(255,255,255,.7);
+
+    border: 2px solid rgba(255,255,255,.4);
+
+    transition: .4s ease;
+}
+
+.slide:hover{
+    transform:
+    translateY(-10px)
+    scale(1.03);
+
+    border: 2px solid transparent;
+
+    background:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    ) border-box;
+
+    background-size: 400% 400%;
+
+    animation: moverGradient 4s ease infinite;
+
+    box-shadow:
+    0 0 25px rgba(255,0,136,.25),
+    0 0 45px rgba(139,92,246,.25);
+}
+
+.slide p{
+    color: var(--gris);
+    margin-bottom: 20px;
+    line-height: 1.7;
+}
+
+.slide h4{
+    color: var(--rosa);
+    font-size: 18px;
+}
+
+/* =========================
+   ORDENES
+========================= */
+
+.orden{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: start;
+    width: 100%;
+}
+
+.orden2{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 30px;
+    width: 100%;
+}
+
+main{
+    width: 100%;
+}
+
+/* =========================
+   ANIMACIONES
+========================= */
+
+@keyframes moverGradient{
+
+    0%{
+        background-position: 0% 50%;
+    }
+
+    50%{
+        background-position: 100% 50%;
+    }
+
+    100%{
+        background-position: 0% 50%;
+    }
+
+}
+
+@keyframes moverComentarios{
+
+    from{
+        transform: translateX(0);
+    }
+
+    to{
+        transform: translateX(-50%);
+    }
+
+}
+
+@keyframes flotar{
+
+    0%{
+        transform: translateY(0);
+    }
+
+    50%{
+        transform: translateY(-20px);
+    }
+
+    100%{
+        transform: translateY(0);
+    }
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* TABLET */
+
+@media(max-width: 1100px){
+
     .orden{
         grid-template-columns: 1fr;
-        padding: 60px 5%;
     }
 
     .orden2{
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .contenedor-niveles{
+        grid-template-columns: repeat(2,1fr);
+    }
+
+}
+
+/* CELULAR */
+
+@media(max-width: 768px){
+
+    .hero{
+        flex-direction: column;
+        text-align: center;
+        padding: 70px 5%;
+    }
+
+    .hero-texto h1{
+        font-size: 38px;
+    }
+
+    .hero-texto p{
+        font-size: 18px;
+    }
+
+    .titulo-seccion,
+    .queaprenderas h2,
+    .niveles h2{
+        font-size: 32px;
     }
 
     .contenedor-queaprenderas{
@@ -260,28 +779,241 @@ img{
 
     .contenedor-niveles{
         grid-template-columns: 1fr;
+        justify-items: center;
     }
 
     .lista-beneficios{
         grid-template-columns: 1fr;
     }
-}
 
-/* =========================
-   CELULAR PEQUEÑO
-========================= */
-
-@media(max-width:480px){
-
-    body{
-        padding-top: 95px;
+    .orden2{
+        grid-template-columns: 1fr;
     }
 
+    .nivel{
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .aprender{
+        max-width: 100%;
+    }
+
+    .slide{
+        width: 240px;
+        min-width: 240px;
+    }
+
+    aside{
+        padding: 70px 5%;
+    }
+
+    .faq{
+        padding: 70px 5%;
+    }
+
+}
+
+/* CELULAR PEQUEÑO */
+
+@media(max-width: 480px){
+
     .hero-texto h1{
-        font-size: 26px;
+        font-size: 30px;
     }
 
     .hero-texto p{
-        font-size: 14px;
+        font-size: 16px;
     }
+
+    .titulo-seccion{
+        font-size: 28px;
+    }
+
+    .slide{
+        width: 220px;
+        min-width: 220px;
+    }
+
+    .aprender img{
+        width: 140px;
+        height: 190px;
+    }
+
+    .nivel img{
+        width: 140px;
+        height: 140px;
+    }
+
+}
+
+/* =========================
+   UBICACION Y CONTADOR
+========================= */
+
+aside{
+    width: 100%;
+}
+
+.orden2{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 30px;
+    width: 100%;
+}
+
+.contador,
+.ubicacion{
+    margin:40px;
+    width: 100%;
+    padding: 35px;
+    border-radius: 30px;
+    text-align: center;
+    background: rgba(255,255,255,.7);
+    border: 2px solid rgba(255,255,255,.4);
+    overflow: hidden;
+    transition: .4s ease;
+}
+
+.contador:hover,
+.ubicacion:hover{
+
+    transform:
+    translateY(-10px)
+    scale(1.02);
+
+    border: 2px solid transparent;
+
+    background:
+    linear-gradient(
+        rgba(255,255,255,.08),
+        rgba(255,255,255,.08)
+    ) padding-box,
+
+    linear-gradient(
+        270deg,
+        var(--rosa),
+        var(--lila),
+        var(--rosa)
+    ) border-box;
+
+    background-size: 400% 400%;
+
+    animation: moverGradient 5s ease infinite;
+
+    box-shadow:
+    0 0 25px rgba(255,0,136,.25),
+    0 0 45px rgba(139,92,246,.25);
+
+}
+
+.titulo-seccion{
+
+    font-size: 35px;
+
+    margin-bottom: 15px;
+
+}
+
+.descripcion-seccion{
+
+    color: var(--gris);
+
+    margin-bottom: 25px;
+
+    line-height: 1.7;
+
+}
+
+.contador p{
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: var(--rosa);
+
+    margin-top: 20px;
+
+}
+
+.info-ubicacion{
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.info-ubicacion i{
+
+    color: var(--rosa);
+
+    font-size: 22px;
+
+}
+
+.info-ubicacion p{
+
+    color: var(--gris);
+
+    font-size: 17px;
+
+}
+
+.ubicacion iframe{
+
+    width: 100%;
+
+    height: 320px;
+
+    border: none;
+
+    border-radius: 20px;
+
+}
+
+/* =========================
+   RESPONSIVE UBICACION
+========================= */
+
+@media(max-width: 900px){
+
+    .orden2{
+        grid-template-columns: 1fr;
+    }
+
+    aside{
+        padding: 70px 5%;
+    }
+
+}
+
+@media(max-width: 480px){
+
+    .contador,
+    .ubicacion{
+        padding: 25px;
+    }
+
+    .titulo-seccion{
+        font-size: 28px;
+    }
+
+    .contador p{
+        font-size: 24px;
+    }
+
+    .ubicacion iframe{
+        height: 250px;
+    }
+
 }
