@@ -1,127 +1,206 @@
+:root{
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    --rosa:#ff4fa0;
+    --lila:#8b5cf6;
+    --amarillo:#ffd84d;
+    --azul:#1e2a58;
+    --gris:#555;
+    --blanco:#fff;
+
+    --header-height: 90px;
 }
 
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#f7f7f7;
-color:#222;
-}
-
+/* =========================
+   DASHBOARD BASE
+========================= */
 
 .dashboard{
-display:flex;
-min-height:100vh;
-flex-direction:row; /* aside izquierda */
+    display:flex;
+    min-height:100vh;
+
+    padding-top: var(--header-height);
+
+    background:#f7f7fb;
 }
 
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar{
-width:320px;
-background:linear-gradient(180deg,#ffffff,#f8f1ff,#fef8dc);
-padding:30px 25px;
-box-shadow:8px 0 20px rgba(0,0,0,0.06); /* sombra derecha */
-display:flex;
-flex-direction:column;
-gap:25px;
+    width:320px;
+
+    background:linear-gradient(180deg,#ffffff,#f8f1ff,#fef8dc);
+    padding:30px 25px;
+
+    box-shadow:8px 0 20px rgba(0,0,0,0.06);
+
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+
+    position: sticky;
+    top: var(--header-height);
+
+    height: calc(100vh - var(--header-height));
+    overflow-y:auto;
 }
 
-
-
+/* PERFIL */
 .perfil{
-text-align:center;
-padding:20px;
-background:white;
-border-radius:18px;
-box-shadow:0 8px 18px rgba(0,0,0,0.05);
+    text-align:center;
+    padding:20px;
+    background:white;
+    border-radius:18px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.05);
 }
 
 .foto{
-width:75px;
-height:75px;
-border-radius:50%;
-margin:auto;
-background:linear-gradient(135deg,#d7adff,#ffbfdc);
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:30px;
-color:#1e2a58;
-margin-bottom:15px;
+    width:75px;
+    height:75px;
+    border-radius:50%;
+
+    margin:auto;
+    margin-bottom:15px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:linear-gradient(135deg,#d7adff,#ffbfdc);
+
+    font-size:30px;
+    color:#1e2a58;
 }
 
 .perfil h3{
-font-size:22px;
-color:#1e2a58;
-margin-bottom:5px;
+    font-size:20px;
+    color:#1e2a58;
+    margin-bottom:5px;
 }
 
 .perfil span{
-font-size:14px;
-color:#777;
+    font-size:14px;
+    color:#777;
 }
 
+/* =========================
+   MENU SIDEBAR
+========================= */
 
 .menu-panel{
-list-style:none;
-display:flex;
-flex-direction:column;
-gap:12px;
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:0;
 }
 
 .menu-panel li a{
-display:flex;
-align-items:center;
-gap:12px;
-padding:15px 16px;
-background:white;
-border-radius:14px;
-color:#333;
-font-weight:600;
-transition:.3s;
-box-shadow:0 6px 14px rgba(0,0,0,0.04);
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:15px 16px;
+
+    background:white;
+    border-radius:14px;
+
+    text-decoration:none;
+
+    color:#333;
+    font-weight:600;
+
+    box-shadow:0 6px 14px rgba(0,0,0,0.04);
+
+    transition:.3s;
 }
 
 .menu-panel li a i{
-width:22px;
-text-align:center;
-font-size:16px;
+    width:22px;
+    text-align:center;
 }
 
 .menu-panel li a:hover{
-background:#f5ebff;
-color:#9d00ff;
-transform:translateX(-4px);
+    background:#f5ebff;
+    color:#9d00ff;
+    transform:translateX(-4px);
 }
 
 .menu-panel .activo a{
-background:#9d00ff;
-color:white;
+    background:#9d00ff;
+    color:white;
 }
 
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
+.contenido{
+    flex:1;
+    padding:40px;
+
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.contenido h1{
+    font-size:28px;
+    color:#1e2a58;
+}
+
+/* =========================
+   HEADER FIX (IMPORTANTE)
+========================= */
+
+.header{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    width:100%;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media(max-width:1000px){
 
-.dashboard{
-flex-direction:column;
-}
+    .dashboard{
+        flex-direction:column;
+    }
 
-.sidebar{
-width:100%;
-box-shadow:none;
-}
+    .sidebar{
+        width:100%;
+        position:relative;
+        height:auto;
+        top:0;
+        box-shadow:none;
+    }
 
-.tarjetas{
-grid-template-columns:1fr;
-}
-
+    .contenido{
+        padding:25px;
+    }
 }
 
 @media(max-width:768px){
 
+    .contenido h1{
+        font-size:22px;
+        text-align:center;
+    }
 
-
+    .perfil{
+        padding:15px;
+    }
 }

@@ -1,358 +1,449 @@
-/* ===== CONTENEDOR ===== */
+/* =========================
+   REGISTER
+========================= */
+
 .seccion-register{
+
+    width: 100%;
+
     min-height: 100vh;
+
+    padding: 160px 8% 100px;
+
     display: flex;
+
     justify-content: center;
+
     align-items: center;
-    padding: 40px;
-    background: linear-gradient(135deg,#f8f4ff,#fff7d9,#ffe8f2);
 }
 
-/* ===== CAJA ===== */
+
+
+/* CAJA */
+
 .register-box{
+
     width: 100%;
-    max-width: 1100px;
-    background: #fff;
-    border-radius: 26px;
+
+    max-width: 1150px;
+
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
+    background: rgba(255,255,255,.75);
+
+    border: 2px solid rgba(255,255,255,.5);
+
+    border-radius: 35px;
+
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-}
 
-/* ===== LADO IZQUIERDO ===== */
-.lado-bienvenida{
-    padding: 60px;
-    background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+    backdrop-filter: blur(14px);
 
-.lado-bienvenida h2{
-    font-size: 40px;
-    margin-bottom: 15px;
-}
+    box-shadow:
+    0 20px 50px rgba(139,92,246,.12);
 
-.lado-bienvenida p{
-    font-size: 16px;
-    line-height: 1.6;
-    color: #444;
-}
-
-/* ===== FORMULARIO ===== */
-.lado-formulario{
-    padding: 60px;
-}
-
-.lado-formulario h3{
-    font-size: 30px;
-    margin-bottom: 25px;
-}
-
-/* ===== GRID ===== */
-.fila-input{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}
-
-/* ===== CAMPOS ===== */
-.grupo-input{
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-}
-
-.grupo-input label{
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.grupo-input small{
-    font-size: 11px;
-    color: #777;
-    margin-bottom: 5px;
-}
-
-.grupo-input input{
-    width: 100%;
-    padding: 14px 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: .25s;
-    outline: none;
-}
-
-/* Focus */
-.grupo-input input:focus{
-    border-color: #cfa8ff;
-    box-shadow: 0 0 0 3px rgba(207,168,255,0.2);
-}
-
-/* ===== INPUT + ICONO ===== */
-.input-wrapper{
     position: relative;
 }
 
-.input-wrapper input{
-    padding-right: 40px;
+
+
+/* LADO IZQUIERDO */
+
+.lado-bienvenida{
+
+    padding: 70px 55px;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--rosa),
+        var(--lila)
+    );
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
 }
 
-/* 👁 */
-.toggle-password{
+
+
+/* EFECTOS */
+
+.lado-bienvenida::before{
+
+    content: "";
+
     position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 15px;
-    color: #888;
-    transition: .2s;
+
+    width: 300px;
+    height: 300px;
+
+    background: rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    top: -100px;
+    right: -80px;
 }
 
-.toggle-password:hover{
-    color: #111;
+.lado-bienvenida::after{
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    background: rgba(255,255,255,.08);
+
+    border-radius: 50%;
+
+    bottom: -80px;
+    left: -60px;
 }
 
-/* ===== BOTÓN ===== */
-button{
+
+
+/* TEXOS */
+
+.lado-bienvenida h2{
+
+    font-size: 52px;
+
+    line-height: 1.1;
+
+    margin-bottom: 25px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.lado-bienvenida p{
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+    max-width: 430px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+
+/* FORMULARIO */
+
+.lado-formulario{
+
+    padding: 70px 55px;
+}
+
+.lado-formulario h3{
+
+    font-size: 38px;
+
+    margin-bottom: 35px;
+
+    color: var(--texto);
+}
+
+
+
+/* FORM */
+
+.lado-formulario form{
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+
+/* FILA */
+
+.fila-input{
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+}
+
+
+
+/* INPUTS */
+
+.grupo-input{
+
     width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
+}
+
+.grupo-input input{
+
+    width: 100%;
+
+    padding: 18px 20px;
+
+    border-radius: 18px;
+
+    border: 2px solid transparent;
+
+    background: rgba(245,245,245,.9);
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition: .3s ease;
+}
+
+
+
+/* FOCUS */
+
+.grupo-input input:focus{
+
+    border-color: var(--lila);
+
+    background: white;
+
+    box-shadow:
+    0 0 0 5px rgba(139,92,246,.12);
+}
+
+
+
+/* CHECK */
+
+.acepto{
+
     font-size: 15px;
-    font-weight: bold;
+
+    color: var(--gris);
+}
+
+.acepto label{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
     cursor: pointer;
-    transition: .25s;
 }
 
-button:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+.acepto input{
+
+    width: 18px;
+    height: 18px;
+
+    accent-color: var(--rosa);
 }
 
-/* ===== LOGIN ===== */
+
+
+/* BOTON */
+
+.lado-formulario button{
+
+    width: 100%;
+
+    padding: 18px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--rosa),
+        var(--lila)
+    );
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .35s ease;
+
+    box-shadow:
+    0 15px 25px rgba(139,92,246,.18);
+}
+
+
+
+/* HOVER */
+
+.lado-formulario button:hover{
+
+    transform:
+    translateY(-5px)
+    scale(1.01);
+
+    box-shadow:
+    0 20px 35px rgba(139,92,246,.28);
+}
+
+
+
+/* LOGIN */
+
 .texto-login{
-    margin-top: 20px;
+
     text-align: center;
-    font-size: 13px;
-    color: #555;
+
+    color: var(--gris);
+
+    margin-top: 8px;
 }
 
 .texto-login a{
-    color: #111;
+
+    color: var(--rosa);
+
     font-weight: bold;
-    text-decoration: none;
+
+    transition: .3s;
 }
 
 .texto-login a:hover{
-    text-decoration: underline;
+
+    color: var(--lila);
 }
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:900px){
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:950px){
 
     .register-box{
+
         grid-template-columns: 1fr;
     }
 
     .lado-bienvenida{
-        padding: 35px 20px;
+
+        text-align: center;
+
+        align-items: center;
+    }
+
+    .lado-bienvenida p{
+
+        max-width: 100%;
+    }
+
+}
+
+
+
+@media(max-width:768px){
+
+    .seccion-register{
+
+        padding: 140px 5% 80px;
+    }
+
+    .lado-bienvenida,
+    .lado-formulario{
+
+        padding: 50px 30px;
+    }
+
+    .lado-bienvenida h2{
+
+        font-size: 38px;
+    }
+
+    .lado-formulario h3{
+
+        font-size: 30px;
+
         text-align: center;
     }
 
-    .lado-formulario{
-        padding: 35px 20px;
-    }
-
     .fila-input{
+
         grid-template-columns: 1fr;
     }
-/* ===== CONTENEDOR PRINCIPAL ===== */
-.seccion-register{
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    background: linear-gradient(135deg,#f8f4ff,#fff7d9,#ffe8f2);
+
 }
 
-/* ===== CAJA ===== */
-.register-box{
-    width: 100%;
-    max-width: 1100px;
-    background: #fff;
-    border-radius: 26px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+
+
+@media(max-width:480px){
+
+    .lado-bienvenida,
+    .lado-formulario{
+
+        padding: 40px 22px;
+    }
+
+    .grupo-input input{
+
+        padding: 16px;
+    }
+
+    .lado-formulario button{
+
+        padding: 16px;
+    }
+
 }
 
-/* ===== BIENVENIDA ===== */
-.lado-bienvenida{
-    padding: 60px;
-    background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.lado-bienvenida h2{
-    font-size: 40px;
-    margin-bottom: 15px;
-}
-
-.lado-bienvenida p{
-    font-size: 16px;
-    line-height: 1.6;
-    color: #444;
-}
-
-/* ===== FORMULARIO ===== */
-.lado-formulario{
-    padding: 60px;
-}
-
-.lado-formulario h3{
-    font-size: 30px;
-    margin-bottom: 25px;
-}
-
-/* ===== FILAS (NOMBRES/APELLIDOS) ===== */
-.fila-input{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}
-
-/* ===== GRUPOS ===== */
-.grupo-input{
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Label */
-.grupo-input label{
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-/* Texto ayuda */
-.grupo-input small{
-    font-size: 11px;
-    color: #777;
-    margin-bottom: 5px;
-}
-
-/* Inputs */
-.grupo-input input{
-    width: 100%;
-    padding: 14px 15px;
-    border: 1px solid #ddd;
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 14px 20px;
     border-radius: 10px;
-    font-size: 14px;
-    transition: .25s;
-    outline: none;
-}
-
-/* Focus */
-.grupo-input input:focus{
-    border-color: #cfa8ff;
-    box-shadow: 0 0 0 3px rgba(207,168,255,0.2);
-}
-
-/* ===== INPUT + ICONO ===== */
-.input-wrapper{
-    position: relative;
-}
-
-.input-wrapper input{
-    padding-right: 40px;
-}
-
-/* 👁 Ojito */
-.toggle-password{
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 15px;
-    color: #888;
-    transition: .2s;
-}
-
-.toggle-password:hover{
-    color: #111;
-}
-
-/* ===== BOTÓN ===== */
-button{
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
-    font-size: 15px;
+    color: white;
     font-weight: bold;
-    cursor: pointer;
-    transition: .25s;
+    font-family: Arial;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
 }
 
-button:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+/* éxito */
+.toast.success {
+    background: #22c55e;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* ===== TEXTO LOGIN ===== */
-.texto-login{
-    margin-top: 20px;
-    text-align: center;
-    font-size: 13px;
-    color: #555;
-}
-
-.texto-login a{
-    color: #111;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.texto-login a:hover{
-    text-decoration: underline;
-}
-
-/* ===== ESPACIADO ENTRE SECCIONES DEL FORM ===== */
-form > section{
-    margin-bottom: 10px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media(max-width:900px){
-
-    .register-box{
-        grid-template-columns: 1fr;
-    }
-
-    .lado-bienvenida{
-        padding: 35px 20px;
-        text-align: center;
-    }
-
-    .lado-formulario{
-        padding: 35px 20px;
-    }
-
-    .fila-input{
-        grid-template-columns: 1fr;
-    }
-
+/* error */
+.toast.error {
+    background: #ef4444;
+    opacity: 1;
+    transform: translateY(0);
 }
