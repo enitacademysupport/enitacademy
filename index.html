@@ -194,8 +194,7 @@
         <!-- CONTADOR -->
         <section class="contador">
             <h2 class="titulo-seccion">Nuestra comunidad sigue creciendo</h2>
-            <p>👁️ 12,532 visitas</p>
-        </section>
+<p>👁️ <span id="visitas">0</span> visitas</p>        </section>
 
         <!-- UBICACION -->
         <section class="ubicacion">
@@ -365,6 +364,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+</script>
+
+<script>
+    import { supabase } from "./supabase.js";
+
+async function initCounter() {
+
+    const span = document.getElementById("visitas");
+    if (!span) return;
+
+    // 🔥 obtener valor actual
+    const { data, error } = await supabase
+        .from("site_stats")
+        .select("visits")
+        .eq("id", 1)
+        .single();
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    let visits = data.visits || 0;
+
+    // 🔥 evitar contar refrescos infinitos
+    if (!localStorage.getItem("visited")) {
+
+        localStorage.setItem("visited", "true");
+
+        visits++;
+
+        await supabase
+            .from("site_stats")
+            .update({ visits })
+            .eq("id", 1);
+    }
+
+    span.textContent = visits;
+}
+
+initCounter();
 </script>
 <script type="module" src="../js/login.js"></script>
 <script type="module" src="../js/header_footer.js"></script>
