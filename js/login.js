@@ -86,48 +86,30 @@ document.addEventListener("click", (e) => {
 });
 
 
-document.getElementById("resetPassword").addEventListener("click", async () => {
+// =========================
+// RECUPERAR CONTRASEÑA
+// =========================
+document.addEventListener("click", async (e) => {
 
-    const email = prompt("Ingresa tu correo");
+    const resetLink = e.target.closest("#resetPassword");
+
+    if (!resetLink) return;
+
+    e.preventDefault();
+
+    const email = prompt("Ingresa tu correo electrónico");
 
     if (!email) return;
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "http://localhost:5500/paginas/reset-password.html"
+        redirectTo: window.location.origin + "/paginas/reset-password.html"
     });
 
     if (error) {
+        console.error(error);
         alert(error.message);
         return;
     }
 
-    alert("Revisa tu correo para restablecer tu contraseña");
+    alert("Se envió un correo para restablecer tu contraseña");
 });
-
-
-const resetBtn = document.getElementById("resetPassword");
-
-if (resetBtn) {
-
-    resetBtn.addEventListener("click", async (e) => {
-
-        e.preventDefault();
-
-        const email = prompt("Ingresa tu correo electrónico");
-
-        if (!email) return;
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + "/paginas/reset-password.html"
-        });
-
-        if (error) {
-            console.error(error);
-            alert(error.message);
-            return;
-        }
-
-        alert("Se envió un correo para restablecer tu contraseña");
-    });
-
-}
