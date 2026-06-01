@@ -55,3 +55,65 @@
 
 </div>
 
+<script>
+    document.addEventListener("click", function(e){
+
+    const modal = document.getElementById("modalLogin");
+
+    // =========================
+    // ABRIR MODAL
+    // =========================
+    if(e.target.closest("#btnLogin") || e.target.closest(".abrir-login")){
+    e.preventDefault();
+    modal.style.display = "flex";
+}
+
+    // =========================
+    // CERRAR MODAL
+    // =========================
+    if(e.target.classList.contains("cerrar")){
+        if(modal) modal.style.display = "none";
+    }
+
+    if(e.target.id === "modalLogin"){
+        if(modal) modal.style.display = "none";
+    }
+
+    // =========================
+    // OJITO PASSWORD
+    // =========================
+    if(e.target.id === "togglePassword"){
+
+        const input = document.getElementById("password");
+
+        if(!input) return;
+
+        const type = input.type === "password" ? "text" : "password";
+        input.type = type;
+
+        e.target.classList.toggle("fa-eye");
+        e.target.classList.toggle("fa-eye-slash");
+    }
+
+});
+
+
+document.getElementById("resetPassword").addEventListener("click", async () => {
+
+    const email = prompt("Ingresa tu correo");
+
+    if (!email) return;
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: "http://localhost:5500/paginas/reset-password.html"
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    alert("Revisa tu correo para restablecer tu contraseña");
+});
+
+</script>
