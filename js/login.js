@@ -44,7 +44,6 @@ document.addEventListener("click", (e) => {
     }
 
 });
-<script>
     document.addEventListener("click", function(e){
 
     const modal = document.getElementById("modalLogin");
@@ -105,6 +104,5 @@ document.getElementById("resetPassword").addEventListener("click", async () => {
     alert("Revisa tu correo para restablecer tu contraseña");
 });
 
-</script>
 
 
