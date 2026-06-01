@@ -85,3 +85,22 @@ document.addEventListener("click", function(e){
     }
 
 });
+
+
+document.getElementById("resetPassword").addEventListener("click", async () => {
+
+    const email = prompt("Ingresa tu correo");
+
+    if (!email) return;
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: "http://localhost:5500/paginas/reset-password.html"
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    alert("Revisa tu correo para restablecer tu contraseña");
+});
