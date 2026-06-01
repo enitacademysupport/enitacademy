@@ -1,7 +1,8 @@
 import { supabase } from "./supabase.js";
 
-document.getElementById("formNuevaPassword")
-.addEventListener("submit", async (e) => {
+const form = document.getElementById("formNuevaPassword");
+
+form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
@@ -16,6 +17,7 @@ document.getElementById("formNuevaPassword")
         return;
     }
 
-    alert("Contraseña actualizada");
-    window.location.href = "login.html";
+    alert("Contraseña actualizada correctamente");
+
+    window.location.href = "../index.html";
 });
