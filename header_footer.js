@@ -1,0 +1,207 @@
+
+.modal{
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.modal::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: rgba(0,0,0,0.6);
+}
+
+
+
+.modal-contenido{
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1100px;
+    animation: aparecer .3s ease;
+}
+
+
+
+.login-box{
+    width: 100%;
+    background: white;
+    border-radius: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+}
+
+
+
+.lado-info{
+    padding: 60px;
+    background: linear-gradient(160deg,#ead5f7,#fff3c8,#ffd7ea);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lado-info h2{
+    font-size: 44px;
+    margin-bottom: 20px;
+    color: #111;
+}
+
+.lado-info p{
+    font-size: 18px;
+    line-height: 1.8;
+    color: #444;
+}
+
+
+
+.lado-formulario{
+    padding: 60px;
+}
+
+.lado-formulario h3{
+    font-size: 34px;
+    margin-bottom: 30px;
+    color: #111;
+}
+
+.grupo-input{
+    margin-bottom: 18px;
+}
+
+.grupo-input input{
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    transition: .3s;
+    box-sizing: border-box;
+}
+
+.grupo-input input:focus{
+    border-color: #d8b6ff;
+    box-shadow: 0 0 0 4px rgba(216,182,255,0.18);
+}
+
+
+
+.password-box{
+    position: relative;
+}
+
+.password-box input{
+    padding-right: 50px;
+}
+
+.password-box i{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+    font-size: 18px;
+
+    display: block;
+    line-height: 1;
+}
+
+.password-box i:hover{
+    color: #111;
+}
+
+
+
+.opciones-login{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+
+
+button{
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg,#cfa8ff,#ffbfdc);
+    color: #111;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 22px rgba(0,0,0,0.08);
+}
+
+
+.crear-cuenta{
+    margin-top: 24px;
+    text-align: center;
+    color: #555;
+}
+
+.crear-cuenta a{
+    text-decoration: none;
+    color: #111;
+    font-weight: bold;
+}
+
+
+
+.cerrar{
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #333;
+}
+
+
+
+@keyframes aparecer{
+    from{
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to{
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+
+@media(max-width:900px){
+
+.login-box{
+    grid-template-columns: 1fr;
+}
+
+.lado-info{
+    text-align: center;
+    padding: 40px 25px;
+}
+
+.lado-formulario{
+    padding: 40px 25px;
+}
+
+}
+

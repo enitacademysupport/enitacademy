@@ -1,217 +1,390 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENIT Academy — Aprende inglés paso a paso</title>
-<link rel="stylesheet" href="/css/inicio.css">
-<link rel="stylesheet" href="/css/header_footer.css">
-<link rel="stylesheet" href="/css/login.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENIT Academy — Panel Docente</title>
+  <link rel="stylesheet" href="../css/header_footer.css">
+  <link rel="stylesheet" href="../css/panel_docente.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="header"></div>
 
-<header id="header"></header>
-<div id="modal-container"></div>
+  <!-- Overlay sidebar móvil -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-texto">
-    <h1 class="titulo-hover">
-      <span class="palabra"><span>A</span><span>p</span><span>r</span><span>e</span><span>n</span><span>d</span><span>e</span></span>
-      <span class="palabra"><span>i</span><span>n</span><span>g</span><span>l</span><span>é</span><span>s</span></span>
-      <span class="palabra"><span>p</span><span>a</span><span>s</span><span>o</span></span>
-      <span class="palabra"><span>a</span></span>
-      <span class="palabra"><span>p</span><span>a</span><span>s</span><span>o</span></span>
-    </h1>
-    <p>Plataforma educativa para mejorar tu vocabulario, gramática y pronunciación en inglés.</p>
-    <a href="#" class="btn-hero abrir-login"><i class="fa-solid fa-rocket"></i> Empezar ahora</a>
-  </div>
-  <div class="hero-img">
-    <img src="/imagenes/hero.png" alt="Aprende inglés con ENIT Academy">
-  </div>
-</section>
+  <main class="panel-layout">
 
-<!-- QUÉ APRENDERÁS -->
-<section class="seccion queaprenderas">
-  <div class="seccion-titulo">
-    <h2>¿Qué aprenderás?</h2>
-    <p>Todo lo que necesitas para dominar el inglés.</p>
-  </div>
-  <div class="grid-4">
-    <article class="card-aprender">
-      <img src="/imagenes/vocabulario.jpg" alt="Vocabulario">
-      <h3>Vocabulario</h3>
-      <p>Palabras prácticas de uso diario.</p>
-    </article>
-    <article class="card-aprender">
-      <img src="/imagenes/pronunciacion.jpg" alt="Pronunciación">
-      <h3>Pronunciación</h3>
-      <p>Mejora tu acento y sonidos.</p>
-    </article>
-    <article class="card-aprender">
-      <img src="/imagenes/gramatica.jpg" alt="Gramática">
-      <h3>Gramática</h3>
-      <p>Reglas, verbos y tiempos verbales.</p>
-    </article>
-    <article class="card-aprender">
-      <img src="/imagenes/conversacion.png" alt="Conversación">
-      <h3>Conversación</h3>
-      <p>Frases útiles para situaciones reales.</p>
-    </article>
-  </div>
-</section>
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar">
+      <div class="sidebar-perfil">
+        <div class="avatar-wrap">
+          <div class="avatar" id="sideAvatar"><i class="fa-solid fa-chalkboard-teacher"></i></div>
+          <div class="avatar-badge"><i class="fa-solid fa-chalkboard-teacher"></i></div>
+        </div>
+        <div class="sidebar-info">
+          <p class="sidebar-nombre" id="sideNombre">Cargando...</p>
+          <span class="sidebar-rol">Docente</span>
+        </div>
+      </div>
 
-<!-- NIVELES -->
-<section class="seccion niveles-sec">
-  <div class="seccion-titulo">
-    <h2>Elige tu nivel</h2>
-    <p>Cursos diseñados especialmente para cada etapa.</p>
-  </div>
-  <div class="grid-3">
-    <article class="card-nivel">
-      <img src="/imagenes/1.png" alt="Básico">
-      <h3>Básico</h3>
-      <p>Perfecto para empezar desde cero.</p>
-      <a href="#" class="abrir-login">Ver más →</a>
-    </article>
-    <article class="card-nivel card-nivel--featured">
-      <img src="/imagenes/2.png" alt="Intermedio">
-      <h3>Intermedio</h3>
-      <p>Mejora tu fluidez y comprensión.</p>
-      <a href="#" class="abrir-login">Ver más →</a>
-    </article>
-    <article class="card-nivel">
-      <img src="/imagenes/3.png" alt="Avanzado">
-      <h3>Avanzado</h3>
-      <p>Perfecciona gramática y conversación.</p>
-      <a href="#" class="abrir-login">Ver más →</a>
-    </article>
-  </div>
-</section>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-vista="cursos">
+          <i class="fa-solid fa-book-open"></i> Mis cursos
+        </button>
+        <button class="nav-item" data-vista="crear">
+          <i class="fa-solid fa-plus"></i> Crear curso
+        </button>
+        <button class="nav-item" data-vista="anuncios">
+          <i class="fa-solid fa-bullhorn"></i> Anuncios
+        </button>
+        <button class="nav-item" data-vista="archivos">
+          <i class="fa-solid fa-folder-open"></i> Archivos
+        </button>
+        <button class="nav-item" data-vista="tareas">
+          <i class="fa-solid fa-clipboard-list"></i> Tareas
+        </button>
+        <button class="nav-item" data-vista="estudiantes">
+          <i class="fa-solid fa-users"></i> Estudiantes
+        </button>
+        <button class="nav-item" data-vista="perfil">
+          <i class="fa-solid fa-user-pen"></i> Mi perfil
+        </button>
+      </nav>
 
-<!-- BENEFICIOS -->
-<section class="seccion beneficios-sec">
-  <div class="seccion-titulo">
-    <h2>¿Por qué elegir ENIT Academy?</h2>
-    <p>Todo lo que necesitas para aprender de verdad.</p>
-  </div>
-  <div class="grid-4">
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-video"></i></div>
-      <h3>Clases dinámicas</h3>
-      <p>Ejercicios modernos e interactivos.</p>
-    </article>
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-headphones"></i></div>
-      <h3>Audio y pronunciación</h3>
-      <p>Escucha y mejora tu speaking.</p>
-    </article>
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-mobile-screen"></i></div>
-      <h3>Desde cualquier lugar</h3>
-      <p>Accede desde celular, laptop o tablet.</p>
-    </article>
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-certificate"></i></div>
-      <h3>Certificados</h3>
-      <p>Reconocimientos al completar cursos.</p>
-    </article>
-  </div>
-</section>
+      <button class="btn-cerrar" id="btnCerrar">
+        <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+      </button>
+    </aside>
 
-<!-- ESTADÍSTICAS -->
-<section class="seccion stats-sec">
-  <div class="stat-item">
-    <span class="stat-num" id="visitas">0</span>
-    <span class="stat-label">Visitas</span>
-  </div>
-  <div class="stat-sep"></div>
-  <div class="stat-item">
-    <span class="stat-num">3</span>
-    <span class="stat-label">Niveles</span>
-  </div>
-  <div class="stat-sep"></div>
-  <div class="stat-item">
-    <span class="stat-num">100%</span>
-    <span class="stat-label">Online</span>
-  </div>
-</section>
+    <!-- ══ CONTENIDO ══ -->
+    <div class="contenido-wrapper">
 
-<!-- TESTIMONIOS -->
-<section class="seccion opiniones-sec">
-  <div class="seccion-titulo">
-    <h2>Lo que dicen nuestros estudiantes</h2>
-    <p>Historias reales de aprendizaje.</p>
-  </div>
-  <div class="scroll-wrapper">
-    <div class="comentarios-scroll" id="comentariosScroll">
-      <article class="slide"><p>"Excelente plataforma, aprendí rápido y sin aburrirme."</p><h4>— Adam Smith</h4></article>
-      <article class="slide"><p>"Las clases son modernas y muy fáciles de entender."</p><h4>— Clara Martin</h4></article>
-      <article class="slide"><p>"Ahora puedo hablar inglés con mucha más confianza."</p><h4>— Richard James</h4></article>
-      <article class="slide"><p>"Me ayudó muchísimo con pronunciación y listening."</p><h4>— Emily Rose</h4></article>
-      <article class="slide"><p>"La plataforma se ve moderna y las clases son divertidas."</p><h4>— Sophia Lee</h4></article>
+      <!-- Topbar móvil -->
+      <div class="panel-topbar">
+        <button id="sidebarToggle" class="sidebar-toggle">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <span class="panel-topbar-title">Panel Docente</span>
+      </div>
+
+      <section class="contenido">
+
+        <!-- Stats rápidas -->
+        <div class="stats-bar" id="statsBar">
+          <div class="stat-card">
+            <i class="fa-solid fa-book-open"></i>
+            <div><span id="statCursos">0</span><p>Cursos</p></div>
+          </div>
+          <div class="stat-card">
+            <i class="fa-solid fa-users"></i>
+            <div><span id="statEstudiantes">0</span><p>Estudiantes</p></div>
+          </div>
+          <div class="stat-card">
+            <i class="fa-solid fa-star"></i>
+            <div><span id="statNivel">—</span><p>Nivel más creado</p></div>
+          </div>
+        </div>
+
+        <!-- ── Vista: mis cursos ── -->
+        <div id="vistaCursos" class="vista">
+          <div class="vista-header">
+            <h2>Mis cursos</h2>
+            <button class="btn-primary btn-sm" onclick="document.querySelector('[data-vista=crear]').click()">
+              <i class="fa-solid fa-plus"></i> Nuevo curso
+            </button>
+          </div>
+          <div id="listaCursos" class="grid-cursos">
+            <p class="txt-vacio" id="msgVacio">Aún no has creado ningún curso.</p>
+          </div>
+        </div>
+
+        <!-- ── Vista: crear curso ── -->
+        <div id="vistaCrear" class="vista oculto">
+          <h2>Crear nuevo curso</h2>
+          <form id="formCurso" class="form-panel" novalidate>
+
+            <div class="form-row">
+              <div class="grupo">
+                <label for="cNombre">Nombre del curso</label>
+                <input type="text" id="cNombre" placeholder="Ej: Inglés básico A1">
+                <small class="error" id="errNombre"></small>
+              </div>
+              <div class="grupo">
+                <label for="cNivel">Nivel</label>
+                <select id="cNivel">
+                  <option value="">-- Selecciona --</option>
+                  <option value="basico">Básico</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                </select>
+                <small class="error" id="errNivel"></small>
+              </div>
+            </div>
+
+            <div class="grupo">
+              <label for="cDesc">Descripción</label>
+              <textarea id="cDesc" rows="3" placeholder="¿De qué trata el curso? ¿Qué aprenderán?"></textarea>
+            </div>
+
+            <div class="grupo">
+              <label>Asignar estudiantes</label>
+              <div class="tabs-asignar">
+                <button type="button" class="tab-btn active" data-tab="lista">
+                  <i class="fa-solid fa-list"></i> Seleccionar de lista
+                </button>
+                <button type="button" class="tab-btn" data-tab="codigo">
+                  <i class="fa-solid fa-key"></i> Compartir código
+                </button>
+              </div>
+              <div id="tabLista" class="tab-panel">
+                <input type="text" id="buscarEstudiante" placeholder="Buscar por nombre...">
+                <div id="listaEstudiantes" class="lista-check">
+                  <p class="txt-vacio">Cargando estudiantes...</p>
+                </div>
+              </div>
+              <div id="tabCodigo" class="tab-panel oculto">
+                <div class="info-codigo">
+                  <i class="fa-solid fa-circle-info"></i>
+                  Se generará un código único al crear el curso. Compártelo con tus estudiantes para que se inscriban desde su panel.
+                </div>
+              </div>
+            </div>
+
+            <div id="alertaCurso" class="form-alerta"></div>
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar curso
+            </button>
+          </form>
+        </div>
+
+        <!-- ── Vista: detalle curso ── -->
+        <div id="vistaDetalle" class="vista oculto">
+          <button class="btn-volver" id="btnVolver">
+            <i class="fa-solid fa-arrow-left"></i> Volver a mis cursos
+          </button>
+          <div class="detalle-cabecera">
+            <div>
+              <span id="detalleNivel" class="badge-nivel"></span>
+              <h2 id="detalleTitulo"></h2>
+              <p id="detalleDesc" class="detalle-desc"></p>
+            </div>
+            <div class="detalle-codigo-box">
+              <p>Código del curso</p>
+              <strong id="detalleCodigo"></strong>
+              <button class="btn-copiar" id="btnCopiarCodigo" title="Copiar código">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+          </div>
+          <div class="detalle-acciones">
+            <button class="btn-outline btn-sm" id="btnEliminarCurso">
+              <i class="fa-solid fa-trash"></i> Eliminar curso
+            </button>
+          </div>
+          <h3>Estudiantes inscritos</h3>
+          <div id="listaInscritos" class="lista-inscritos"></div>
+        </div>
+
+        <!-- ── Vista: anuncios ── -->
+        <div id="vistaAnuncios" class="vista oculto">
+          <h2><i class="fa-solid fa-bullhorn"></i> Anuncios</h2>
+          <p class="subtitulo-vista">Publica avisos importantes para tus estudiantes.</p>
+
+          <div class="classroom-grid">
+            <div class="classroom-form-col">
+              <div class="form-card">
+                <h3><i class="fa-solid fa-plus-circle"></i> Nuevo anuncio</h3>
+                <form id="formAnuncio" class="form-panel" novalidate>
+                  <div class="grupo">
+                    <label for="anuncioCurso">Curso</label>
+                    <select id="anuncioCurso"><option value="">— Selecciona un curso —</option></select>
+                  </div>
+                  <div class="grupo">
+                    <label for="anuncioTitulo">Título</label>
+                    <input type="text" id="anuncioTitulo" placeholder="Ej: Examen parcial la próxima semana">
+                  </div>
+                  <div class="grupo">
+                    <label for="anuncioContenido">Mensaje</label>
+                    <textarea id="anuncioContenido" rows="4" placeholder="Escribe aquí el detalle del anuncio..."></textarea>
+                  </div>
+                  <div id="alertaAnuncio" class="form-alerta"></div>
+                  <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-bullhorn"></i> Publicar anuncio
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="classroom-list-col">
+              <h3><i class="fa-solid fa-list"></i> Anuncios publicados</h3>
+              <div id="listaAnuncios" class="lista-classroom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Vista: archivos ── -->
+        <div id="vistaArchivos" class="vista oculto">
+          <h2><i class="fa-solid fa-folder-open"></i> Archivos</h2>
+          <p class="subtitulo-vista">Comparte materiales de estudio con tus estudiantes.</p>
+
+          <div class="classroom-grid">
+            <div class="classroom-form-col">
+              <div class="form-card">
+                <h3><i class="fa-solid fa-cloud-arrow-up"></i> Subir archivo</h3>
+                <form id="formArchivo" class="form-panel" novalidate>
+                  <div class="grupo">
+                    <label for="archivoCurso">Curso</label>
+                    <select id="archivoCurso"><option value="">— Selecciona un curso —</option></select>
+                  </div>
+                  <div class="grupo">
+                    <label for="archivoNombre">Nombre del archivo</label>
+                    <input type="text" id="archivoNombre" placeholder="Ej: Unidad 1 - Vocabulario.pdf">
+                  </div>
+                  <div class="grupo">
+                    <label for="archivoUrl">URL del archivo</label>
+                    <input type="url" id="archivoUrl" placeholder="https://drive.google.com/...">
+                    <small class="nota">Sube el archivo a Google Drive, Dropbox u otro y pega el enlace.</small>
+                  </div>
+                  <div class="grupo">
+                    <label for="archivoTipo">Tipo</label>
+                    <select id="archivoTipo">
+                      <option value="material">Material de estudio</option>
+                      <option value="tarea">Plantilla de tarea</option>
+                      <option value="ejercicio">Ejercicio</option>
+                      <option value="examen">Examen</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                  </div>
+                  <div id="alertaArchivo" class="form-alerta"></div>
+                  <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Subir archivo
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="classroom-list-col">
+              <h3><i class="fa-solid fa-list"></i> Archivos subidos</h3>
+              <div id="listaArchivos" class="lista-classroom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Vista: tareas ── -->
+        <div id="vistaTareas" class="vista oculto">
+          <h2><i class="fa-solid fa-clipboard-list"></i> Tareas</h2>
+          <p class="subtitulo-vista">Asigna tareas y actividades a tus estudiantes.</p>
+
+          <div class="classroom-grid">
+            <div class="classroom-form-col">
+              <div class="form-card">
+                <h3><i class="fa-solid fa-plus-circle"></i> Nueva tarea</h3>
+                <form id="formTarea" class="form-panel" novalidate>
+                  <div class="grupo">
+                    <label for="tareaCurso">Curso</label>
+                    <select id="tareaCurso"><option value="">— Selecciona un curso —</option></select>
+                  </div>
+                  <div class="grupo">
+                    <label for="tareaTitulo">Título de la tarea</label>
+                    <input type="text" id="tareaTitulo" placeholder="Ej: Ejercicio de listening - Unit 3">
+                  </div>
+                  <div class="grupo">
+                    <label for="tareaDesc">Descripción / instrucciones</label>
+                    <textarea id="tareaDesc" rows="4" placeholder="Describe qué deben hacer los estudiantes..."></textarea>
+                  </div>
+                  <div class="form-row">
+                    <div class="grupo">
+                      <label for="tareaFecha">Fecha de entrega</label>
+                      <input type="date" id="tareaFecha">
+                    </div>
+                    <div class="grupo">
+                      <label for="tareaPuntos">Puntos</label>
+                      <input type="number" id="tareaPuntos" placeholder="Ej: 100" min="0" max="1000">
+                    </div>
+                  </div>
+                  <div id="alertaTarea" class="form-alerta"></div>
+                  <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> Crear tarea
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="classroom-list-col">
+              <h3><i class="fa-solid fa-list"></i> Tareas creadas</h3>
+              <div id="listaTareas" class="lista-classroom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Vista: estudiantes ── -->
+        <div id="vistaEstudiantes" class="vista oculto">
+          <h2>Todos los estudiantes</h2>
+          <input type="text" id="filtroEstudiantes" class="buscador" placeholder="Buscar estudiante...">
+          <div id="tablaEstudiantes" class="tabla-estudiantes"></div>
+        </div>
+
+        <!-- ── Vista: perfil ── -->
+        <div id="vistaPerfil" class="vista oculto">
+          <h2>Mi perfil</h2>
+          <form id="formPerfil" class="form-panel" novalidate>
+
+            <div class="perfil-avatar-section">
+              <div class="avatar avatar-lg" id="perfilAvatar">
+                <i class="fa-solid fa-chalkboard-teacher"></i>
+              </div>
+              <div>
+                <p class="perfil-rol-badge"><i class="fa-solid fa-chalkboard-teacher"></i> Docente</p>
+                <p class="perfil-desde" id="perfilDesde"></p>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="grupo">
+                <label for="pNombre">Nombre</label>
+                <input type="text" id="pNombre" placeholder="Tu nombre">
+                <small class="error" id="errPNombre"></small>
+              </div>
+              <div class="grupo">
+                <label for="pApellido">Apellido</label>
+                <input type="text" id="pApellido" placeholder="Tu apellido">
+                <small class="error" id="errPApellido"></small>
+              </div>
+            </div>
+
+            <div class="grupo">
+              <label for="pEmail">Correo electrónico</label>
+              <input type="email" id="pEmail" disabled>
+              <small class="nota">El correo no se puede cambiar.</small>
+            </div>
+
+            <hr class="divisor">
+            <h3>Cambiar contraseña</h3>
+
+            <div class="grupo campo-password">
+              <label for="pPassNueva">Nueva contraseña</label>
+              <div class="input-wrapper">
+                <input type="password" id="pPassNueva" placeholder="Mínimo 6 caracteres">
+                <button type="button" class="toggle-pw" data-target="pPassNueva" aria-label="Mostrar">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+              <small class="error" id="errPPass"></small>
+            </div>
+
+            <div id="alertaPerfil" class="form-alerta"></div>
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+            </button>
+          </form>
+        </div>
+
+      </section>
     </div>
-  </div>
-</section>
+  </main>
 
-<!-- FAQ -->
-<section class="seccion faq-sec">
-  <div class="seccion-titulo">
-    <h2>Preguntas frecuentes</h2>
-    <p>Todo lo que necesitas saber antes de empezar.</p>
-  </div>
-  <div class="lista-faq">
-    <details><summary>¿Necesito conocimientos previos?</summary><p>No, puedes empezar desde cero y avanzar paso a paso.</p></details>
-    <details><summary>¿Las clases son virtuales?</summary><p>Sí, puedes aprender desde cualquier dispositivo.</p></details>
-    <details><summary>¿Recibiré certificado?</summary><p>Sí, algunos cursos incluyen certificado al finalizar.</p></details>
-    <details><summary>¿Puedo estudiar desde mi celular?</summary><p>La plataforma es 100% responsive y funciona en móviles.</p></details>
-  </div>
-</section>
-
-<!-- UBICACIÓN -->
-<section class="seccion ubicacion-sec">
-  <div class="seccion-titulo">
-    <h2>Nuestra ubicación</h2>
-    <p><i class="fa-solid fa-location-dot"></i> Lima, Perú — aprende presencial o virtual.</p>
-  </div>
-  <div class="mapa-wrap">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62398.35482034257!2d-76.97187699005096!3d-12.187399243333376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105bb8b8aea3d77%3A0x8e0fbe3f089a7db6!2sMercado%20Las%20Lomas%20V.E.S!5e0!3m2!1ses-419!2spe!4v1779081545783!5m2!1ses-419!2spe" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación ENIT Academy"></iframe>
-  </div>
-</section>
-
-<footer id="footer"></footer>
-
-<script type="module" src="/js/header_footer.js"></script>
-<script type="module" src="/js/login.js"></script>
-<script type="module" src="/js/reset-password.js"></script>
-<script type="module">
-import { supabase } from "/js/supabase.js";
-// Contador visitas
-async function initCounter() {
-  const span = document.getElementById("visitas");
-  if (!span) return;
-  const { data } = await supabase.from("site_stats").select("visits").eq("id",1).single();
-  if (!data) return;
-  let v = data.visits || 0;
-  if (!localStorage.getItem("visited")) { localStorage.setItem("visited","1"); v++; await supabase.from("site_stats").update({visits:v}).eq("id",1); }
-  span.textContent = v.toLocaleString();
-}
-initCounter();
-// Scroll comments clone
-const sc = document.getElementById("comentariosScroll");
-if (sc) sc.innerHTML += sc.innerHTML;
-// Modo oscuro
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    document.getElementById("modoOscuro")?.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      const i = document.querySelector("#modoOscuro i");
-      if (i) { i.classList.toggle("fa-moon"); i.classList.toggle("fa-sun"); }
-    });
-  }, 300);
-});
-</script>
+  <div id="footer"></div>
+  <script type="module" src="../js/header_footer.js"></script>
+  <script type="module" src="../js/panel_docente.js"></script>
 </body>
 </html>

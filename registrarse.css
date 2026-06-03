@@ -1,50 +1,56 @@
-<div id="modalLogin" class="modal">
-  <div class="modal-contenido">
-    <span class="cerrar">&times;</span>
+<footer class="footer-main">
+  <div class="footer-grid">
 
-    <div class="login-box">
-
-      <div class="lado-info">
-        <h2>Bienvenid@</h2>
-        <p>Continúa aprendiendo inglés con clases modernas, dinámicas y diseñadas para ti.</p>
+    <!-- Marca -->
+    <div class="footer-col footer-brand">
+      <a href="/index.html" class="footer-logo">
+        <img src="/imagenes/logo.png" alt="ENIT Academy">
+        <span>ENIT Academy</span>
+      </a>
+      <p>Aprende inglés de forma moderna, práctica y dinámica desde cualquier lugar del mundo.</p>
+      <div class="footer-sociales">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" aria-label="X / Twitter"><i class="fab fa-x-twitter"></i></a>
       </div>
-
-      <div class="lado-formulario">
-        <h3>Iniciar Sesión</h3>
-
-        <form id="loginForm">
-
-          <div class="grupo-input">
-            <label for="loginEmail">Correo electrónico</label>
-            <input type="email" id="loginEmail" placeholder="tu@correo.com" autocomplete="email">
-          </div>
-
-          <div class="grupo-input password-box">
-            <label for="loginPassword">Contraseña</label>
-            <div style="position:relative;">
-              <input type="password" id="loginPassword" placeholder="Tu contraseña" autocomplete="current-password">
-              <i class="fa-solid fa-eye" id="togglePassword"
-                 style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);cursor:pointer;color:#9178a6;"></i>
-            </div>
-          </div>
-
-          <div class="opciones-login">
-            <label><input type="checkbox"> Recordarme</label>
-            <a href="#" id="resetPassword">¿Olvidaste tu contraseña?</a>
-          </div>
-
-          <!-- Alerta de feedback -->
-          <div id="loginAlerta" class="form-alerta"></div>
-
-          <button type="submit">Ingresar</button>
-
-          <p class="crear-cuenta">
-            ¿No tienes cuenta? <a href="/paginas/registrarse.html">Regístrate</a>
-          </p>
-
-        </form>
-      </div>
-
     </div>
+
+    <!-- Nosotros -->
+    <div class="footer-col">
+      <h4>Nosotros</h4>
+      <ul>
+        <li><a href="/paginas/nosotros.html">¿Quiénes somos?</a></li>
+        <li><a href="/paginas/nosotros.html">Misión y visión</a></li>
+        <li><a href="/paginas/contactanos.html">Contáctanos</a></li>
+      </ul>
+    </div>
+
+    <!-- Cursos -->
+    <div class="footer-col">
+      <h4>Cursos</h4>
+      <ul>
+        <li><a href="#" class="abrir-login">Nivel Básico</a></li>
+        <li><a href="#" class="abrir-login">Nivel Intermedio</a></li>
+        <li><a href="#" class="abrir-login">Nivel Avanzado</a></li>
+        <li><a href="/paginas/registrarse.html">Registrarse gratis</a></li>
+      </ul>
+    </div>
+
+    <!-- Contacto -->
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul class="footer-contacto">
+        <li><i class="fa-solid fa-envelope"></i> enit_academy@gmail.com</li>
+        <li><i class="fa-solid fa-location-dot"></i> Lima, Perú</li>
+        <li><i class="fa-solid fa-clock"></i> Lun – Vie, 9am – 6pm</li>
+      </ul>
+    </div>
+
   </div>
-</div>
+
+  <div class="footer-bottom">
+    <p>© 2026 <strong>ENIT Academy</strong> · Todos los derechos reservados</p>
+    <p>Hecho con <i class="fa-solid fa-heart" style="color:var(--rosa)"></i> en Lima, Perú</p>
+  </div>
+</footer>
