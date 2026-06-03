@@ -1,57 +1,50 @@
 <div id="modalLogin" class="modal">
+  <div class="modal-contenido">
+    <span class="cerrar">&times;</span>
 
-    <div class="modal-contenido">
+    <div class="login-box">
 
-        <span class="cerrar">&times;</span>
+      <div class="lado-info">
+        <h2>Bienvenid@</h2>
+        <p>Continúa aprendiendo inglés con clases modernas, dinámicas y diseñadas para ti.</p>
+      </div>
 
-        <div class="login-box">
+      <div class="lado-formulario">
+        <h3>Iniciar Sesión</h3>
 
-            <div class="lado-info">
-                <h2>Bienvenid@</h2>
-                <p>
-                    Continúa aprendiendo inglés con clases modernas,
-                    dinámicas y diseñadas para ti.
-                </p>
+        <form id="loginForm">
+
+          <div class="grupo-input">
+            <label for="loginEmail">Correo electrónico</label>
+            <input type="email" id="loginEmail" placeholder="tu@correo.com" autocomplete="email">
+          </div>
+
+          <div class="grupo-input password-box">
+            <label for="loginPassword">Contraseña</label>
+            <div style="position:relative;">
+              <input type="password" id="loginPassword" placeholder="Tu contraseña" autocomplete="current-password">
+              <i class="fa-solid fa-eye" id="togglePassword"
+                 style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);cursor:pointer;color:#9178a6;"></i>
             </div>
+          </div>
 
-            <div class="lado-formulario">
+          <div class="opciones-login">
+            <label><input type="checkbox"> Recordarme</label>
+            <a href="#" id="resetPassword">¿Olvidaste tu contraseña?</a>
+          </div>
 
-                <h3>Iniciar Sesión</h3>
+          <!-- Alerta de feedback -->
+          <div id="loginAlerta" class="form-alerta"></div>
 
-                <form id="loginForm">
+          <button type="submit">Ingresar</button>
 
-                    <div class="grupo-input">
-                        <input type="email" placeholder="Correo electrónico">
-                    </div>
+          <p class="crear-cuenta">
+            ¿No tienes cuenta? <a href="/paginas/registrarse.html">Regístrate</a>
+          </p>
 
-                    <div class="grupo-input password-box">
-                        <input type="password" id="password" placeholder="Contraseña">
-                        <i class="fa-solid fa-eye" id="togglePassword"></i>
-                    </div>
-
-                    <div class="opciones-login">
-                        <label>
-                            <input type="checkbox">
-                            Recordarme
-                        </label>
-
-                        <a href="#" id="resetPassword">¿Olvidaste tu contraseña?</a>
-                    </div>
-
-                    <button type="submit">Ingresar</button>
-
-                    <p class="crear-cuenta">
-                        ¿No tienes cuenta?
-                        <a href="../paginas/registrarse.html">Regístrate</a>
-                    </p>
-
-                </form>
-
-            </div>
-
-        </div>
+        </form>
+      </div>
 
     </div>
-
+  </div>
 </div>
-
