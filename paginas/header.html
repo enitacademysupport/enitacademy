@@ -3,7 +3,7 @@
 
     <!-- LOGO -->
     <a href="/index.html" class="logo">
-      <img src="/imagenes/logo.png" alt="Logo ENIT Academy">
+      <img src="/imagenes/logo.png" alt="ENIT Academy">
       <span class="logo-texto">
         <span>E</span><span>N</span><span>I</span><span>T</span>
         <span class="espacio">&nbsp;</span>
@@ -11,13 +11,22 @@
       </span>
     </a>
 
-    <!-- MENU -->
-    <ul class="menu">
+    <!-- MENU DESKTOP -->
+    <ul class="menu" id="menuPrincipal">
+
+      <!-- Cerrar (solo mobile) -->
+      <button class="menu-close" id="menuClose" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
       <li><a href="/index.html"><i class="fa-solid fa-house"></i> Inicio</a></li>
       <li><a href="/paginas/nosotros.html"><i class="fa-solid fa-users"></i> Nosotros</a></li>
 
       <li class="dropdown">
-        <a href="#"><i class="fa-solid fa-graduation-cap"></i> Niveles <i class="fa-solid fa-chevron-down"></i></a>
+        <a href="#" class="dropdown-toggle">
+          <i class="fa-solid fa-graduation-cap"></i> Niveles
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </a>
         <ul class="menu-vertical">
           <li class="submenu">
             <a href="#">Básico <i class="fa-solid fa-chevron-right"></i></a>
@@ -36,7 +45,6 @@
               <li><a href="#">Past Simple</a></li>
               <li><a href="#">Future</a></li>
               <li><a href="#">Comparatives</a></li>
-              <li><a href="#">Listening</a></li>
               <li><a href="#">Modal Verbs</a></li>
               <li><a href="#">Questions</a></li>
             </ul>
@@ -49,7 +57,6 @@
               <li><a href="#">Phrasal Verbs</a></li>
               <li><a href="#">Essay Writing</a></li>
               <li><a href="#">Speaking</a></li>
-              <li><a href="#">Debates</a></li>
             </ul>
           </li>
         </ul>
@@ -58,18 +65,19 @@
       <li><a href="/paginas/contactanos.html"><i class="fa-solid fa-envelope"></i> Contacto</a></li>
     </ul>
 
-    <button id="modoOscuro" class="modo-oscuro-btn"><i class="fa-solid fa-moon"></i></button>
-
-    <!-- AUTH -->
-    <section class="botones">
+    <!-- CONTROLES DERECHA -->
+    <div class="navbar-right">
+      <button id="modoOscuro" class="btn-icon-nav" aria-label="Modo oscuro">
+        <i class="fa-solid fa-moon"></i>
+      </button>
 
       <!-- Sin sesión -->
-      <div id="authButtons">
-        <a href="#" class="btn-login abrir-login">Iniciar Sesión</a>
+      <div id="authButtons" class="auth-btns">
+        <a href="#" class="btn-login abrir-login">Iniciar sesión</a>
         <a href="/paginas/registrarse.html" class="btn-register">Registrarse</a>
       </div>
 
-      <!-- Con sesión: foto + nombre + dropdown -->
+      <!-- Con sesión -->
       <div id="userBox" class="user-box" style="display:none;">
         <img id="userPhoto" class="user-photo" src="" alt="Foto perfil">
         <div class="user-info">
@@ -77,8 +85,6 @@
           <span id="userRolHeader" class="user-rol"></span>
         </div>
         <i class="fa-solid fa-chevron-down user-chevron"></i>
-
-        <!-- Dropdown -->
         <div id="userDropdown" class="user-dropdown">
           <button id="btnMiPanel" class="drop-item">
             <i class="fa-solid fa-gauge"></i> Mi panel
@@ -90,7 +96,14 @@
         </div>
       </div>
 
-    </section>
+      <!-- Hamburguesa (solo mobile) -->
+      <button id="menuToggle" class="hamburger" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
 
   </nav>
+
+  <!-- Overlay mobile -->
+  <div id="menuOverlay" class="menu-overlay"></div>
 </header>
