@@ -1,217 +1,278 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENIT Academy — Aprende inglés paso a paso</title>
-<link rel="stylesheet" href="/css/inicio.css">
-<link rel="stylesheet" href="/css/header_footer.css">
-<link rel="stylesheet" href="/css/login.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENIT Academy — Aprende inglés paso a paso</title>
+  <link rel="stylesheet" href="/css/inicio.css">
+  <link rel="stylesheet" href="/css/header_footer.css">
+  <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header id="header"></header>
+<div id="header"></div>
 <div id="modal-container"></div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-texto">
-    <h1 class="titulo-hover">
-      <span class="palabra"><span>A</span><span>p</span><span>r</span><span>e</span><span>n</span><span>d</span><span>e</span></span>
-      <span class="palabra"><span>i</span><span>n</span><span>g</span><span>l</span><span>é</span><span>s</span></span>
-      <span class="palabra"><span>p</span><span>a</span><span>s</span><span>o</span></span>
-      <span class="palabra"><span>a</span></span>
-      <span class="palabra"><span>p</span><span>a</span><span>s</span><span>o</span></span>
+    <h1 class="titulo-animado">
+      <span>Aprende</span> <span>inglés</span> <span>paso</span> <span>a</span> <span>paso</span>
     </h1>
     <p>Plataforma educativa para mejorar tu vocabulario, gramática y pronunciación en inglés.</p>
     <a href="#" class="btn-hero abrir-login"><i class="fa-solid fa-rocket"></i> Empezar ahora</a>
   </div>
-  <div class="hero-img">
+  <div class="hero-imagen">
     <img src="/imagenes/hero.png" alt="Aprende inglés con ENIT Academy">
   </div>
 </section>
 
-<!-- QUÉ APRENDERÁS -->
-<section class="seccion queaprenderas">
-  <div class="seccion-titulo">
-    <h2>¿Qué aprenderás?</h2>
-    <p>Todo lo que necesitas para dominar el inglés.</p>
-  </div>
-  <div class="grid-4">
-    <article class="card-aprender">
-      <img src="/imagenes/vocabulario.jpg" alt="Vocabulario">
-      <h3>Vocabulario</h3>
-      <p>Palabras prácticas de uso diario.</p>
-    </article>
-    <article class="card-aprender">
-      <img src="/imagenes/pronunciacion.jpg" alt="Pronunciación">
-      <h3>Pronunciación</h3>
-      <p>Mejora tu acento y sonidos.</p>
-    </article>
-    <article class="card-aprender">
-      <img src="/imagenes/gramatica.jpg" alt="Gramática">
-      <h3>Gramática</h3>
-      <p>Reglas, verbos y tiempos verbales.</p>
-    </article>
-    <article class="card-aprender">
-      <img src="/imagenes/conversacion.png" alt="Conversación">
-      <h3>Conversación</h3>
-      <p>Frases útiles para situaciones reales.</p>
-    </article>
-  </div>
-</section>
+<!-- LAYOUT: contenido principal + aside -->
+<div class="contenedor-principal">
 
-<!-- NIVELES -->
-<section class="seccion niveles-sec">
-  <div class="seccion-titulo">
-    <h2>Elige tu nivel</h2>
-    <p>Cursos diseñados especialmente para cada etapa.</p>
-  </div>
-  <div class="grid-3">
-    <article class="card-nivel">
-      <img src="/imagenes/1.png" alt="Básico">
-      <h3>Básico</h3>
-      <p>Perfecto para empezar desde cero.</p>
-      <a href="#" class="abrir-login">Ver más →</a>
-    </article>
-    <article class="card-nivel card-nivel--featured">
-      <img src="/imagenes/2.png" alt="Intermedio">
-      <h3>Intermedio</h3>
-      <p>Mejora tu fluidez y comprensión.</p>
-      <a href="#" class="abrir-login">Ver más →</a>
-    </article>
-    <article class="card-nivel">
-      <img src="/imagenes/3.png" alt="Avanzado">
-      <h3>Avanzado</h3>
-      <p>Perfecciona gramática y conversación.</p>
-      <a href="#" class="abrir-login">Ver más →</a>
-    </article>
-  </div>
-</section>
+  <!-- CONTENIDO IZQUIERDO -->
+  <main class="contenido-main">
 
-<!-- BENEFICIOS -->
-<section class="seccion beneficios-sec">
-  <div class="seccion-titulo">
-    <h2>¿Por qué elegir ENIT Academy?</h2>
-    <p>Todo lo que necesitas para aprender de verdad.</p>
-  </div>
-  <div class="grid-4">
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-video"></i></div>
-      <h3>Clases dinámicas</h3>
-      <p>Ejercicios modernos e interactivos.</p>
-    </article>
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-headphones"></i></div>
-      <h3>Audio y pronunciación</h3>
-      <p>Escucha y mejora tu speaking.</p>
-    </article>
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-mobile-screen"></i></div>
-      <h3>Desde cualquier lugar</h3>
-      <p>Accede desde celular, laptop o tablet.</p>
-    </article>
-    <article class="card-beneficio">
-      <div class="beneficio-icon"><i class="fa-solid fa-certificate"></i></div>
-      <h3>Certificados</h3>
-      <p>Reconocimientos al completar cursos.</p>
-    </article>
-  </div>
-</section>
+    <!-- ¿Qué aprenderás? -->
+    <section class="seccion">
+      <div class="titulo-seccion">
+        <h2>¿Qué aprenderás?</h2>
+        <p>Todo lo que necesitas para dominar el inglés.</p>
+      </div>
+      <div class="grilla-4">
+        <article class="tarjeta-aprender">
+          <img src="/imagenes/vocabulario.jpg" alt="Vocabulario">
+          <h3>Vocabulario</h3>
+          <p>Palabras prácticas de uso diario.</p>
+        </article>
+        <article class="tarjeta-aprender">
+          <img src="/imagenes/pronunciacion.jpg" alt="Pronunciación">
+          <h3>Pronunciación</h3>
+          <p>Mejora tu acento y sonidos.</p>
+        </article>
+        <article class="tarjeta-aprender">
+          <img src="/imagenes/gramatica.jpg" alt="Gramática">
+          <h3>Gramática</h3>
+          <p>Reglas, verbos y tiempos verbales.</p>
+        </article>
+        <article class="tarjeta-aprender">
+          <img src="/imagenes/conversacion.png" alt="Conversación">
+          <h3>Conversación</h3>
+          <p>Frases útiles para situaciones reales.</p>
+        </article>
+      </div>
+    </section>
 
-<!-- ESTADÍSTICAS -->
-<section class="seccion stats-sec">
-  <div class="stat-item">
-    <span class="stat-num" id="visitas">0</span>
-    <span class="stat-label">Visitas</span>
-  </div>
-  <div class="stat-sep"></div>
-  <div class="stat-item">
-    <span class="stat-num">3</span>
-    <span class="stat-label">Niveles</span>
-  </div>
-  <div class="stat-sep"></div>
-  <div class="stat-item">
-    <span class="stat-num">100%</span>
-    <span class="stat-label">Online</span>
-  </div>
-</section>
+    <!-- Niveles -->
+    <section class="seccion">
+      <div class="titulo-seccion">
+        <h2>Elige tu nivel</h2>
+        <p>Cursos diseñados para cada etapa.</p>
+      </div>
+      <div class="grilla-3">
+        <article class="tarjeta-nivel">
+          <img src="/imagenes/1.png" alt="Básico">
+          <h3>Básico</h3>
+          <p>Perfecto para empezar desde cero.</p>
+          <a href="#" class="abrir-login">Ver más →</a>
+        </article>
+        <article class="tarjeta-nivel tarjeta-nivel--destacada">
+          <img src="/imagenes/2.png" alt="Intermedio">
+          <h3>Intermedio</h3>
+          <p>Mejora tu fluidez y comprensión.</p>
+          <a href="#" class="abrir-login">Ver más →</a>
+        </article>
+        <article class="tarjeta-nivel">
+          <img src="/imagenes/3.png" alt="Avanzado">
+          <h3>Avanzado</h3>
+          <p>Perfecciona gramática y conversación.</p>
+          <a href="#" class="abrir-login">Ver más →</a>
+        </article>
+      </div>
+    </section>
 
-<!-- TESTIMONIOS -->
-<section class="seccion opiniones-sec">
-  <div class="seccion-titulo">
-    <h2>Lo que dicen nuestros estudiantes</h2>
-    <p>Historias reales de aprendizaje.</p>
-  </div>
-  <div class="scroll-wrapper">
-    <div class="comentarios-scroll" id="comentariosScroll">
-      <article class="slide"><p>"Excelente plataforma, aprendí rápido y sin aburrirme."</p><h4>— Adam Smith</h4></article>
-      <article class="slide"><p>"Las clases son modernas y muy fáciles de entender."</p><h4>— Clara Martin</h4></article>
-      <article class="slide"><p>"Ahora puedo hablar inglés con mucha más confianza."</p><h4>— Richard James</h4></article>
-      <article class="slide"><p>"Me ayudó muchísimo con pronunciación y listening."</p><h4>— Emily Rose</h4></article>
-      <article class="slide"><p>"La plataforma se ve moderna y las clases son divertidas."</p><h4>— Sophia Lee</h4></article>
+    <!-- Beneficios -->
+    <section class="seccion">
+      <div class="titulo-seccion">
+        <h2>¿Por qué elegir ENIT Academy?</h2>
+        <p>Todo lo que necesitas para aprender de verdad.</p>
+      </div>
+      <div class="grilla-4">
+        <article class="tarjeta-beneficio">
+          <div class="icono-beneficio"><i class="fa-solid fa-video"></i></div>
+          <h3>Clases dinámicas</h3>
+          <p>Ejercicios modernos e interactivos.</p>
+        </article>
+        <article class="tarjeta-beneficio">
+          <div class="icono-beneficio"><i class="fa-solid fa-headphones"></i></div>
+          <h3>Audio y pronunciación</h3>
+          <p>Escucha y mejora tu speaking.</p>
+        </article>
+        <article class="tarjeta-beneficio">
+          <div class="icono-beneficio"><i class="fa-solid fa-mobile-screen"></i></div>
+          <h3>Desde cualquier lugar</h3>
+          <p>Accede desde celular, laptop o tablet.</p>
+        </article>
+        <article class="tarjeta-beneficio">
+          <div class="icono-beneficio"><i class="fa-solid fa-certificate"></i></div>
+          <h3>Certificados</h3>
+          <p>Reconocimientos al completar cursos.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section class="seccion">
+      <div class="titulo-seccion">
+        <h2>Lo que dicen nuestros estudiantes</h2>
+        <p>Historias reales de aprendizaje.</p>
+      </div>
+      <div class="carrusel-wrap">
+        <div class="carrusel" id="carrusel">
+          <article class="slide-opinion"><p>"Excelente plataforma, aprendí rápido y sin aburrirme."</p><h4>— Adam Smith</h4></article>
+          <article class="slide-opinion"><p>"Las clases son modernas y muy fáciles de entender."</p><h4>— Clara Martin</h4></article>
+          <article class="slide-opinion"><p>"Ahora puedo hablar inglés con mucha más confianza."</p><h4>— Richard James</h4></article>
+          <article class="slide-opinion"><p>"Me ayudó muchísimo con pronunciación y listening."</p><h4>— Emily Rose</h4></article>
+          <article class="slide-opinion"><p>"La plataforma se ve moderna y las clases son divertidas."</p><h4>— Sophia Lee</h4></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="seccion">
+      <div class="titulo-seccion">
+        <h2>Preguntas frecuentes</h2>
+        <p>Todo lo que necesitas saber antes de empezar.</p>
+      </div>
+      <div class="lista-faq">
+        <details><summary>¿Necesito conocimientos previos?</summary><p>No, puedes empezar desde cero y avanzar paso a paso.</p></details>
+        <details><summary>¿Las clases son virtuales?</summary><p>Sí, puedes aprender desde cualquier dispositivo.</p></details>
+        <details><summary>¿Recibiré certificado?</summary><p>Sí, algunos cursos incluyen certificado al finalizar.</p></details>
+        <details><summary>¿Puedo estudiar desde mi celular?</summary><p>La plataforma es 100% responsive y funciona en móviles.</p></details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ASIDE DERECHO -->
+  <aside class="aside-info">
+
+    <!-- Contador de visitas -->
+    <div class="aside-card">
+      <div class="aside-icono"><i class="fa-solid fa-eye"></i></div>
+      <h3>Visitas totales</h3>
+      <span class="contador-numero" id="contadorVisitas">—</span>
+      <p>personas ya nos visitaron</p>
     </div>
-  </div>
-</section>
 
-<!-- FAQ -->
-<section class="seccion faq-sec">
-  <div class="seccion-titulo">
-    <h2>Preguntas frecuentes</h2>
-    <p>Todo lo que necesitas saber antes de empezar.</p>
-  </div>
-  <div class="lista-faq">
-    <details><summary>¿Necesito conocimientos previos?</summary><p>No, puedes empezar desde cero y avanzar paso a paso.</p></details>
-    <details><summary>¿Las clases son virtuales?</summary><p>Sí, puedes aprender desde cualquier dispositivo.</p></details>
-    <details><summary>¿Recibiré certificado?</summary><p>Sí, algunos cursos incluyen certificado al finalizar.</p></details>
-    <details><summary>¿Puedo estudiar desde mi celular?</summary><p>La plataforma es 100% responsive y funciona en móviles.</p></details>
-  </div>
-</section>
+    <!-- Stats rápidas -->
+    <div class="aside-card">
+      <h3>En números</h3>
+      <ul class="lista-stats">
+        <li><i class="fa-solid fa-users"></i> <span id="totalEstudiantes">—</span> estudiantes</li>
+        <li><i class="fa-solid fa-book-open"></i> <span id="totalCursos">—</span> cursos activos</li>
+        <li><i class="fa-solid fa-graduation-cap"></i> 3 niveles disponibles</li>
+        <li><i class="fa-solid fa-globe"></i> 100% online</li>
+      </ul>
+    </div>
 
-<!-- UBICACIÓN -->
-<section class="seccion ubicacion-sec">
-  <div class="seccion-titulo">
-    <h2>Nuestra ubicación</h2>
-    <p><i class="fa-solid fa-location-dot"></i> Lima, Perú — aprende presencial o virtual.</p>
-  </div>
-  <div class="mapa-wrap">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62398.35482034257!2d-76.97187699005096!3d-12.187399243333376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105bb8b8aea3d77%3A0x8e0fbe3f089a7db6!2sMercado%20Las%20Lomas%20V.E.S!5e0!3m2!1ses-419!2spe!4v1779081545783!5m2!1ses-419!2spe" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación ENIT Academy"></iframe>
-  </div>
-</section>
+    <!-- Ubicación -->
+    <div class="aside-card aside-mapa">
+      <h3><i class="fa-solid fa-location-dot"></i> Nuestra ubicación</h3>
+      <p>Lima, Perú — aprende presencial o virtual.</p>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62398.35482034257!2d-76.97187699005096!3d-12.187399243333376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105bb8b8aea3d77%3A0x8e0fbe3f089a7db6!2sMercado%20Las%20Lomas%20V.E.S!5e0!3m2!1ses-419!2spe!4v1779081545783!5m2!1ses-419!2spe"
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación ENIT Academy">
+      </iframe>
+    </div>
+
+    <!-- CTA -->
+    <div class="aside-card aside-cta">
+      <h3>¿Listo para empezar?</h3>
+      <p>Regístrate gratis y comienza hoy.</p>
+      <a href="/paginas/registrarse.html" class="btn-aside">Crear cuenta <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+
+  </aside>
+
+</div><!-- fin contenedor-principal -->
 
 <footer id="footer"></footer>
 
 <script type="module" src="/js/header_footer.js"></script>
 <script type="module" src="/js/login.js"></script>
 <script type="module" src="/js/reset-password.js"></script>
+
 <script type="module">
 import { supabase } from "/js/supabase.js";
-// Contador visitas
-async function initCounter() {
-  const span = document.getElementById("visitas");
+
+// ── Contador de visitas ───────────────────────
+async function contarVisita() {
+  const span = document.getElementById("contadorVisitas");
   if (!span) return;
-  const { data } = await supabase.from("site_stats").select("visits").eq("id",1).single();
+
+  // Leer visitas actuales
+  const { data } = await supabase.from("site_stats").select("visitas").eq("id", 1).single();
   if (!data) return;
-  let v = data.visits || 0;
-  if (!localStorage.getItem("visited")) { localStorage.setItem("visited","1"); v++; await supabase.from("site_stats").update({visits:v}).eq("id",1); }
-  span.textContent = v.toLocaleString();
+
+  let total = data.visitas || 0;
+
+  // Sumar 1 solo si es la primera vez del usuario en este navegador
+  if (!sessionStorage.getItem("visita_contada")) {
+    sessionStorage.setItem("visita_contada", "1");
+    total++;
+    await supabase.from("site_stats").update({ visitas: total }).eq("id", 1);
+  }
+
+  // Animación del número
+  let actual = 0;
+  const paso = Math.ceil(total / 60);
+  const intervalo = setInterval(() => {
+    actual = Math.min(actual + paso, total);
+    span.textContent = actual.toLocaleString("es-PE");
+    if (actual >= total) clearInterval(intervalo);
+  }, 30);
 }
-initCounter();
-// Scroll comments clone
-const sc = document.getElementById("comentariosScroll");
-if (sc) sc.innerHTML += sc.innerHTML;
-// Modo oscuro
+
+// ── Estadísticas de la plataforma ────────────
+async function cargarStats() {
+  const { count: totalEst } = await supabase
+    .from("perfiles").select("id", { count: "exact", head: true }).eq("rol", "estudiante");
+
+  const { count: totalCursos } = await supabase
+    .from("cursos").select("id", { count: "exact", head: true });
+
+  const elEst    = document.getElementById("totalEstudiantes");
+  const elCursos = document.getElementById("totalCursos");
+  if (elEst)    elEst.textContent    = totalEst    || 0;
+  if (elCursos) elCursos.textContent = totalCursos || 0;
+}
+
+contarVisita();
+cargarStats();
+
+// ── Carrusel automático ───────────────────────
+const carrusel = document.getElementById("carrusel");
+if (carrusel) {
+  // Duplicar para scroll infinito
+  carrusel.innerHTML += carrusel.innerHTML;
+}
+
+// ── Modo oscuro ───────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
-    document.getElementById("modoOscuro")?.addEventListener("click", () => {
+    const btnOscuro = document.getElementById("modoOscuro");
+    if (!btnOscuro) return;
+    btnOscuro.addEventListener("click", () => {
       document.body.classList.toggle("dark");
-      const i = document.querySelector("#modoOscuro i");
-      if (i) { i.classList.toggle("fa-moon"); i.classList.toggle("fa-sun"); }
+      const icono = btnOscuro.querySelector("i");
+      if (icono) { icono.classList.toggle("fa-moon"); icono.classList.toggle("fa-sun"); }
     });
-  }, 300);
+  }, 400);
 });
 </script>
+
 </body>
 </html>

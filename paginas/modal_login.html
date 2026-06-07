@@ -1,50 +1,46 @@
-<div id="modalLogin" class="modal">
-  <div class="modal-contenido">
-    <span class="cerrar">&times;</span>
+<div id="modalLogin" class="modal-fondo">
+  <div class="modal-caja">
+    <button class="cerrar" aria-label="Cerrar">&times;</button>
 
-    <div class="login-box">
-
-      <div class="lado-info">
-        <h2>Bienvenid@</h2>
-        <p>Continúa aprendiendo inglés con clases modernas, dinámicas y diseñadas para ti.</p>
+    <div class="login-contenido">
+      <div class="login-bienvenida">
+        <h2>¡Bienvenid@!</h2>
+        <p>Continúa aprendiendo inglés con clases modernas y divertidas.</p>
       </div>
 
-      <div class="lado-formulario">
-        <h3>Iniciar Sesión</h3>
+      <div class="login-formulario">
+        <h3>Iniciar sesión</h3>
 
-        <form id="loginForm">
-
-          <div class="grupo-input">
+        <form id="loginForm" novalidate>
+          <div class="campo">
             <label for="loginEmail">Correo electrónico</label>
             <input type="email" id="loginEmail" placeholder="tu@correo.com" autocomplete="email">
           </div>
 
-          <div class="grupo-input password-box">
+          <div class="campo campo-clave">
             <label for="loginPassword">Contraseña</label>
-            <div style="position:relative;">
+            <div class="envoltorio-input">
               <input type="password" id="loginPassword" placeholder="Tu contraseña" autocomplete="current-password">
-              <i class="fa-solid fa-eye" id="togglePassword"
-                 style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);cursor:pointer;color:#9178a6;"></i>
+              <i class="fa-solid fa-eye ojo-clave" id="togglePassword"></i>
             </div>
           </div>
 
           <div class="opciones-login">
-            <label><input type="checkbox"> Recordarme</label>
+            <label class="recordarme">
+              <input type="checkbox"> Recordarme
+            </label>
             <a href="#" id="resetPassword">¿Olvidaste tu contraseña?</a>
           </div>
 
-          <!-- Alerta de feedback -->
           <div id="loginAlerta" class="form-alerta"></div>
 
-          <button type="submit">Ingresar</button>
+          <button type="submit" class="btn-ingresar-form">Ingresar</button>
 
-          <p class="crear-cuenta">
+          <p class="link-registro">
             ¿No tienes cuenta? <a href="/paginas/registrarse.html">Regístrate</a>
           </p>
-
         </form>
       </div>
-
     </div>
   </div>
 </div>

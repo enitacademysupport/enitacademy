@@ -1,60 +1,38 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — panel_estudiante.js
-   ════════════════════════════════════════════ */
 import { supabase } from "./supabase.js";
 
-// ── Guardia de sesión ─────────────────────────
+// ── Verificar sesión ──────────────────────────
 async function verificarSesion() {
-  return new Promise((resolve) => {
-    let resolved = false;
+  const { data: { session } } = await supabase.auth.getSession();
 
-    const timeout = setTimeout(() => {
-      if (!resolved) { resolved = true; window.location.href = "/index.html"; resolve(null); }
-    }, 8000);
+  if (!session) { window.location.replace("/index.html"); return null; }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event !== "INITIAL_SESSION" && event !== "SIGNED_IN") return;
-      if (resolved) return;
-      resolved = true;
-      clearTimeout(timeout);
-      subscription.unsubscribe();
+  const { data: perfil } = await supabase
+    .from("perfiles").select("*").eq("id", session.user.id).single();
 
-      if (!session) { window.location.href = "/index.html"; resolve(null); return; }
+  if (!perfil) { window.location.replace("/index.html"); return null; }
+  if (perfil.rol !== "estudiante") { window.location.replace("/paginas/panel_docente.html"); return null; }
 
-      const { data: perfil, error } = await supabase
-        .from("perfiles").select("*").eq("id", session.user.id).single();
-
-      if (error || !perfil) { window.location.href = "/index.html"; resolve(null); return; }
-      if (perfil.rol !== "estudiante") { window.location.href = "/paginas/panel_docente.html"; resolve(null); return; }
-
-      resolve({ user: session.user, perfil });
-    });
-  });
+  return { usuario: session.user, perfil };
 }
 
 // ── Helpers ───────────────────────────────────
-function alerta(id, tipo, msg) {
-  const el = document.getElementById(id);
+function mostrarAlerta(idElemento, tipo, mensaje) {
+  const el = document.getElementById(idElemento);
   if (!el) return;
-  el.className = `form-alerta visible alerta-${tipo}`;
-  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i><span>${msg}</span>`;
+  el.className = `alerta alerta-${tipo}`;
+  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${mensaje}`;
 }
-
-function limpiarAlerta(id) {
-  const el = document.getElementById(id);
-  if (el) { el.className = "form-alerta"; el.innerHTML = ""; }
+function limpiarAlerta(idElemento) {
+  const el = document.getElementById(idElemento);
+  if (el) { el.className = "alerta"; el.innerHTML = ""; }
 }
 
 function mostrarVista(nombre) {
   document.querySelectorAll(".vista").forEach(v => v.classList.add("oculto"));
-  const key = nombre[0].toUpperCase() + nombre.slice(1);
-  const el  = document.getElementById("vista" + key);
-  if (el) el.classList.remove("oculto");
-  document.querySelectorAll(".nav-item").forEach(b =>
-    b.classList.toggle("active", b.dataset.vista === nombre)
-  );
-  document.querySelector(".sidebar")?.classList.remove("sidebar-open");
-  document.getElementById("sidebarOverlay")?.classList.remove("visible");
+  document.getElementById("vista-" + nombre)?.classList.remove("oculto");
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("activo", b.dataset.vista === nombre));
+  document.querySelector(".panel-sidebar")?.classList.remove("sidebar-abierto");
+  document.getElementById("fondoSidebar")?.classList.remove("visible");
 }
 
 // ── Stats ─────────────────────────────────────
@@ -74,8 +52,8 @@ async function cargarStats(estudianteId) {
   document.getElementById("statNivel").textContent    = nivelTop;
 }
 
-// ── Cursos ────────────────────────────────────
-let cursosEstudiante = [];
+// ── Cursos inscritos ──────────────────────────
+let misCursos = [];
 
 async function cargarCursos(estudianteId) {
   const { data } = await supabase
@@ -84,45 +62,41 @@ async function cargarCursos(estudianteId) {
     .eq("estudiante_id", estudianteId)
     .order("inscrito_at", { ascending: false });
 
-  cursosEstudiante = data?.map(d => d.cursos) || [];
+  misCursos = data?.map(d => d.cursos) || [];
 
-  const lista = document.getElementById("listaCursos");
-  const vacio = document.getElementById("msgVacio");
-  lista.innerHTML = "";
+  const contenedor = document.getElementById("listaCursos");
+  const sinDatos   = document.getElementById("msgSinCursos");
+  contenedor.innerHTML = "";
 
-  if (!data?.length) {
-    lista.appendChild(vacio);
-    vacio.style.display = "block";
-    return;
-  }
-  vacio.style.display = "none";
+  if (!data?.length) { contenedor.appendChild(sinDatos); sinDatos.style.display = "block"; return; }
+  sinDatos.style.display = "none";
 
   data.forEach(({ cursos: c, inscrito_at }) => {
-    const card = document.createElement("div");
-    card.className = "card-curso";
-    card.innerHTML = `
-      <div class="card-top">
-        <span class="badge-nivel nivel-${c.nivel}">${c.nivel || "—"}</span>
-        <span class="fecha-inscripcion">${new Date(inscrito_at).toLocaleDateString("es-PE")}</span>
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "tarjeta-curso";
+    tarjeta.innerHTML = `
+      <div class="tarjeta-top">
+        <span class="etiqueta-nivel nivel-${c.nivel}">${c.nivel || "—"}</span>
+        <span class="fecha-texto">${new Date(inscrito_at).toLocaleDateString("es-PE")}</span>
       </div>
       <h3>${c.nombre}</h3>
       <p>${c.descripcion || "Sin descripción"}</p>
-      <div class="card-footer">
-        <span class="docente-small">
+      <div class="tarjeta-pie">
+        <span class="texto-docente">
           <i class="fa-solid fa-chalkboard-teacher"></i>
           ${c.perfiles?.nombre ?? ""} ${c.perfiles?.apellido ?? ""}
         </span>
       </div>
     `;
-    lista.appendChild(card);
+    contenedor.appendChild(tarjeta);
   });
 
-  // Poblar filtros de curso en las otras vistas
-  ["filtroAnunciosCurso","filtroArchivosCurso","filtroTareasCurso"].forEach(selId => {
-    const sel = document.getElementById(selId);
+  // Poblar filtros
+  ["filtroAnuncios","filtroArchivos","filtroTareas"].forEach(id => {
+    const sel = document.getElementById(id);
     if (!sel) return;
     sel.innerHTML = '<option value="">Todos los cursos</option>';
-    cursosEstudiante.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.nombre}</option>`; });
+    misCursos.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.nombre}</option>`; });
   });
 }
 
@@ -130,32 +104,23 @@ async function cargarCursos(estudianteId) {
 let todosAnuncios = [];
 
 async function cargarAnuncios(estudianteId) {
-  const { data } = await supabase
-    .from("inscripciones")
-    .select("curso_id").eq("estudiante_id", estudianteId);
+  const { data: inscripciones } = await supabase.from("inscripciones").select("curso_id").eq("estudiante_id", estudianteId);
+  if (!inscripciones?.length) { dibujarAnuncios([]); return; }
 
-  if (!data?.length) { document.getElementById("listaAnunciosEst").innerHTML = "<p class='txt-vacio'>Aún no estás inscrito en ningún curso.</p>"; return; }
-
-  const ids = data.map(d => d.curso_id);
-  const { data: anuncios } = await supabase
-    .from("anuncios")
-    .select("*, cursos(nombre)")
-    .in("curso_id", ids)
-    .order("creado_at", { ascending: false });
-
-  todosAnuncios = anuncios || [];
-  renderAnuncios(todosAnuncios);
+  const ids = inscripciones.map(i => i.curso_id);
+  const { data } = await supabase.from("anuncios").select("*, cursos(nombre)").in("curso_id", ids).order("creado_at", { ascending: false });
+  todosAnuncios = data || [];
+  dibujarAnuncios(todosAnuncios);
 }
 
-function renderAnuncios(lista) {
-  const el = document.getElementById("listaAnunciosEst");
-  if (!lista.length) { el.innerHTML = "<p class='txt-vacio'>No hay anuncios por ahora.</p>"; return; }
-
+function dibujarAnuncios(lista) {
+  const el = document.getElementById("listaAnuncios");
+  if (!lista.length) { el.innerHTML = "<p class='sin-datos'>No hay anuncios por ahora.</p>"; return; }
   el.innerHTML = lista.map(a => `
-    <div class="anuncio-card anuncio-estudiante">
-      <div class="anuncio-header">
-        <span class="anuncio-curso"><i class="fa-solid fa-book-open"></i> ${a.cursos?.nombre || "—"}</span>
-        <span class="anuncio-fecha">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
+    <div class="tarjeta-anuncio">
+      <div class="anuncio-cabecera">
+        <span class="texto-curso"><i class="fa-solid fa-book-open"></i> ${a.cursos?.nombre || "—"}</span>
+        <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
       </div>
       <h4>${a.titulo}</h4>
       <p>${a.contenido}</p>
@@ -164,44 +129,32 @@ function renderAnuncios(lista) {
 
 // ── Archivos ──────────────────────────────────
 let todosArchivos = [];
+const ICONOS = { pdf:"fa-file-pdf", doc:"fa-file-word", docx:"fa-file-word", ppt:"fa-file-powerpoint", pptx:"fa-file-powerpoint", mp4:"fa-file-video", mp3:"fa-file-audio", jpg:"fa-file-image", jpeg:"fa-file-image", png:"fa-file-image" };
 
 async function cargarArchivos(estudianteId) {
-  const { data } = await supabase
-    .from("inscripciones").select("curso_id").eq("estudiante_id", estudianteId);
+  const { data: inscripciones } = await supabase.from("inscripciones").select("curso_id").eq("estudiante_id", estudianteId);
+  if (!inscripciones?.length) { dibujarArchivos([]); return; }
 
-  if (!data?.length) { document.getElementById("listaArchivosEst").innerHTML = "<p class='txt-vacio'>Aún no estás inscrito en ningún curso.</p>"; return; }
-
-  const ids = data.map(d => d.curso_id);
-  const { data: archivos } = await supabase
-    .from("archivos")
-    .select("*, cursos(nombre)")
-    .in("curso_id", ids)
-    .order("creado_at", { ascending: false });
-
-  todosArchivos = archivos || [];
-  renderArchivos(todosArchivos);
+  const ids = inscripciones.map(i => i.curso_id);
+  const { data } = await supabase.from("archivos").select("*, cursos(nombre)").in("curso_id", ids).order("creado_at", { ascending: false });
+  todosArchivos = data || [];
+  dibujarArchivos(todosArchivos);
 }
 
-function renderArchivos(lista) {
-  const el = document.getElementById("listaArchivosEst");
-  const iconMap = { pdf:"fa-file-pdf", doc:"fa-file-word", docx:"fa-file-word", ppt:"fa-file-powerpoint", pptx:"fa-file-powerpoint", xls:"fa-file-excel", xlsx:"fa-file-excel", mp4:"fa-file-video", mp3:"fa-file-audio", jpg:"fa-file-image", jpeg:"fa-file-image", png:"fa-file-image" };
-  
-  if (!lista.length) { el.innerHTML = "<p class='txt-vacio'>No hay archivos disponibles aún.</p>"; return; }
-
+function dibujarArchivos(lista) {
+  const el = document.getElementById("listaArchivos");
+  if (!lista.length) { el.innerHTML = "<p class='sin-datos'>No hay archivos disponibles aún.</p>"; return; }
   el.innerHTML = lista.map(a => {
-    const ext = a.nombre_archivo?.split(".").pop()?.toLowerCase() || "";
-    const icon = iconMap[ext] || "fa-file";
-    return `
-    <div class="archivo-card">
-      <div class="archivo-icon"><i class="fa-solid ${icon}"></i></div>
-      <div class="archivo-info">
-        <span class="archivo-nombre">${a.nombre_archivo}</span>
-        <span class="archivo-curso"><i class="fa-solid fa-book-open"></i> ${a.cursos?.nombre || "—"}</span>
-        <span class="archivo-fecha">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
+    const ext  = a.nombre_archivo?.split(".").pop()?.toLowerCase() || "";
+    const icon = ICONOS[ext] || "fa-file";
+    return `<div class="tarjeta-archivo">
+      <i class="fa-solid ${icon} icono-archivo"></i>
+      <div class="info-archivo">
+        <span class="nombre-archivo">${a.nombre_archivo}</span>
+        <span class="texto-curso"><i class="fa-solid fa-book-open"></i> ${a.cursos?.nombre || "—"}</span>
+        <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
       </div>
-      <a href="${a.url}" target="_blank" class="btn-icon btn-download" title="Descargar">
-        <i class="fa-solid fa-download"></i>
-      </a>
+      <a href="${a.url}" target="_blank" class="btn-icono" title="Descargar"><i class="fa-solid fa-download"></i></a>
     </div>`;
   }).join("");
 }
@@ -210,156 +163,142 @@ function renderArchivos(lista) {
 let todasTareas = [];
 
 async function cargarTareas(estudianteId) {
-  const { data } = await supabase
-    .from("inscripciones").select("curso_id").eq("estudiante_id", estudianteId);
+  const { data: inscripciones } = await supabase.from("inscripciones").select("curso_id").eq("estudiante_id", estudianteId);
+  if (!inscripciones?.length) { dibujarTareas([]); return; }
 
-  if (!data?.length) { document.getElementById("listaTareasEst").innerHTML = "<p class='txt-vacio'>Aún no estás inscrito en ningún curso.</p>"; return; }
-
-  const ids = data.map(d => d.curso_id);
-  const { data: tareas } = await supabase
-    .from("tareas")
-    .select("*, cursos(nombre)")
-    .in("curso_id", ids)
-    .order("fecha_entrega", { ascending: true, nullsFirst: false });
-
-  todasTareas = tareas || [];
-  renderTareas(todasTareas);
+  const ids = inscripciones.map(i => i.curso_id);
+  const { data } = await supabase.from("tareas").select("*, cursos(nombre)").in("curso_id", ids).order("fecha_entrega", { ascending: true, nullsFirst: false });
+  todasTareas = data || [];
+  dibujarTareas(todasTareas);
 }
 
-function renderTareas(lista) {
-  const el = document.getElementById("listaTareasEst");
-  if (!lista.length) { el.innerHTML = "<p class='txt-vacio'>No hay tareas asignadas aún.</p>"; return; }
-
+function dibujarTareas(lista) {
+  const el  = document.getElementById("listaTareas");
   const hoy = new Date();
+  if (!lista.length) { el.innerHTML = "<p class='sin-datos'>No hay tareas asignadas aún.</p>"; return; }
   el.innerHTML = lista.map(t => {
-    const vence   = t.fecha_entrega ? new Date(t.fecha_entrega).toLocaleDateString("es-PE") : "Sin fecha límite";
+    const vence   = t.fecha_entrega ? new Date(t.fecha_entrega).toLocaleDateString("es-PE") : "Sin fecha";
     const vencida = t.fecha_entrega && new Date(t.fecha_entrega) < hoy;
     const urgente = t.fecha_entrega && !vencida && (new Date(t.fecha_entrega) - hoy) < 3 * 86400000;
-    return `
-    <div class="tarea-card ${vencida ? "tarea-vencida" : urgente ? "tarea-urgente" : ""}">
-      <div class="tarea-header">
-        <span class="anuncio-curso"><i class="fa-solid fa-book-open"></i> ${t.cursos?.nombre || "—"}</span>
-        <span class="tarea-fecha ${vencida ? "vencida" : urgente ? "urgente" : ""}">
+    return `<div class="tarjeta-tarea ${vencida ? "tarea-vencida" : urgente ? "tarea-urgente" : ""}">
+      <div class="tarea-cabecera">
+        <span class="texto-curso"><i class="fa-solid fa-book-open"></i> ${t.cursos?.nombre || "—"}</span>
+        <span class="fecha-texto ${vencida ? "texto-vencido" : urgente ? "texto-urgente" : ""}">
           <i class="fa-solid fa-clock"></i> ${vence}
-          ${vencida ? '<span class="badge-vencida">Vencida</span>' : urgente ? '<span class="badge-urgente">Pronto</span>' : ""}
+          ${vencida ? '<span class="etiqueta-vencida">Vencida</span>' : urgente ? '<span class="etiqueta-urgente">¡Pronto!</span>' : ""}
         </span>
       </div>
       <h4>${t.titulo}</h4>
       ${t.descripcion ? `<p>${t.descripcion}</p>` : ""}
-      ${t.puntos ? `<span class="tarea-puntos"><i class="fa-solid fa-star"></i> ${t.puntos} pts</span>` : ""}
+      ${t.puntos ? `<span class="puntos-badge"><i class="fa-solid fa-star"></i> ${t.puntos} pts</span>` : ""}
     </div>`;
   }).join("");
 }
 
-// ── Filtros por curso ──────────────────────────
+// ── Filtros ───────────────────────────────────
 function initFiltros() {
-  document.getElementById("filtroAnunciosCurso")?.addEventListener("change", e => {
+  document.getElementById("filtroAnuncios")?.addEventListener("change", e => {
     const v = e.target.value;
-    renderAnuncios(v ? todosAnuncios.filter(a => a.curso_id === v) : todosAnuncios);
+    dibujarAnuncios(v ? todosAnuncios.filter(a => a.curso_id === v) : todosAnuncios);
   });
-  document.getElementById("filtroArchivosCurso")?.addEventListener("change", e => {
+  document.getElementById("filtroArchivos")?.addEventListener("change", e => {
     const v = e.target.value;
-    renderArchivos(v ? todosArchivos.filter(a => a.curso_id === v) : todosArchivos);
+    dibujarArchivos(v ? todosArchivos.filter(a => a.curso_id === v) : todosArchivos);
   });
-  document.getElementById("filtroTareasCurso")?.addEventListener("change", e => {
+  document.getElementById("filtroTareas")?.addEventListener("change", e => {
     const v = e.target.value;
-    renderTareas(v ? todasTareas.filter(t => t.curso_id === v) : todasTareas);
+    dibujarTareas(v ? todasTareas.filter(t => t.curso_id === v) : todasTareas);
   });
 }
 
 // ── Unirse por código ─────────────────────────
 function initFormCodigo(estudianteId) {
-  document.getElementById("formCodigo").addEventListener("submit", async e => {
+  document.getElementById("formCodigo")?.addEventListener("submit", async e => {
     e.preventDefault();
     limpiarAlerta("alertaCodigo");
     document.getElementById("errCodigo").textContent = "";
 
-    const codigo = document.getElementById("codigoInput").value.trim().toUpperCase();
+    const codigo = document.getElementById("inputCodigo").value.trim().toUpperCase();
     if (!codigo) { document.getElementById("errCodigo").textContent = "Ingresa un código."; return; }
 
     const btn = e.target.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Buscando...";
 
-    const { data: curso, error } = await supabase
-      .from("cursos").select("id,nombre").eq("codigo", codigo).single();
-
+    const { data: curso, error } = await supabase.from("cursos").select("id,nombre").eq("codigo", codigo).single();
     if (error || !curso) {
-      alerta("alertaCodigo","error","Código inválido. Verifica e intenta de nuevo.");
-      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Unirme al curso';
+      mostrarAlerta("alertaCodigo", "error", "Código inválido.");
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Unirme';
       return;
     }
 
-    const { data: yaInscrito } = await supabase
-      .from("inscripciones").select("id")
-      .eq("curso_id", curso.id).eq("estudiante_id", estudianteId).maybeSingle();
+    const { data: yaInscrito } = await supabase.from("inscripciones")
+      .select("id").eq("curso_id", curso.id).eq("estudiante_id", estudianteId).maybeSingle();
 
     if (yaInscrito) {
-      alerta("alertaCodigo","error","Ya estás inscrito en este curso.");
-      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Unirme al curso';
+      mostrarAlerta("alertaCodigo", "error", "Ya estás inscrito en este curso.");
+      btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Unirme';
       return;
     }
 
-    const { error: errIns } = await supabase
-      .from("inscripciones").insert({ curso_id: curso.id, estudiante_id: estudianteId });
+    const { error: errIns } = await supabase.from("inscripciones").insert({ curso_id: curso.id, estudiante_id: estudianteId });
+    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Unirme';
 
-    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Unirme al curso';
+    if (errIns) { mostrarAlerta("alertaCodigo", "error", errIns.message); return; }
 
-    if (errIns) { alerta("alertaCodigo","error",errIns.message); return; }
-
-    alerta("alertaCodigo","ok",`¡Te uniste a "${curso.nombre}"!`);
+    mostrarAlerta("alertaCodigo", "ok", `¡Te uniste a "${curso.nombre}"!`);
     e.target.reset();
     setTimeout(async () => {
       await cargarCursos(estudianteId);
       await Promise.all([cargarAnuncios(estudianteId), cargarArchivos(estudianteId), cargarTareas(estudianteId)]);
       cargarStats(estudianteId);
       mostrarVista("cursos");
-    }, 1600);
+    }, 1500);
   });
 }
 
 // ── Perfil ────────────────────────────────────
-function initFormPerfil(user, perfil) {
+function initFormPerfil(usuario, perfil) {
   document.getElementById("pNombre").value   = perfil.nombre   || "";
   document.getElementById("pApellido").value = perfil.apellido || "";
-  document.getElementById("pEmail").value    = user.email      || "";
+  document.getElementById("pEmail").value    = usuario.email   || "";
   document.getElementById("perfilDesde").textContent =
-    "Miembro desde " + new Date(perfil.creado_at).toLocaleDateString("es-PE", { year:"numeric", month:"long" });
+    "Miembro desde " + new Date(perfil.creado_at).toLocaleDateString("es-PE", { year: "numeric", month: "long" });
 
-  document.querySelector(".toggle-pw")?.addEventListener("click", function () {
-    const input = document.getElementById(this.dataset.target);
-    const show  = input.type === "password";
-    input.type  = show ? "text" : "password";
-    this.querySelector("i").className = show ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+  document.querySelector(".btn-ojo")?.addEventListener("click", function() {
+    const input = document.getElementById(this.dataset.objetivo);
+    const mostrar = input.type === "password";
+    input.type = mostrar ? "text" : "password";
+    this.querySelector("i").className = mostrar ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
   });
 
-  document.getElementById("formPerfil").addEventListener("submit", async e => {
+  document.getElementById("formPerfil")?.addEventListener("submit", async e => {
     e.preventDefault();
     limpiarAlerta("alertaPerfil");
 
     const nombre    = document.getElementById("pNombre").value.trim();
     const apellido  = document.getElementById("pApellido").value.trim();
-    const passNueva = document.getElementById("pPassNueva").value;
+    const clave     = document.getElementById("pClave").value;
 
     document.getElementById("errPNombre").textContent   = "";
     document.getElementById("errPApellido").textContent = "";
-    document.getElementById("errPPass").textContent     = "";
+    document.getElementById("errPClave").textContent    = "";
 
-    let ok = true;
-    if (!nombre)   { document.getElementById("errPNombre").textContent   = "Nombre obligatorio.";   ok = false; }
-    if (!apellido) { document.getElementById("errPApellido").textContent = "Apellido obligatorio."; ok = false; }
-    if (passNueva && passNueva.length < 6) { document.getElementById("errPPass").textContent = "Mínimo 6 caracteres."; ok = false; }
-    if (!ok) return;
+    let valido = true;
+    if (!nombre)   { document.getElementById("errPNombre").textContent   = "Nombre obligatorio.";   valido = false; }
+    if (!apellido) { document.getElementById("errPApellido").textContent = "Apellido obligatorio."; valido = false; }
+    if (clave && clave.length < 6) { document.getElementById("errPClave").textContent = "Mínimo 6 caracteres."; valido = false; }
+    if (!valido) return;
 
     const btn = e.target.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Guardando...";
 
-    await supabase.from("perfiles").update({ nombre, apellido }).eq("id", user.id);
+    await supabase.from("perfiles").update({ nombre, apellido }).eq("id", usuario.id);
     await supabase.auth.updateUser({ data: { nombre, apellido } });
 
-    if (passNueva) {
-      const { error: errPass } = await supabase.auth.updateUser({ password: passNueva });
-      if (errPass) {
-        alerta("alertaPerfil","error",errPass.message);
+    if (clave) {
+      const { error: errClave } = await supabase.auth.updateUser({ password: clave });
+      if (errClave) {
+        mostrarAlerta("alertaPerfil", "error", errClave.message);
         btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
         return;
       }
@@ -367,33 +306,27 @@ function initFormPerfil(user, perfil) {
 
     btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
     document.getElementById("sideNombre").textContent = `${nombre} ${apellido}`;
-    document.getElementById("pPassNueva").value = "";
-    alerta("alertaPerfil","ok","¡Perfil actualizado correctamente!");
+    document.getElementById("pClave").value = "";
+    mostrarAlerta("alertaPerfil", "ok", "Perfil actualizado correctamente.");
   });
 }
 
 // ── Sidebar móvil ─────────────────────────────
-function initSidebarMobile() {
-  const toggle  = document.getElementById("sidebarToggle");
-  const sidebar = document.querySelector(".sidebar");
-  const overlay = document.getElementById("sidebarOverlay");
+function initSidebarMovil() {
+  const btnAbrir = document.getElementById("btnAbrirSidebar");
+  const sidebar  = document.querySelector(".panel-sidebar");
+  const fondo    = document.getElementById("fondoSidebar");
 
-  toggle?.addEventListener("click", () => {
-    sidebar.classList.toggle("sidebar-open");
-    overlay.classList.toggle("visible");
-  });
-  overlay?.addEventListener("click", () => {
-    sidebar.classList.remove("sidebar-open");
-    overlay.classList.remove("visible");
-  });
+  btnAbrir?.addEventListener("click", () => { sidebar?.classList.toggle("sidebar-abierto"); fondo?.classList.toggle("visible"); });
+  fondo?.addEventListener("click",   () => { sidebar?.classList.remove("sidebar-abierto"); fondo?.classList.remove("visible"); });
 }
 
-// ── Init ──────────────────────────────────────
+// ── INICIO ────────────────────────────────────
 window.addEventListener("DOMContentLoaded", async () => {
   const sesion = await verificarSesion();
   if (!sesion) return;
 
-  const { user, perfil } = sesion;
+  const { usuario, perfil } = sesion;
   document.getElementById("sideNombre").textContent = `${perfil.nombre} ${perfil.apellido}`;
 
   await Promise.all([
@@ -405,15 +338,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   ]);
 
   initFormCodigo(perfil.id);
-  initFormPerfil(user, perfil);
+  initFormPerfil(usuario, perfil);
   initFiltros();
-  initSidebarMobile();
+  initSidebarMovil();
 
-  document.querySelectorAll(".nav-item").forEach(btn => {
+  document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.addEventListener("click", () => mostrarVista(btn.dataset.vista));
   });
 
-  document.getElementById("btnCerrar")?.addEventListener("click", async () => {
+  document.getElementById("btnSalir")?.addEventListener("click", async () => {
     await supabase.auth.signOut();
     window.location.href = "/index.html";
   });

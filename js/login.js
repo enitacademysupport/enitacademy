@@ -1,18 +1,16 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — login.js
-   ════════════════════════════════════════════ */
 import { supabase } from "./supabase.js";
 
-const RUTAS = {
+const PANEL = {
   docente:    "/paginas/panel_docente.html",
   estudiante: "/paginas/panel_estudiante.html",
 };
 
-// ── Modal abrir/cerrar ────────────────────────
-document.addEventListener("click", function (e) {
+// ── Abrir / cerrar modal ──────────────────────
+document.addEventListener("click", function(e) {
   const modal = document.getElementById("modalLogin");
   if (!modal) return;
-  if (e.target.closest("#btnLogin") || e.target.closest(".abrir-login")) {
+
+  if (e.target.closest(".abrir-login") || e.target.closest("#btnLogin")) {
     e.preventDefault();
     modal.style.display = "flex";
   }
@@ -22,18 +20,18 @@ document.addEventListener("click", function (e) {
 });
 
 // ── Ojo contraseña ────────────────────────────
-document.addEventListener("click", function (e) {
+document.addEventListener("click", function(e) {
   if (e.target.id !== "togglePassword") return;
   const input = document.getElementById("loginPassword");
   if (!input) return;
-  const show = input.type === "password";
-  input.type = show ? "text" : "password";
-  e.target.classList.toggle("fa-eye",      !show);
-  e.target.classList.toggle("fa-eye-slash", show);
+  const mostrar = input.type === "password";
+  input.type = mostrar ? "text" : "password";
+  e.target.classList.toggle("fa-eye",       !mostrar);
+  e.target.classList.toggle("fa-eye-slash",  mostrar);
 });
 
-// ── Submit login ──────────────────────────────
-document.addEventListener("click", async (e) => {
+// ── Ingresar ──────────────────────────────────
+document.addEventListener("click", async function(e) {
   if (!e.target.closest("#loginForm button[type='submit']")) return;
   e.preventDefault();
 
@@ -43,8 +41,8 @@ document.addEventListener("click", async (e) => {
   const email    = form.querySelector('input[type="email"]').value.trim();
   const password = form.querySelector('input[type="password"]').value;
 
-  limpiarAlerta();
-  if (!email || !password) { mostrarAlerta("error", "Completa todos los campos."); return; }
+  setAlerta("");
+  if (!email || !password) { setAlerta("Completa todos los campos.", "error"); return; }
 
   const btn = e.target.closest("button");
   btn.disabled    = true;
@@ -55,55 +53,41 @@ document.addEventListener("click", async (e) => {
   if (error) {
     btn.disabled    = false;
     btn.textContent = "Ingresar";
-    mostrarAlerta("error", "Correo o contraseña incorrectos.");
+    setAlerta("Correo o contraseña incorrectos.", "error");
     return;
   }
 
-  mostrarAlerta("ok", "¡Bienvenido! Redirigiendo...");
-  btn.textContent = "Redirigiendo...";
-
-  // Sesión ya en data.session, leer rol directamente
-  const session = data.session;
-  if (!session) { window.location.href = "/index.html"; return; }
-
+  // Leer rol y redirigir — sin setTimeout, sin onAuthStateChange
   const { data: perfil } = await supabase
     .from("perfiles")
     .select("rol")
-    .eq("id", session.user.id)
+    .eq("id", data.user.id)
     .single();
 
-  const ruta = RUTAS[perfil?.rol] ?? "/paginas/panel_estudiante.html";
-  window.location.href = ruta;
+  // Guardar en sessionStorage para que el panel sepa que viene de login
+  sessionStorage.setItem("desde_login", "1");
+
+  window.location.href = PANEL[perfil?.rol] ?? PANEL.estudiante;
 });
 
 // ── Recuperar contraseña ──────────────────────
-document.addEventListener("click", async (e) => {
+document.addEventListener("click", async function(e) {
   if (!e.target.closest("#resetPassword")) return;
   e.preventDefault();
-
-  const email = prompt("Ingresa tu correo electrónico:");
+  const email = prompt("Ingresa tu correo:");
   if (!email) return;
-
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: window.location.origin + "/paginas/reset-password.html",
   });
-
   if (error) { alert(error.message); return; }
-  alert("Se envió un correo para restablecer tu contraseña.");
+  alert("Revisa tu correo para restablecer tu contraseña.");
 });
 
-// ── Helpers alerta ────────────────────────────
-function mostrarAlerta(tipo, msg) {
-  const alerta = document.getElementById("loginAlerta");
-  if (!alerta) { alert(msg); return; }
-  alerta.className = `form-alerta visible alerta-${tipo}`;
-  alerta.innerHTML = `
-    <i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i>
-    <span>${msg}</span>
-  `;
-}
-
-function limpiarAlerta() {
-  const alerta = document.getElementById("loginAlerta");
-  if (alerta) { alerta.className = "form-alerta"; alerta.innerHTML = ""; }
+// ── Helper alerta ─────────────────────────────
+function setAlerta(msg, tipo = "ok") {
+  const el = document.getElementById("loginAlerta");
+  if (!el) return;
+  if (!msg) { el.className = "form-alerta"; el.innerHTML = ""; return; }
+  el.className = `form-alerta visible alerta-${tipo}`;
+  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i><span>${msg}</span>`;
 }
