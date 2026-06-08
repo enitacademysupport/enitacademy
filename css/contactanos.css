@@ -394,3 +394,31 @@
     }
 
 }
+
+.mensaje-exito{
+    display:none;
+    margin-top:20px;
+    padding:15px 20px;
+    border-radius:12px;
+    background:#e8fff0;
+    color:#0f9d58;
+    border:1px solid #b7f0cb;
+    font-weight:700;
+    text-align:center;
+    animation: aparecer .4s ease;
+}
+
+.mensaje-exito i{
+    margin-right:8px;
+}
+
+@keyframes aparecer{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}

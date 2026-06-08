@@ -8,6 +8,309 @@
   <link rel="stylesheet" href="../css/panel.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
+  <style>
+    /* ── SALUDO + RELOJ ── */
+    .saludo-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      background: linear-gradient(135deg, #fff0f8 0%, #f0ecff 100%);
+      border: 1.5px solid #f0d6e8;
+      border-radius: 20px;
+      padding: 1.6rem 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .saludo-texto h2 {
+      font-family: 'Paytone One', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      color: #2a1a33;
+      margin-bottom: 0.25rem;
+    }
+    .saludo-texto h2 span {
+      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .saludo-texto p { font-size: 0.9rem; color: #6b5478; }
+    .saludo-reloj { text-align: right; flex-shrink: 0; }
+    .reloj-hora {
+      font-family: 'Paytone One', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+      letter-spacing: 2px;
+    }
+    .reloj-fecha { font-size: 0.82rem; color: #6b5478; font-weight: 600; margin-top: 0.2rem; }
+
+    /* ── LAYOUT CON ASIDE ── */
+    .panel-con-aside {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .panel-main-content { min-width: 0; }
+
+    /* ── ASIDE GENERAL ── */
+    .aside-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: 80px;
+    }
+    .aside-bloque {
+      background: #fff;
+      border: 1.5px solid #f0d6e8;
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 4px 14px rgba(255,79,160,0.08);
+    }
+    .aside-bloque h4 {
+      font-family: 'Paytone One', sans-serif;
+      font-size: 0.88rem;
+      color: #2a1a33;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .aside-bloque h4 i { color: #ff4fa0; }
+    .aside-mini-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0d6e8;
+      font-size: 0.82rem;
+    }
+    .aside-mini-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .aside-mini-item strong { color: #2a1a33; font-size: 0.83rem; }
+    .aside-mini-item span { color: #6b5478; font-size: 0.78rem; }
+    .aside-mini-item .curso-tag {
+      display: inline-block;
+      background: #f0ecff;
+      color: #8b5cf6;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      margin-top: 0.2rem;
+    }
+    .aside-mini-item .vence-tag {
+      display: inline-block;
+      background: #fff0f8;
+      color: #ff4fa0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+    }
+    .aside-mini-item .vence-tag.urgente { background: #fff3e0; color: #e65100; }
+    .aside-mini-item .vence-tag.vencida { background: #fce4e4; color: #c62828; }
+    .aside-sin-datos { font-size: 0.82rem; color: #a08ab8; text-align: center; padding: 0.5rem 0; }
+
+    /* ── PESTAÑAS DEL CURSO ── */
+    .pestanas-curso {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin: 1.2rem 0 1rem;
+    }
+    .pestana-curso-btn {
+      padding: 0.45rem 1rem;
+      border: 1.5px solid #f0d6e8;
+      border-radius: 50px;
+      background: #fff;
+      color: #6b5478;
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .pestana-curso-btn:hover { border-color: #ff4fa0; color: #ff4fa0; }
+    .pestana-curso-btn.activa {
+      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+      border-color: transparent;
+      color: #fff;
+    }
+    .pestana-curso-panel { display: none; }
+    .pestana-curso-panel.visible { display: block; }
+
+    /* ── TARJETA CURSO (expandible) ── */
+    .tarjeta-curso-est {
+      background: #fff;
+      border: 1.5px solid #f0d6e8;
+      border-radius: 18px;
+      margin-bottom: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(255,79,160,0.08);
+      transition: box-shadow 0.2s;
+    }
+    .tarjeta-curso-est:hover { box-shadow: 0 8px 24px rgba(255,79,160,0.15); }
+    .curso-cabecera {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.4rem;
+      cursor: pointer;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .curso-cabecera-info { flex: 1; min-width: 0; }
+    .curso-cabecera-info h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #2a1a33;
+      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .curso-cabecera-info p { font-size: 0.82rem; color: #6b5478; }
+    .curso-cabecera-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex-shrink: 0;
+    }
+    .btn-toggle-curso {
+      width: 32px; height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: #f0ecff;
+      color: #8b5cf6;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      transition: transform 0.3s, background 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-toggle-curso.abierto { transform: rotate(180deg); background: #8b5cf6; color: #fff; }
+    .curso-body {
+      display: none;
+      padding: 0 1.4rem 1.4rem;
+      border-top: 1.5px solid #f0d6e8;
+    }
+    .curso-body.visible { display: block; }
+
+    /* ── SUBIR ARCHIVO PC ── */
+    .zona-subir {
+      border: 2px dashed #e0c8f0;
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-align: center;
+      background: #fdf8ff;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .zona-subir:hover, .zona-subir.drag-over {
+      border-color: #8b5cf6;
+      background: #f0ecff;
+    }
+    .zona-subir i { font-size: 2rem; color: #c4a8e0; margin-bottom: 0.5rem; display: block; }
+    .zona-subir p { font-size: 0.85rem; color: #6b5478; margin: 0; }
+    .zona-subir strong { color: #8b5cf6; }
+    #inputArchivoPC { display: none; }
+    .barra-progreso-wrap {
+      display: none;
+      margin-top: 0.8rem;
+    }
+    .barra-progreso-wrap.visible { display: block; }
+    .barra-progreso {
+      height: 8px;
+      background: #f0d6e8;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .barra-progreso-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff4fa0, #8b5cf6);
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .barra-progreso-txt { font-size: 0.78rem; color: #6b5478; margin-top: 0.3rem; text-align: center; }
+
+    /* ── PERFIL MEJORADO ── */
+    .perfil-card {
+      background: linear-gradient(135deg, #fff0f8, #f0ecff);
+      border: 1.5px solid #f0d6e8;
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .perfil-avatar-grande {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    .perfil-info-txt h3 {
+      font-family: 'Paytone One', sans-serif;
+      font-size: 1.2rem;
+      color: #2a1a33;
+      margin-bottom: 0.3rem;
+    }
+    .perfil-info-txt p { font-size: 0.85rem; color: #6b5478; }
+    .perfil-rol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #fff;
+      border: 1.5px solid #f0d6e8;
+      color: #8b5cf6;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      margin-top: 0.5rem;
+    }
+    .seccion-form-grupo {
+      background: #fff;
+      border: 1.5px solid #f0d6e8;
+      border-radius: 16px;
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .seccion-form-grupo h3 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #2a1a33;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .seccion-form-grupo h3 i { color: #ff4fa0; }
+
+    @media (max-width: 900px) {
+      .panel-con-aside { grid-template-columns: 1fr; }
+      .aside-panel { position: static; }
+    }
+    @media (max-width: 540px) {
+      .saludo-hero { flex-direction: column; align-items: flex-start; padding: 1.3rem; }
+      .saludo-reloj { text-align: left; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
 </head>
 <body>
   <div id="header"></div>
@@ -15,7 +318,7 @@
 
   <main class="panel-contenedor">
 
-    <!-- SIDEBAR -->
+    <!-- ── SIDEBAR ── -->
     <aside class="panel-sidebar">
       <div class="perfil-sidebar">
         <div class="avatar-sidebar"><i class="fa-solid fa-user-graduate"></i></div>
@@ -24,22 +327,20 @@
           <span class="rol-sidebar">Estudiante</span>
         </div>
       </div>
-
       <nav class="nav-sidebar">
-        <button class="nav-btn activo" data-vista="cursos"><i class="fa-solid fa-book-open"></i> Mis cursos</button>
+        <button class="nav-btn activo" data-vista="inicio"><i class="fa-solid fa-house"></i> Inicio</button>
+        <button class="nav-btn" data-vista="cursos"><i class="fa-solid fa-book-open"></i> Mis cursos</button>
         <button class="nav-btn" data-vista="anuncios"><i class="fa-solid fa-bullhorn"></i> Anuncios</button>
         <button class="nav-btn" data-vista="archivos"><i class="fa-solid fa-folder-open"></i> Archivos</button>
         <button class="nav-btn" data-vista="tareas"><i class="fa-solid fa-clipboard-list"></i> Tareas</button>
         <button class="nav-btn" data-vista="unirse"><i class="fa-solid fa-key"></i> Unirse a curso</button>
         <button class="nav-btn" data-vista="perfil"><i class="fa-solid fa-user-pen"></i> Mi perfil</button>
       </nav>
-
-      <button class="btn-salir" id="btnSalir"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+      <button class="btn-salir" id="btnCerrarSesion3"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
     </aside>
 
-    <!-- CONTENIDO -->
+    <!-- ── CUERPO ── -->
     <div class="panel-cuerpo">
-
       <div class="barra-movil">
         <button id="btnAbrirSidebar" class="btn-hamburguesa-panel"><span></span><span></span><span></span></button>
         <span class="titulo-panel">Panel Estudiante</span>
@@ -47,15 +348,58 @@
 
       <section class="panel-seccion">
 
-        <!-- Stats -->
-        <div class="barra-stats">
-          <div class="stat-card"><i class="fa-solid fa-book-open"></i><div><span id="statCursos">0</span><p>Cursos</p></div></div>
-          <div class="stat-card"><i class="fa-solid fa-chalkboard-teacher"></i><div><span id="statDocentes">0</span><p>Docentes</p></div></div>
-          <div class="stat-card"><i class="fa-solid fa-graduation-cap"></i><div><span id="statNivel">—</span><p>Último nivel</p></div></div>
+        <!-- SALUDO + RELOJ -->
+        <div class="saludo-hero">
+          <div class="saludo-texto">
+            <h2 id="saludoH2">¡Hola, <span>Estudiante</span>! 👋</h2>
+            <p id="saludoFrase">Bienvenido a tu panel de aprendizaje.</p>
+          </div>
+          <div class="saludo-reloj">
+            <div class="reloj-hora" id="relojHora">00:00:00</div>
+            <div class="reloj-fecha" id="relojFecha"></div>
+          </div>
         </div>
 
-        <!-- Vista: cursos -->
-        <div id="vista-cursos" class="vista">
+        <!-- ════════ VISTA: INICIO ════════ -->
+        <div id="vista-inicio" class="vista">
+          <div class="panel-con-aside">
+            <!-- Cursos con contenido expandible -->
+            <div class="panel-main-content">
+              <div class="vista-cabecera">
+                <h2>Mis cursos</h2>
+                <button class="btn-primario btn-pequeno" onclick="document.querySelector('[data-vista=unirse]').click()">
+                  <i class="fa-solid fa-plus"></i> Unirse
+                </button>
+              </div>
+              <div id="listaCursosInicio">
+                <p class="sin-datos" id="msgSinCursosInicio">Aún no estás inscrito en ningún curso.</p>
+              </div>
+            </div>
+
+            <!-- Aside general -->
+            <aside class="aside-panel">
+
+              <div class="aside-bloque">
+                <h4><i class="fa-solid fa-bullhorn"></i> Últimos anuncios</h4>
+                <div id="asideAnuncios"><p class="aside-sin-datos">Sin anuncios</p></div>
+              </div>
+
+              <div class="aside-bloque">
+                <h4><i class="fa-solid fa-clipboard-list"></i> Tareas próximas</h4>
+                <div id="asideTareas"><p class="aside-sin-datos">Sin tareas</p></div>
+              </div>
+
+              <div class="aside-bloque">
+                <h4><i class="fa-solid fa-folder-open"></i> Archivos recientes</h4>
+                <div id="asideArchivos"><p class="aside-sin-datos">Sin archivos</p></div>
+              </div>
+
+            </aside>
+          </div>
+        </div>
+
+        <!-- ════════ VISTA: MIS CURSOS (lista simple) ════════ -->
+        <div id="vista-cursos" class="vista oculto">
           <div class="vista-cabecera">
             <h2>Mis cursos</h2>
             <button class="btn-primario btn-pequeno" onclick="document.querySelector('[data-vista=unirse]').click()">
@@ -67,7 +411,7 @@
           </div>
         </div>
 
-        <!-- Vista: anuncios -->
+        <!-- ════════ VISTA: ANUNCIOS GENERALES ════════ -->
         <div id="vista-anuncios" class="vista oculto">
           <div class="vista-cabecera">
             <h2>Anuncios</h2>
@@ -76,7 +420,7 @@
           <div id="listaAnuncios" class="lista-anuncios"></div>
         </div>
 
-        <!-- Vista: archivos -->
+        <!-- ════════ VISTA: ARCHIVOS GENERALES ════════ -->
         <div id="vista-archivos" class="vista oculto">
           <div class="vista-cabecera">
             <h2>Archivos</h2>
@@ -85,7 +429,7 @@
           <div id="listaArchivos" class="lista-archivos"></div>
         </div>
 
-        <!-- Vista: tareas -->
+        <!-- ════════ VISTA: TAREAS GENERALES ════════ -->
         <div id="vista-tareas" class="vista oculto">
           <div class="vista-cabecera">
             <h2>Tareas</h2>
@@ -94,7 +438,7 @@
           <div id="listaTareas" class="lista-tareas"></div>
         </div>
 
-        <!-- Vista: unirse -->
+        <!-- ════════ VISTA: UNIRSE ════════ -->
         <div id="vista-unirse" class="vista oculto">
           <h2>Unirse a un curso</h2>
           <p class="texto-subtitulo">Ingresa el código que te dio tu docente.</p>
@@ -112,48 +456,57 @@
           </form>
         </div>
 
-        <!-- Vista: perfil -->
+        <!-- ════════ VISTA: PERFIL ════════ -->
         <div id="vista-perfil" class="vista oculto">
           <h2>Mi perfil</h2>
+
+          <!-- Card de resumen -->
+          <div class="perfil-card">
+            <div class="perfil-avatar-grande"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="perfil-info-txt">
+              <h3 id="perfilNombreCompleto">—</h3>
+              <p id="perfilEmailVista">—</p>
+              <span class="perfil-rol-badge"><i class="fa-solid fa-user-graduate"></i> Estudiante</span>
+              <p class="texto-desde" id="perfilDesde" style="margin-top:0.5rem;font-size:0.8rem;color:#a08ab8;"></p>
+            </div>
+          </div>
+
           <form id="formPerfil" class="formulario" novalidate>
 
-            <div class="seccion-avatar-perfil">
-              <div class="avatar-grande"><i class="fa-solid fa-user-graduate"></i></div>
-              <div>
-                <span class="etiqueta-rol-perfil"><i class="fa-solid fa-user-graduate"></i> Estudiante</span>
-                <p class="texto-desde" id="perfilDesde"></p>
+            <!-- Datos personales -->
+            <div class="seccion-form-grupo">
+              <h3><i class="fa-solid fa-user"></i> Datos personales</h3>
+              <div class="fila-formulario">
+                <div class="campo">
+                  <label for="pNombre">Nombre</label>
+                  <input type="text" id="pNombre">
+                  <small class="error" id="errPNombre"></small>
+                </div>
+                <div class="campo">
+                  <label for="pApellido">Apellido</label>
+                  <input type="text" id="pApellido">
+                  <small class="error" id="errPApellido"></small>
+                </div>
               </div>
-            </div>
-
-            <div class="fila-formulario">
               <div class="campo">
-                <label for="pNombre">Nombre</label>
-                <input type="text" id="pNombre">
-                <small class="error" id="errPNombre"></small>
+                <label for="pEmail">Correo electrónico</label>
+                <input type="email" id="pEmail" disabled>
+                <small class="nota">El correo no se puede cambiar.</small>
               </div>
+            </div>
+
+            <!-- Seguridad -->
+            <div class="seccion-form-grupo">
+              <h3><i class="fa-solid fa-lock"></i> Seguridad</h3>
               <div class="campo">
-                <label for="pApellido">Apellido</label>
-                <input type="text" id="pApellido">
-                <small class="error" id="errPApellido"></small>
+                <label for="pClave">Nueva contraseña</label>
+                <div class="campo-con-ojo">
+                  <input type="password" id="pClave" placeholder="Déjalo vacío para no cambiarla">
+                  <button type="button" class="btn-ojo" data-objetivo="pClave"><i class="fa-regular fa-eye"></i></button>
+                </div>
+                <small class="error" id="errPClave"></small>
+                <small class="nota">Mínimo 6 caracteres.</small>
               </div>
-            </div>
-
-            <div class="campo">
-              <label for="pEmail">Correo</label>
-              <input type="email" id="pEmail" disabled>
-              <small class="nota">El correo no se puede cambiar.</small>
-            </div>
-
-            <hr class="divisor">
-            <h3>Cambiar contraseña</h3>
-
-            <div class="campo">
-              <label for="pClave">Nueva contraseña</label>
-              <div class="campo-con-ojo">
-                <input type="password" id="pClave" placeholder="Mínimo 6 caracteres">
-                <button type="button" class="btn-ojo" data-objetivo="pClave"><i class="fa-regular fa-eye"></i></button>
-              </div>
-              <small class="error" id="errPClave"></small>
             </div>
 
             <div id="alertaPerfil" class="alerta"></div>
@@ -165,7 +518,50 @@
     </div>
   </main>
 
-  <script type="module" src="../js/header_footer.js"></script>
+  <footer id="footer"></footer>
+
+    <script type="module" src="../js/header_footer.js"></script>
   <script type="module" src="../js/panel_estudiante.js"></script>
+
+  <!-- Reloj + saludo -->
+  <script>
+    const DIAS  = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+    const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+    function actualizarReloj() {
+      const ahora = new Date();
+      const hh = String(ahora.getHours()).padStart(2,"0");
+      const mm = String(ahora.getMinutes()).padStart(2,"0");
+      const ss = String(ahora.getSeconds()).padStart(2,"0");
+      const relojHora  = document.getElementById("relojHora");
+      const relojFecha = document.getElementById("relojFecha");
+      if (relojHora)  relojHora.textContent  = `${hh}:${mm}:${ss}`;
+      if (relojFecha) relojFecha.textContent =
+        `${DIAS[ahora.getDay()]}, ${ahora.getDate()} de ${MESES[ahora.getMonth()]} ${ahora.getFullYear()}`;
+    }
+    actualizarReloj();
+    setInterval(actualizarReloj, 1000);
+
+    function aplicarSaludo() {
+      const texto  = document.getElementById("sideNombre")?.textContent || "";
+      const nombre = texto.split(" ")[0];
+      if (!nombre || nombre === "Cargando...") { setTimeout(aplicarSaludo, 300); return; }
+      const h        = new Date().getHours();
+      const emoji    = h < 12 ? "☀️" : h < 19 ? "🌤️" : "🌙";
+      const greeting = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
+      const frases   = [
+        "El mejor momento para aprender es ahora. ¡Vamos!",
+        "Sigue avanzando, cada lección cuenta.",
+        "Revisa tus tareas pendientes.",
+        "Dedicar tiempo al estudio dice mucho de ti. 💪"
+      ];
+      const frase = frases[h < 12 ? 0 : h < 15 ? 1 : h < 19 ? 2 : 3];
+      const h2 = document.getElementById("saludoH2");
+      const p  = document.getElementById("saludoFrase");
+      if (h2) h2.innerHTML = `${greeting}, <span>${nombre}</span>! ${emoji}`;
+      if (p)  p.textContent = frase;
+    }
+    document.addEventListener("DOMContentLoaded", () => setTimeout(aplicarSaludo, 500));
+  </script>
 </body>
 </html>

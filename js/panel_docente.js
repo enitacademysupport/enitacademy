@@ -1,19 +1,12 @@
 import { supabase } from "./supabase.js";
 
-// ── Verificar sesión (sin redirigir por onAuthStateChange) ────────
+// ── Verificar sesión ──────────────────────────
 async function verificarSesion() {
   const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    window.location.replace("/index.html");
-    return null;
-  }
+  if (!session) { window.location.replace("/index.html"); return null; }
 
   const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("*")
-    .eq("id", session.user.id)
-    .single();
+    .from("perfiles").select("*").eq("id", session.user.id).single();
 
   if (!perfil) { window.location.replace("/index.html"); return null; }
   if (perfil.rol !== "docente") { window.location.replace("/paginas/panel_estudiante.html"); return null; }
@@ -21,21 +14,21 @@ async function verificarSesion() {
   return { usuario: session.user, perfil };
 }
 
-// ── Helpers generales ─────────────────────────
+// ── Helpers ───────────────────────────────────
 function generarCodigo() {
   const letras = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   return Array.from({ length: 8 }, () => letras[Math.floor(Math.random() * letras.length)]).join("");
 }
 
-function mostrarAlerta(idElemento, tipo, mensaje) {
-  const el = document.getElementById(idElemento);
+function mostrarAlerta(id, tipo, msg) {
+  const el = document.getElementById(id);
   if (!el) return;
   el.className = `alerta alerta-${tipo}`;
-  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${mensaje}`;
+  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${msg}`;
 }
 
-function limpiarAlerta(idElemento) {
-  const el = document.getElementById(idElemento);
+function limpiarAlerta(id) {
+  const el = document.getElementById(id);
   if (el) { el.className = "alerta"; el.innerHTML = ""; }
 }
 
@@ -43,33 +36,16 @@ function mostrarVista(nombre) {
   document.querySelectorAll(".vista").forEach(v => v.classList.add("oculto"));
   document.getElementById("vista-" + nombre)?.classList.remove("oculto");
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("activo", b.dataset.vista === nombre));
-  // Cerrar sidebar en móvil
   document.querySelector(".panel-sidebar")?.classList.remove("sidebar-abierto");
   document.getElementById("fondoSidebar")?.classList.remove("visible");
 }
 
-// ── Stats ─────────────────────────────────────
-async function cargarStats(docenteId) {
-  const { data: cursos } = await supabase.from("cursos").select("id,nivel").eq("docente_id", docenteId);
-  const totalCursos = cursos?.length || 0;
-
-  let totalAlumnos = 0;
-  if (cursos?.length) {
-    const ids = cursos.map(c => c.id);
-    const { count } = await supabase.from("inscripciones").select("id", { count: "exact", head: true }).in("curso_id", ids);
-    totalAlumnos = count || 0;
-  }
-
-  const conteoNiveles = {};
-  cursos?.forEach(c => { if (c.nivel) conteoNiveles[c.nivel] = (conteoNiveles[c.nivel] || 0) + 1; });
-  const nivelTop = Object.entries(conteoNiveles).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
-
-  document.getElementById("statCursos").textContent   = totalCursos;
-  document.getElementById("statAlumnos").textContent  = totalAlumnos;
-  document.getElementById("statNivel").textContent    = nivelTop;
+function activarPestana(nombre) {
+  document.querySelectorAll(".pestana-btn").forEach(b => b.classList.toggle("activa", b.dataset.pestana === nombre));
+  document.querySelectorAll(".pestana-panel").forEach(p => p.classList.toggle("oculto", p.dataset.panel !== nombre));
 }
 
-// ── Lista de cursos ───────────────────────────
+// ── Cursos ────────────────────────────────────
 let cursoActual = null;
 
 async function cargarCursos(docenteId) {
@@ -81,11 +57,7 @@ async function cargarCursos(docenteId) {
   const sinDatos   = document.getElementById("msgSinCursos");
   contenedor.innerHTML = "";
 
-  if (!cursos?.length) {
-    contenedor.appendChild(sinDatos);
-    sinDatos.style.display = "block";
-    return;
-  }
+  if (!cursos?.length) { contenedor.appendChild(sinDatos); sinDatos.style.display = "block"; return; }
   sinDatos.style.display = "none";
 
   cursos.forEach(c => {
@@ -105,10 +77,8 @@ async function cargarCursos(docenteId) {
   });
 }
 
-// ── Detalle del curso (con tabs internos) ─────
 async function abrirCurso(curso) {
   cursoActual = curso;
-
   document.getElementById("cursoTitulo").textContent = curso.nombre;
   document.getElementById("cursoCodigo").textContent = curso.codigo;
   document.getElementById("cursoDesc").textContent   = curso.descripcion || "";
@@ -123,22 +93,15 @@ async function abrirCurso(curso) {
     cargarTareasDelCurso(curso.id),
   ]);
 
-  // Activar primera pestaña
   activarPestana("alumnos");
   mostrarVista("detalle");
 }
 
-// Pestañas dentro del curso
-function activarPestana(nombre) {
-  document.querySelectorAll(".pestana-btn").forEach(b => b.classList.toggle("activa", b.dataset.pestana === nombre));
-  document.querySelectorAll(".pestana-panel").forEach(p => p.classList.toggle("oculto", p.dataset.panel !== nombre));
-}
-
-// ── Alumnos del curso ─────────────────────────
+// ── Alumnos ───────────────────────────────────
 async function cargarAlumnosDelCurso(cursoId) {
   const { data } = await supabase
     .from("inscripciones")
-    .select("estudiante_id, perfiles(nombre, apellido)")
+    .select("estudiante_id, perfiles(id, nombre, apellido)")
     .eq("curso_id", cursoId);
 
   const lista = document.getElementById("listaAlumnosCurso");
@@ -147,11 +110,45 @@ async function cargarAlumnosDelCurso(cursoId) {
         <div class="fila-alumno">
           <div class="icono-alumno"><i class="fa-solid fa-user-graduate"></i></div>
           <span>${i.perfiles.nombre} ${i.perfiles.apellido}</span>
+          <button class="btn-ver-alumno btn-icono" data-id="${i.perfiles.id}" data-nombre="${i.perfiles.nombre} ${i.perfiles.apellido}" title="Ver archivos">
+            <i class="fa-solid fa-folder-open"></i>
+          </button>
         </div>`).join("")
     : "<p class='sin-datos'>Sin alumnos inscritos aún.</p>";
+
+  lista.querySelectorAll(".btn-ver-alumno").forEach(btn => {
+    btn.addEventListener("click", () => verArchivosAlumno(btn.dataset.id, btn.dataset.nombre));
+  });
 }
 
-// ── Anuncios del curso ────────────────────────
+async function verArchivosAlumno(estudianteId, nombre) {
+  const { data } = await supabase
+    .from("archivos_estudiante")
+    .select("*, cursos(nombre)")
+    .eq("estudiante_id", estudianteId)
+    .order("creado_at", { ascending: false });
+
+  const modal = document.getElementById("modalArchivosAlumno");
+  document.getElementById("modalAlumnoNombre").textContent = nombre;
+
+  const lista = document.getElementById("modalListaArchivos");
+  lista.innerHTML = data?.length
+    ? data.map(a => `
+        <div class="tarjeta-archivo">
+          <i class="fa-solid fa-file icono-archivo"></i>
+          <div class="info-archivo">
+            <span class="nombre-archivo">${a.nombre}</span>
+            <span class="texto-curso"><i class="fa-solid fa-book-open"></i> ${a.cursos?.nombre || "—"}</span>
+            <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
+          </div>
+          <a href="${a.url}" target="_blank" class="btn-icono"><i class="fa-solid fa-download"></i></a>
+        </div>`).join("")
+    : "<p class='sin-datos'>Este estudiante no ha subido archivos.</p>";
+
+  modal.style.display = "flex";
+}
+
+// ── Anuncios ──────────────────────────────────
 async function cargarAnunciosDelCurso(cursoId) {
   const { data } = await supabase
     .from("anuncios").select("*").eq("curso_id", cursoId)
@@ -186,21 +183,24 @@ async function publicarAnuncio(docenteId) {
   if (error) { mostrarAlerta("alertaAnuncio", "error", error.message); return; }
 
   mostrarAlerta("alertaAnuncio", "ok", "Anuncio publicado.");
-  document.getElementById("anuncioTitulo").value   = "";
+  document.getElementById("anuncioTitulo").value    = "";
   document.getElementById("anuncioContenido").value = "";
   setTimeout(() => cargarAnunciosDelCurso(cursoActual.id), 800);
 }
 
-// ── Archivos del curso ────────────────────────
-const ICONOS_ARCHIVO = { pdf:"fa-file-pdf", doc:"fa-file-word", docx:"fa-file-word", ppt:"fa-file-powerpoint", pptx:"fa-file-powerpoint", mp4:"fa-file-video", mp3:"fa-file-audio", jpg:"fa-file-image", jpeg:"fa-file-image", png:"fa-file-image" };
+// ── Archivos ──────────────────────────────────
+const ICONOS = { pdf:"fa-file-pdf", doc:"fa-file-word", docx:"fa-file-word", ppt:"fa-file-powerpoint", pptx:"fa-file-powerpoint", mp4:"fa-file-video", mp3:"fa-file-audio", jpg:"fa-file-image", jpeg:"fa-file-image", png:"fa-file-image" };
 
 async function cargarArchivosDelCurso(cursoId) {
-  const { data } = await supabase.from("archivos").select("*").eq("curso_id", cursoId).order("creado_at", { ascending: false });
+  const { data } = await supabase
+    .from("archivos").select("*").eq("curso_id", cursoId)
+    .order("creado_at", { ascending: false });
+
   const lista = document.getElementById("listaArchivosCurso");
   lista.innerHTML = data?.length
     ? data.map(a => {
         const ext  = a.nombre_archivo?.split(".").pop()?.toLowerCase() || "";
-        const icon = ICONOS_ARCHIVO[ext] || "fa-file";
+        const icon = ICONOS[ext] || "fa-file";
         return `<div class="tarjeta-archivo">
           <i class="fa-solid ${icon} icono-archivo"></i>
           <div class="info-archivo">
@@ -208,7 +208,7 @@ async function cargarArchivosDelCurso(cursoId) {
             <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
           </div>
           <div class="acciones-archivo">
-            <a href="${a.url}" target="_blank" class="btn-icono" title="Descargar"><i class="fa-solid fa-download"></i></a>
+            <a href="${a.url}" target="_blank" class="btn-icono"><i class="fa-solid fa-download"></i></a>
             <button class="btn-icono btn-eliminar" data-id="${a.id}" data-tabla="archivos"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>`;
@@ -221,8 +221,8 @@ async function cargarArchivosDelCurso(cursoId) {
 }
 
 async function subirArchivo(docenteId) {
-  const nombre  = document.getElementById("archivoNombre").value.trim();
-  const url     = document.getElementById("archivoUrl").value.trim();
+  const nombre = document.getElementById("archivoNombre").value.trim();
+  const url    = document.getElementById("archivoUrl").value.trim();
   if (!nombre || !url) { mostrarAlerta("alertaArchivo", "error", "Completa nombre y enlace."); return; }
 
   const { error } = await supabase.from("archivos").insert({ curso_id: cursoActual.id, docente_id: docenteId, nombre_archivo: nombre, url });
@@ -234,30 +234,91 @@ async function subirArchivo(docenteId) {
   setTimeout(() => cargarArchivosDelCurso(cursoActual.id), 800);
 }
 
-// ── Tareas del curso ──────────────────────────
+// ── Tareas ────────────────────────────────────
 async function cargarTareasDelCurso(cursoId) {
-  const { data } = await supabase.from("tareas").select("*").eq("curso_id", cursoId).order("fecha_entrega", { ascending: true, nullsFirst: false });
+  const { data } = await supabase
+    .from("tareas").select("*").eq("curso_id", cursoId)
+    .order("fecha_entrega", { ascending: true, nullsFirst: false });
+
   const lista = document.getElementById("listaTareasCurso");
   const hoy   = new Date();
-  lista.innerHTML = data?.length
-    ? data.map(t => {
-        const vence   = t.fecha_entrega ? new Date(t.fecha_entrega).toLocaleDateString("es-PE") : "Sin fecha";
-        const vencida = t.fecha_entrega && new Date(t.fecha_entrega) < hoy;
-        return `<div class="tarjeta-tarea ${vencida ? "tarea-vencida" : ""}">
-          <div class="tarea-cabecera">
-            <h4>${t.titulo}</h4>
-            <span class="fecha-texto ${vencida ? "texto-vencido" : ""}"><i class="fa-solid fa-clock"></i> ${vence}</span>
-            <button class="btn-icono btn-eliminar" data-id="${t.id}" data-tabla="tareas"><i class="fa-solid fa-trash"></i></button>
-          </div>
-          ${t.descripcion ? `<p>${t.descripcion}</p>` : ""}
-          ${t.puntos ? `<span class="puntos-badge"><i class="fa-solid fa-star"></i> ${t.puntos} pts</span>` : ""}
-        </div>`;
-      }).join("")
-    : "<p class='sin-datos'>No hay tareas en este curso.</p>";
+
+  if (!data?.length) { lista.innerHTML = "<p class='sin-datos'>No hay tareas en este curso.</p>"; return; }
+
+  const tareasConEntregas = await Promise.all(data.map(async t => {
+    const { count }        = await supabase.from("entregas").select("id", { count: "exact", head: true }).eq("tarea_id", t.id);
+    const { count: noVistas } = await supabase.from("entregas").select("id", { count: "exact", head: true }).eq("tarea_id", t.id).eq("visto", false);
+    return { ...t, totalEntregas: count || 0, noVistas: noVistas || 0 };
+  }));
+
+  lista.innerHTML = tareasConEntregas.map(t => {
+    const vence   = t.fecha_entrega ? new Date(t.fecha_entrega).toLocaleDateString("es-PE") : "Sin fecha";
+    const vencida = t.fecha_entrega && new Date(t.fecha_entrega) < hoy;
+    return `
+      <div class="tarjeta-tarea ${vencida ? "tarea-vencida" : ""}">
+        <div class="tarea-cabecera">
+          <h4>${t.titulo}</h4>
+          <span class="fecha-texto ${vencida ? "texto-vencido" : ""}">
+            <i class="fa-solid fa-clock"></i> ${vence}
+          </span>
+          <button class="btn-icono btn-eliminar" data-id="${t.id}" data-tabla="tareas">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+        ${t.descripcion ? `<p>${t.descripcion}</p>` : ""}
+        ${t.puntos ? `<span class="puntos-badge"><i class="fa-solid fa-star"></i> ${t.puntos} pts</span>` : ""}
+        <div class="entregas-resumen">
+          <span class="entregas-total"><i class="fa-solid fa-paper-plane"></i> ${t.totalEntregas} entregas</span>
+          ${t.noVistas > 0 ? `<span class="entregas-nuevas"><i class="fa-solid fa-circle-exclamation"></i> ${t.noVistas} sin revisar</span>` : ""}
+          <button class="btn-ver-entregas btn-pequeno" data-id="${t.id}" data-titulo="${t.titulo}">Ver entregas</button>
+        </div>
+      </div>`;
+  }).join("");
 
   lista.querySelectorAll(".btn-eliminar").forEach(btn => {
     btn.addEventListener("click", () => eliminarItem(btn.dataset.tabla, btn.dataset.id, () => cargarTareasDelCurso(cursoId)));
   });
+  lista.querySelectorAll(".btn-ver-entregas").forEach(btn => {
+    btn.addEventListener("click", () => verEntregas(btn.dataset.id, btn.dataset.titulo));
+  });
+}
+
+async function verEntregas(tareaId, titulo) {
+  const { data } = await supabase
+    .from("entregas")
+    .select("*, perfiles(nombre, apellido)")
+    .eq("tarea_id", tareaId)
+    .order("entregado_at", { ascending: false });
+
+  const modal = document.getElementById("modalEntregas");
+  document.getElementById("modalEntregasTitulo").textContent = titulo;
+
+  const lista = document.getElementById("modalListaEntregas");
+  lista.innerHTML = data?.length
+    ? data.map(e => `
+        <div class="tarjeta-entrega ${!e.visto ? "entrega-nueva" : ""}">
+          <div class="entrega-cabecera">
+            <div class="icono-alumno"><i class="fa-solid fa-user-graduate"></i></div>
+            <div>
+              <strong>${e.perfiles.nombre} ${e.perfiles.apellido}</strong>
+              <span class="fecha-texto">${new Date(e.entregado_at).toLocaleDateString("es-PE")}</span>
+            </div>
+            ${!e.visto ? '<span class="badge-nueva">Nueva</span>' : '<span class="badge-vista">Revisada</span>'}
+            <button class="btn-marcar-visto btn-pequeno ${e.visto ? "oculto" : ""}" data-id="${e.id}">Marcar revisada</button>
+          </div>
+          ${e.comentario ? `<p class="entrega-comentario">${e.comentario}</p>` : ""}
+          ${e.url_archivo ? `<a href="${e.url_archivo}" target="_blank" class="btn-icono btn-descargar"><i class="fa-solid fa-download"></i> Descargar entrega</a>` : ""}
+        </div>`).join("")
+    : "<p class='sin-datos'>Ningún estudiante ha entregado aún.</p>";
+
+  lista.querySelectorAll(".btn-marcar-visto").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      await supabase.from("entregas").update({ visto: true }).eq("id", btn.dataset.id);
+      verEntregas(tareaId, titulo);
+    });
+  });
+
+  modal.style.display = "flex";
 }
 
 async function crearTarea(docenteId) {
@@ -267,7 +328,10 @@ async function crearTarea(docenteId) {
   const puntos = document.getElementById("tareaPuntos").value;
   if (!titulo) { mostrarAlerta("alertaTarea", "error", "El título es obligatorio."); return; }
 
-  const { error } = await supabase.from("tareas").insert({ curso_id: cursoActual.id, docente_id: docenteId, titulo, descripcion: desc, fecha_entrega: fecha || null, puntos: puntos || null });
+  const { error } = await supabase.from("tareas").insert({
+    curso_id: cursoActual.id, docente_id: docenteId,
+    titulo, descripcion: desc, fecha_entrega: fecha || null, puntos: puntos || null
+  });
   if (error) { mostrarAlerta("alertaTarea", "error", error.message); return; }
 
   mostrarAlerta("alertaTarea", "ok", "Tarea creada.");
@@ -282,7 +346,7 @@ async function eliminarItem(tabla, id, callback) {
   callback();
 }
 
-// ── Lista de estudiantes (todos) ──────────────
+// ── Estudiantes ───────────────────────────────
 async function cargarEstudiantes() {
   const { data } = await supabase.from("perfiles").select("id,nombre,apellido").eq("rol","estudiante").order("nombre");
   const lista = document.getElementById("listaCheckEstudiantes");
@@ -311,7 +375,7 @@ async function cargarTablaEstudiantes() {
   if (!tabla) return;
   if (!data?.length) { tabla.innerHTML = "<p class='sin-datos'>No hay estudiantes aún.</p>"; return; }
 
-  function dibujarTabla(lista) {
+  function dibujar(lista) {
     tabla.innerHTML = `
       <div class="fila-tabla fila-encabezado">
         <span>Nombre</span><span>Apellido</span><span>Desde</span>
@@ -323,10 +387,10 @@ async function cargarTablaEstudiantes() {
           <span>${new Date(e.creado_at).toLocaleDateString("es-PE")}</span>
         </div>`).join("")}`;
   }
-  dibujarTabla(data);
+  dibujar(data);
   filtro?.addEventListener("input", ev => {
     const q = ev.target.value.toLowerCase();
-    dibujarTabla(data.filter(e => `${e.nombre} ${e.apellido}`.toLowerCase().includes(q)));
+    dibujar(data.filter(e => `${e.nombre} ${e.apellido}`.toLowerCase().includes(q)));
   });
 }
 
@@ -361,7 +425,6 @@ function initFormCurso(docenteId) {
 
     if (error) { mostrarAlerta("alertaCrearCurso", "error", error.message); return; }
 
-    // Inscribir alumnos seleccionados
     const seleccionados = [...document.querySelectorAll("#listaCheckEstudiantes input:checked")].map(c => c.value);
     if (seleccionados.length) {
       await supabase.from("inscripciones").insert(seleccionados.map(sid => ({ curso_id: curso.id, estudiante_id: sid })));
@@ -370,7 +433,7 @@ function initFormCurso(docenteId) {
     mostrarAlerta("alertaCrearCurso", "ok", `Curso creado. Código: ${codigo}`);
     e.target.reset();
     document.querySelectorAll("#listaCheckEstudiantes input").forEach(c => c.checked = false);
-    setTimeout(() => { cargarCursos(docenteId); cargarStats(docenteId); mostrarVista("cursos"); }, 1800);
+    setTimeout(() => { cargarCursos(docenteId); mostrarVista("cursos"); }, 1800);
   });
 }
 
@@ -382,7 +445,6 @@ function initEliminarCurso(docenteId) {
     await supabase.from("cursos").delete().eq("id", cursoActual.id);
     cursoActual = null;
     await cargarCursos(docenteId);
-    cargarStats(docenteId);
     mostrarVista("cursos");
   });
 }
@@ -390,12 +452,21 @@ function initEliminarCurso(docenteId) {
 // ── Copiar código ─────────────────────────────
 function initCopiarCodigo() {
   document.getElementById("btnCopiarCodigo")?.addEventListener("click", () => {
-    const cod = document.getElementById("cursoCodigo").textContent;
-    navigator.clipboard.writeText(cod).then(() => {
+    navigator.clipboard.writeText(document.getElementById("cursoCodigo").textContent).then(() => {
       const btn = document.getElementById("btnCopiarCodigo");
       btn.innerHTML = '<i class="fa-solid fa-check"></i>';
       setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500);
     });
+  });
+}
+
+// ── Modales ───────────────────────────────────
+function initModales() {
+  document.querySelectorAll(".modal-fondo").forEach(modal => {
+    modal.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
+  });
+  document.querySelectorAll(".btn-cerrar-modal").forEach(btn => {
+    btn.addEventListener("click", () => { btn.closest(".modal-fondo").style.display = "none"; });
   });
 }
 
@@ -407,21 +478,20 @@ function initFormPerfil(usuario, perfil) {
   document.getElementById("perfilDesde").textContent =
     "Miembro desde " + new Date(perfil.creado_at).toLocaleDateString("es-PE", { year: "numeric", month: "long" });
 
-  // Ojo contraseña
   document.querySelector(".btn-ojo")?.addEventListener("click", function() {
     const input = document.getElementById(this.dataset.objetivo);
-    const mostrar = input.type === "password";
-    input.type = mostrar ? "text" : "password";
-    this.querySelector("i").className = mostrar ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+    const ver   = input.type === "password";
+    input.type  = ver ? "text" : "password";
+    this.querySelector("i").className = ver ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
   });
 
   document.getElementById("formPerfil")?.addEventListener("submit", async e => {
     e.preventDefault();
     limpiarAlerta("alertaPerfil");
 
-    const nombre    = document.getElementById("pNombre").value.trim();
-    const apellido  = document.getElementById("pApellido").value.trim();
-    const clave     = document.getElementById("pClave").value;
+    const nombre   = document.getElementById("pNombre").value.trim();
+    const apellido = document.getElementById("pApellido").value.trim();
+    const clave    = document.getElementById("pClave").value;
 
     document.getElementById("errPNombre").textContent   = "";
     document.getElementById("errPApellido").textContent = "";
@@ -440,9 +510,9 @@ function initFormPerfil(usuario, perfil) {
     await supabase.auth.updateUser({ data: { nombre, apellido } });
 
     if (clave) {
-      const { error: errClave } = await supabase.auth.updateUser({ password: clave });
-      if (errClave) {
-        mostrarAlerta("alertaPerfil", "error", errClave.message);
+      const { error } = await supabase.auth.updateUser({ password: clave });
+      if (error) {
+        mostrarAlerta("alertaPerfil", "error", error.message);
         btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
         return;
       }
@@ -451,18 +521,17 @@ function initFormPerfil(usuario, perfil) {
     btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
     document.getElementById("sideNombre").textContent = `${nombre} ${apellido}`;
     document.getElementById("pClave").value = "";
-    mostrarAlerta("alertaPerfil", "ok", "Perfil actualizado correctamente.");
+    mostrarAlerta("alertaPerfil", "ok", "Perfil actualizado.");
   });
 }
 
 // ── Sidebar móvil ─────────────────────────────
 function initSidebarMovil() {
-  const btnAbrir   = document.getElementById("btnAbrirSidebar");
-  const sidebar    = document.querySelector(".panel-sidebar");
-  const fondo      = document.getElementById("fondoSidebar");
-
-  btnAbrir?.addEventListener("click", () => { sidebar?.classList.toggle("sidebar-abierto"); fondo?.classList.toggle("visible"); });
-  fondo?.addEventListener("click",   () => { sidebar?.classList.remove("sidebar-abierto"); fondo?.classList.remove("visible"); });
+  const btn     = document.getElementById("btnAbrirSidebar");
+  const sidebar = document.querySelector(".panel-sidebar");
+  const fondo   = document.getElementById("fondoSidebar");
+  btn?.addEventListener("click",   () => { sidebar?.classList.toggle("sidebar-abierto"); fondo?.classList.toggle("visible"); });
+  fondo?.addEventListener("click", () => { sidebar?.classList.remove("sidebar-abierto"); fondo?.classList.remove("visible"); });
 }
 
 // ── INICIO ────────────────────────────────────
@@ -475,7 +544,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   await Promise.all([
     cargarCursos(perfil.id),
-    cargarStats(perfil.id),
     cargarEstudiantes(),
     cargarTablaEstudiantes(),
   ]);
@@ -485,25 +553,21 @@ window.addEventListener("DOMContentLoaded", async () => {
   initCopiarCodigo();
   initFormPerfil(usuario, perfil);
   initSidebarMovil();
+  initModales();
 
-  // Navegación sidebar
   document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.addEventListener("click", () => mostrarVista(btn.dataset.vista));
   });
-
-  // Pestañas dentro del curso
   document.querySelectorAll(".pestana-btn").forEach(btn => {
     btn.addEventListener("click", () => activarPestana(btn.dataset.pestana));
   });
 
-  // Botones dentro del detalle del curso
   document.getElementById("btnVolverCursos")?.addEventListener("click", () => mostrarVista("cursos"));
-  document.getElementById("btnPublicarAnuncio")?.addEventListener("click",  () => publicarAnuncio(perfil.id));
-  document.getElementById("btnSubirArchivo")?.addEventListener("click",     () => subirArchivo(perfil.id));
-  document.getElementById("btnCrearTarea")?.addEventListener("click",       () => crearTarea(perfil.id));
+  document.getElementById("btnPublicarAnuncio")?.addEventListener("click", () => publicarAnuncio(perfil.id));
+  document.getElementById("btnSubirArchivo")?.addEventListener("click",    () => subirArchivo(perfil.id));
+  document.getElementById("btnCrearTarea")?.addEventListener("click",      () => crearTarea(perfil.id));
 
-  // Cerrar sesión
-  document.getElementById("btnSalir")?.addEventListener("click", async () => {
+  document.getElementById("btnCerrarSesion2")?.addEventListener("click", async () => {
     await supabase.auth.signOut();
     window.location.href = "/index.html";
   });

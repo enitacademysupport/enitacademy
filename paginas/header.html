@@ -13,56 +13,38 @@
 
     <!-- Menú principal -->
     <ul class="menu-nav" id="menuPrincipal">
-      <li class="menu-cerrar-wrap">
-        <button id="cerrarMenu" class="btn-cerrar-menu" aria-label="Cerrar menú">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </li>
+
       <li><a href="/index.html"><i class="fa-solid fa-house"></i> Inicio</a></li>
       <li><a href="/paginas/nosotros.html"><i class="fa-solid fa-users"></i> Nosotros</a></li>
-      <li class="tiene-submenu">
-        <a href="#"><i class="fa-solid fa-graduation-cap"></i> Niveles <i class="fa-solid fa-chevron-down flecha"></i></a>
-        <ul class="submenu">
-          <li class="tiene-submenu">
-            <a href="#">Básico <i class="fa-solid fa-chevron-right flecha"></i></a>
-            <ul class="submenu submenu-lateral">
-              <li><a href="#">Greetings</a></li>
-              <li><a href="#">Alphabet</a></li>
-              <li><a href="#">Numbers</a></li>
-              <li><a href="#">Colors</a></li>
-              <li><a href="#">Verb to be</a></li>
-            </ul>
-          </li>
-          <li class="tiene-submenu">
-            <a href="#">Intermedio <i class="fa-solid fa-chevron-right flecha"></i></a>
-            <ul class="submenu submenu-lateral">
-              <li><a href="#">Past Simple</a></li>
-              <li><a href="#">Future</a></li>
-              <li><a href="#">Modal Verbs</a></li>
-              <li><a href="#">Comparatives</a></li>
-            </ul>
-          </li>
-          <li class="tiene-submenu">
-            <a href="#">Avanzado <i class="fa-solid fa-chevron-right flecha"></i></a>
-            <ul class="submenu submenu-lateral">
-              <li><a href="#">Business English</a></li>
-              <li><a href="#">Idioms</a></li>
-              <li><a href="#">Phrasal Verbs</a></li>
-              <li><a href="#">Essay Writing</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
+
+    <li class="tiene-submenu">
+  <a href="#" class="abrir-login">
+    <i class="fa-solid fa-graduation-cap"></i> Cursos
+  </a>
+</li>
+
       <li><a href="/paginas/contactanos.html"><i class="fa-solid fa-envelope"></i> Contacto</a></li>
+
+      <!-- Botones Iniciar sesión / Registrarse dentro del panel móvil -->
+      <!-- Solo se muestran en móvil (CSS los oculta en escritorio) -->
+      <li class="menu-auth-movil" id="menuAuthMovil">
+        <a href="#" class="btn-ingresar abrir-login">
+          <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
+        </a>
+        <a href="/paginas/registrarse.html" class="btn-registrar">
+          <i class="fa-solid fa-user-plus"></i> Registrarse
+        </a>
+      </li>
+
     </ul>
 
-    <!-- Botones derecha -->
+    <!-- Botones derecha (barra superior) -->
     <div class="nav-derecha">
       <button id="modoOscuro" class="btn-modo" aria-label="Modo oscuro">
         <i class="fa-solid fa-moon"></i>
       </button>
 
-      <!-- Sin sesión -->
+      <!-- Sin sesión — visible en escritorio -->
       <div id="botonesAuth" class="botones-auth">
         <a href="#" class="btn-ingresar abrir-login">Iniciar sesión</a>
         <a href="/paginas/registrarse.html" class="btn-registrar">Registrarse</a>
@@ -76,8 +58,6 @@
           <span id="rolUsuario"    class="usuario-rol"></span>
         </div>
         <i class="fa-solid fa-chevron-down chevron-usuario"></i>
-
-        <!-- Dropdown -->
         <div id="menuUsuario" class="dropdown-usuario">
           <button id="btnMiPanel" class="opcion-dropdown">
             <i class="fa-solid fa-gauge"></i> Mi panel
@@ -89,8 +69,8 @@
         </div>
       </div>
 
-      <!-- Hamburguesa -->
-      <button id="botonMenu" class="btn-hamburguesa" aria-label="Abrir menú">
+      <!-- Hamburguesa — ÚNICA X la genera el CSS con .activo -->
+      <button id="botonMenu" class="btn-hamburguesa" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>

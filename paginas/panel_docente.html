@@ -8,14 +8,56 @@
   <link rel="stylesheet" href="../css/panel.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
+  <style>
+    .saludo-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      background: linear-gradient(135deg, #fff0f8 0%, #f0ecff 100%);
+      border: 1.5px solid #f0d6e8;
+      border-radius: 20px;
+      padding: 1.6rem 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .saludo-texto h2 {
+      font-family: 'Paytone One', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      color: #2a1a33;
+      margin-bottom: 0.25rem;
+    }
+    .saludo-texto h2 span {
+      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .saludo-texto p { font-size: 0.9rem; color: #6b5478; }
+    .saludo-reloj { text-align: right; flex-shrink: 0; }
+    .reloj-hora {
+      font-family: 'Paytone One', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+      letter-spacing: 2px;
+    }
+    .reloj-fecha { font-size: 0.82rem; color: #6b5478; font-weight: 600; margin-top: 0.2rem; }
+    @media (max-width: 540px) {
+      .saludo-hero { flex-direction: column; align-items: flex-start; padding: 1.3rem; }
+      .saludo-reloj { text-align: left; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
 </head>
 <body>
   <div id="header"></div>
   <div id="fondoSidebar" class="fondo-sidebar"></div>
 
   <main class="panel-contenedor">
-
-    <!-- SIDEBAR -->
     <aside class="panel-sidebar">
       <div class="perfil-sidebar">
         <div class="avatar-sidebar"><i class="fa-solid fa-chalkboard-teacher"></i></div>
@@ -24,21 +66,16 @@
           <span class="rol-sidebar">Docente</span>
         </div>
       </div>
-
       <nav class="nav-sidebar">
         <button class="nav-btn activo" data-vista="cursos"><i class="fa-solid fa-book-open"></i> Mis cursos</button>
         <button class="nav-btn" data-vista="crear"><i class="fa-solid fa-plus"></i> Crear curso</button>
         <button class="nav-btn" data-vista="estudiantes"><i class="fa-solid fa-users"></i> Estudiantes</button>
         <button class="nav-btn" data-vista="perfil"><i class="fa-solid fa-user-pen"></i> Mi perfil</button>
       </nav>
-
-      <button class="btn-salir" id="btnSalir"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+      <button class="btn-salir" id="btnCerrarSesion2"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div class="panel-cuerpo">
-
-      <!-- Barra superior móvil -->
       <div class="barra-movil">
         <button id="btnAbrirSidebar" class="btn-hamburguesa-panel"><span></span><span></span><span></span></button>
         <span class="titulo-panel">Panel Docente</span>
@@ -46,11 +83,16 @@
 
       <section class="panel-seccion">
 
-        <!-- Estadísticas -->
-        <div class="barra-stats">
-          <div class="stat-card"><i class="fa-solid fa-book-open"></i><div><span id="statCursos">0</span><p>Cursos</p></div></div>
-          <div class="stat-card"><i class="fa-solid fa-users"></i><div><span id="statAlumnos">0</span><p>Estudiantes</p></div></div>
-          <div class="stat-card"><i class="fa-solid fa-star"></i><div><span id="statNivel">—</span><p>Nivel top</p></div></div>
+        <!-- SALUDO + RELOJ -->
+        <div class="saludo-hero">
+          <div class="saludo-texto">
+            <h2 id="saludoH2">¡Hola, <span>Docente</span>! 👋</h2>
+            <p id="saludoFrase">Bienvenido a tu panel docente.</p>
+          </div>
+          <div class="saludo-reloj">
+            <div class="reloj-hora" id="relojHora">00:00:00</div>
+            <div class="reloj-fecha" id="relojFecha"></div>
+          </div>
         </div>
 
         <!-- Vista: mis cursos -->
@@ -66,10 +108,9 @@
           </div>
         </div>
 
-        <!-- Vista: detalle de un curso -->
+        <!-- Vista: detalle -->
         <div id="vista-detalle" class="vista oculto">
           <button class="btn-volver" id="btnVolverCursos"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-
           <div class="detalle-cabecera">
             <div>
               <span id="cursoNivel" class="etiqueta-nivel"></span>
@@ -82,25 +123,18 @@
               <button id="btnCopiarCodigo" class="btn-icono" title="Copiar"><i class="fa-regular fa-copy"></i></button>
             </div>
           </div>
-
           <button class="btn-peligro btn-pequeno" id="btnEliminarCurso">
             <i class="fa-solid fa-trash"></i> Eliminar curso
           </button>
-
-          <!-- Pestañas del curso -->
           <div class="pestanas-nav">
             <button class="pestana-btn activa" data-pestana="alumnos"><i class="fa-solid fa-users"></i> Alumnos</button>
             <button class="pestana-btn" data-pestana="anuncios"><i class="fa-solid fa-bullhorn"></i> Anuncios</button>
             <button class="pestana-btn" data-pestana="archivos"><i class="fa-solid fa-folder-open"></i> Archivos</button>
             <button class="pestana-btn" data-pestana="tareas"><i class="fa-solid fa-clipboard-list"></i> Tareas</button>
           </div>
-
-          <!-- Panel: alumnos -->
           <div class="pestana-panel" data-panel="alumnos">
             <div id="listaAlumnosCurso" class="lista-alumnos"></div>
           </div>
-
-          <!-- Panel: anuncios -->
           <div class="pestana-panel oculto" data-panel="anuncios">
             <div class="formulario-inline">
               <h3>Publicar anuncio</h3>
@@ -111,8 +145,6 @@
             </div>
             <div id="listaAnunciosCurso" class="lista-anuncios"></div>
           </div>
-
-          <!-- Panel: archivos -->
           <div class="pestana-panel oculto" data-panel="archivos">
             <div class="formulario-inline">
               <h3>Agregar archivo</h3>
@@ -123,8 +155,6 @@
             </div>
             <div id="listaArchivosCurso" class="lista-archivos"></div>
           </div>
-
-          <!-- Panel: tareas -->
           <div class="pestana-panel oculto" data-panel="tareas">
             <div class="formulario-inline">
               <h3>Crear tarea</h3>
@@ -162,21 +192,15 @@
                 <small class="error" id="errCNivel"></small>
               </div>
             </div>
-
             <div class="campo">
               <label for="cDesc">Descripción</label>
               <textarea id="cDesc" rows="3" placeholder="¿De qué trata el curso?"></textarea>
             </div>
-
             <div class="campo">
               <label>Asignar estudiantes</label>
               <div class="tabs-asignar">
-                <button type="button" class="tab-asignar activo-tab" data-panel-tab="lista">
-                  <i class="fa-solid fa-list"></i> Seleccionar
-                </button>
-                <button type="button" class="tab-asignar" data-panel-tab="codigo-info">
-                  <i class="fa-solid fa-key"></i> Por código
-                </button>
+                <button type="button" class="tab-asignar activo-tab" data-panel-tab="lista"><i class="fa-solid fa-list"></i> Seleccionar</button>
+                <button type="button" class="tab-asignar" data-panel-tab="codigo-info"><i class="fa-solid fa-key"></i> Por código</button>
               </div>
               <div id="panel-lista" class="panel-tab">
                 <input type="text" id="buscarEstudiante" placeholder="Buscar estudiante...">
@@ -186,7 +210,6 @@
                 <p class="info-codigo"><i class="fa-solid fa-circle-info"></i> Al guardar el curso se genera un código único. Compártelo con tus estudiantes para que se inscriban.</p>
               </div>
             </div>
-
             <div id="alertaCrearCurso" class="alerta"></div>
             <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar curso</button>
           </form>
@@ -203,7 +226,6 @@
         <div id="vista-perfil" class="vista oculto">
           <h2>Mi perfil</h2>
           <form id="formPerfil" class="formulario" novalidate>
-
             <div class="seccion-avatar-perfil">
               <div class="avatar-grande"><i class="fa-solid fa-chalkboard-teacher"></i></div>
               <div>
@@ -211,7 +233,6 @@
                 <p class="texto-desde" id="perfilDesde"></p>
               </div>
             </div>
-
             <div class="fila-formulario">
               <div class="campo">
                 <label for="pNombre">Nombre</label>
@@ -224,16 +245,13 @@
                 <small class="error" id="errPApellido"></small>
               </div>
             </div>
-
             <div class="campo">
               <label for="pEmail">Correo</label>
               <input type="email" id="pEmail" disabled>
               <small class="nota">El correo no se puede cambiar.</small>
             </div>
-
             <hr class="divisor">
             <h3>Cambiar contraseña</h3>
-
             <div class="campo">
               <label for="pClave">Nueva contraseña</label>
               <div class="campo-con-ojo">
@@ -242,7 +260,6 @@
               </div>
               <small class="error" id="errPClave"></small>
             </div>
-
             <div id="alertaPerfil" class="alerta"></div>
             <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
           </form>
@@ -252,11 +269,13 @@
     </div>
   </main>
 
-  <script type="module" src="../js/header_footer.js"></script>
+  <footer id="footer"></footer>
+
+    <script type="module" src="../js/header_footer.js"></script>
   <script type="module" src="../js/panel_docente.js"></script>
 
+  <!-- Tabs crear curso (sin módulo, sin await) -->
   <script>
-    // Tabs en crear curso (sin módulo)
     document.addEventListener("click", function(e) {
       const btn = e.target.closest(".tab-asignar");
       if (!btn) return;
@@ -265,6 +284,45 @@
       btn.classList.add("activo-tab");
       document.getElementById("panel-" + btn.dataset.panelTab)?.classList.remove("oculto");
     });
+
+    // Reloj (sin módulo, sin await — no bloquea nada)
+    const DIAS  = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+    const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+    function actualizarReloj() {
+      const ahora = new Date();
+      const hh = String(ahora.getHours()).padStart(2,"0");
+      const mm = String(ahora.getMinutes()).padStart(2,"0");
+      const ss = String(ahora.getSeconds()).padStart(2,"0");
+      const relojHora  = document.getElementById("relojHora");
+      const relojFecha = document.getElementById("relojFecha");
+      if (relojHora)  relojHora.textContent  = hh + ":" + mm + ":" + ss;
+      if (relojFecha) relojFecha.textContent =
+        DIAS[ahora.getDay()] + ", " + ahora.getDate() + " de " + MESES[ahora.getMonth()] + " " + ahora.getFullYear();
+    }
+    actualizarReloj();
+    setInterval(actualizarReloj, 1000);
+
+    // Saludo: se ejecuta después de que panel_docente.js pone el nombre en #sideNombre
+    function aplicarSaludo() {
+      const nombre = (document.getElementById("sideNombre")?.textContent || "").split(" ")[0];
+      if (!nombre || nombre === "Cargando...") { setTimeout(aplicarSaludo, 300); return; }
+      const h  = new Date().getHours();
+      const emoji   = h < 12 ? "☀️" : h < 19 ? "🌤️" : "🌙";
+      const greeting = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
+      const frases = [
+        "Empieza el día revisando tus cursos.",
+        "Recuerda revisar las entregas de tus estudiantes.",
+        "Buen momento para publicar un anuncio.",
+        "Gracias por dedicar tu tiempo a enseñar. 💪"
+      ];
+      const frase = frases[h < 12 ? 0 : h < 15 ? 1 : h < 19 ? 2 : 3];
+      const h2 = document.getElementById("saludoH2");
+      const p  = document.getElementById("saludoFrase");
+      if (h2) h2.innerHTML = greeting + ", <span>" + nombre + "</span>! " + emoji;
+      if (p)  p.textContent = frase;
+    }
+    document.addEventListener("DOMContentLoaded", () => setTimeout(aplicarSaludo, 500));
   </script>
 </body>
 </html>
