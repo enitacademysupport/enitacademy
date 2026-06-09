@@ -6,307 +6,101 @@
   <title>Verificar correo — ENIT Academy</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --pink: #ff4fa0;
-      --pink-dim: rgba(255, 79, 160, 0.15);
-      --pink-glow: rgba(255, 79, 160, 0.35);
-      --bg: #0d0d14;
-      --surface: #14141f;
+      --pink: #ff4fa0; --pink-dim: rgba(255,79,160,0.15);
+      --bg: #0d0d14; --surface: #14141f;
       --border: rgba(255,255,255,0.08);
-      --text: #f0f0f8;
-      --muted: #888;
-      --success: #3ddc97;
-      --error: #ff5f6d;
-      --radius: 12px;
+      --text: #f0f0f8; --muted: #888;
+      --success: #3ddc97; --error: #ff5f6d; --radius: 12px;
     }
-
     html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100dvh;
+      height: 100%; background: var(--bg); color: var(--text);
+      font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh;
     }
-
-    /* ambient glow */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 600px 400px at 50% -80px, rgba(255,79,160,0.18) 0%, transparent 70%);
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse 600px 400px at 50% -80px, rgba(255,79,160,0.18) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .card {
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px 40px 40px;
-      width: 100%;
-      max-width: 420px;
-      margin: 24px;
-      text-align: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 48px 40px 40px;
+      width: 100%; max-width: 420px; margin: 24px; text-align: center;
     }
-
-    .logo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--pink);
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    .icon-wrap {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 20px;
-      background: var(--pink-dim);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .icon-wrap svg {
-      width: 28px;
-      height: 28px;
-      stroke: var(--pink);
-    }
-
-    h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 36px;
-    }
-
-    .subtitle span {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* OTP inputs */
-    .otp-row {
-      display: flex;
-      gap: 7px;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
-
+    .logo { font-size:1.1rem; font-weight:700; letter-spacing:0.06em; color:var(--pink); text-transform:uppercase; margin-bottom:32px; }
+    .icon-wrap { width:64px; height:64px; margin:0 auto 20px; background:var(--pink-dim); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .icon-wrap svg { width:28px; height:28px; stroke:var(--pink); }
+    h1 { font-size:1.35rem; font-weight:700; margin-bottom:8px; }
+    .subtitle { color:var(--muted); font-size:0.9rem; line-height:1.6; margin-bottom:36px; }
+    .subtitle span { color:var(--text); font-weight:500; }
+    .otp-row { display:flex; gap:10px; justify-content:center; margin-bottom:28px; }
     .otp-input {
-      width: 44px;
-      height: 56px;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 1.3rem;
-      font-weight: 700;
-      font-family: 'Inter', monospace;
-      text-align: center;
-      caret-color: var(--pink);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      -webkit-appearance: none;
+      width:52px; height:60px; background:var(--bg);
+      border:1.5px solid var(--border); border-radius:var(--radius);
+      color:var(--text); font-size:1.5rem; font-weight:700;
+      font-family:'Inter',monospace; text-align:center;
+      caret-color:var(--pink); outline:none; transition:border-color 0.2s,box-shadow 0.2s;
     }
-
-    .otp-input:focus {
-      border-color: var(--pink);
-      box-shadow: 0 0 0 3px var(--pink-dim);
-    }
-
-    .otp-input.filled {
-      border-color: rgba(255,79,160,0.5);
-    }
-
-    .otp-input.error-state {
-      border-color: var(--error);
-      box-shadow: 0 0 0 3px rgba(255,95,109,0.15);
-      animation: shake 0.4s ease;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
-    }
-
-    /* feedback messages */
-    .feedback {
-      height: 22px;
-      font-size: 0.82rem;
-      margin-bottom: 20px;
-      transition: opacity 0.2s;
-    }
-
-    .feedback.error  { color: var(--error); }
-    .feedback.success { color: var(--success); }
-
-    /* verify button */
+    .otp-input:focus { border-color:var(--pink); box-shadow:0 0 0 3px var(--pink-dim); }
+    .otp-input.filled { border-color:rgba(255,79,160,0.5); }
+    .otp-input.error-state { border-color:var(--error); box-shadow:0 0 0 3px rgba(255,95,109,0.15); animation:shake 0.4s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+    .feedback { height:22px; font-size:0.82rem; margin-bottom:20px; }
+    .feedback.error { color:var(--error); }
+    .feedback.success { color:var(--success); }
     .btn-verify {
-      width: 100%;
-      padding: 15px;
-      background: var(--pink);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      width:100%; padding:15px; background:var(--pink); border:none;
+      border-radius:var(--radius); color:#fff; font-size:0.95rem; font-weight:600;
+      cursor:pointer; transition:opacity 0.2s,transform 0.1s;
+      display:flex; align-items:center; justify-content:center; gap:8px;
     }
-
-    .btn-verify:hover:not(:disabled) { opacity: 0.88; }
-    .btn-verify:active:not(:disabled) { transform: scale(0.98); }
-    .btn-verify:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* spinner */
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.35);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .btn-verify.loading .spinner { display: block; }
-    .btn-verify.loading .btn-label { display: none; }
-
-    /* resend area */
-    .resend {
-      margin-top: 24px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .resend button {
-      background: none;
-      border: none;
-      color: var(--pink);
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0;
-      transition: opacity 0.2s;
-    }
-
-    .resend button:disabled {
-      color: var(--muted);
-      cursor: default;
-    }
-
-    #countdown {
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* success overlay */
-    .success-overlay {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0 4px;
-    }
-
-    .success-overlay .check-circle {
-      width: 64px; height: 64px;
-      background: rgba(61,220,151,0.15);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .success-overlay .check-circle svg {
-      width: 30px; height: 30px;
-      stroke: var(--success);
-      stroke-dasharray: 40;
-      stroke-dashoffset: 40;
-      animation: draw 0.5s ease forwards 0.1s;
-    }
-
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-
-    .success-overlay p {
-      color: var(--success);
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .success-overlay small {
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
+    .btn-verify:hover:not(:disabled) { opacity:0.88; }
+    .btn-verify:disabled { opacity:0.5; cursor:not-allowed; }
+    .spinner { width:18px; height:18px; border:2.5px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .btn-verify.loading .spinner { display:block; }
+    .btn-verify.loading .btn-label { display:none; }
+    .resend { margin-top:24px; font-size:0.85rem; color:var(--muted); }
+    .resend button { background:none; border:none; color:var(--pink); cursor:pointer; font-size:0.85rem; font-weight:600; padding:0; }
+    .resend button:disabled { color:var(--muted); cursor:default; }
+    .success-overlay { display:none; flex-direction:column; align-items:center; gap:12px; padding:8px 0 4px; }
+    .check-circle { width:64px; height:64px; background:rgba(61,220,151,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .check-circle svg { width:30px; height:30px; stroke:var(--success); stroke-dasharray:40; stroke-dashoffset:40; animation:draw 0.5s ease forwards 0.1s; }
+    @keyframes draw { to { stroke-dashoffset:0; } }
+    .success-overlay p { color:var(--success); font-weight:600; font-size:1rem; }
+    .success-overlay small { color:var(--muted); font-size:0.82rem; }
+    @media (max-width:400px) { .otp-input{width:42px;height:52px;font-size:1.2rem;} .otp-row{gap:7px;} .card{padding:36px 20px 28px;} }
   </style>
 </head>
 <body>
-
 <div class="card">
   <div class="logo">ENIT Academy</div>
-
-  <!-- main form view -->
   <div id="form-view">
     <div class="icon-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"/>
-        <path d="m22 7-10 7L2 7"/>
+        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/>
       </svg>
     </div>
-
     <h1>Verifica tu correo</h1>
-    <p class="subtitle" id="subtitle-text">
-      Enviamos un código de 8 caracteres a<br>
-      <span id="email-display">tu correo electrónico</span>
-    </p>
-
-    <div class="otp-row" id="otp-row">
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" data-index="0" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="1" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="2" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="3" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="4" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="5" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="6" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="7" />
+    <p class="subtitle">Enviamos un código de 6 dígitos a<br><span id="email-display">tu correo</span></p>
+    <div class="otp-row">
+      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" />
+      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" />
+      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" />
+      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" />
+      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" />
+      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" />
     </div>
-
     <div class="feedback" id="feedback"></div>
-
     <button class="btn-verify" id="btn-verify" disabled>
-      <span class="spinner"></span>
-      <span class="btn-label">Verificar cuenta</span>
+      <span class="spinner"></span><span class="btn-label">Verificar cuenta</span>
     </button>
-
     <div class="resend">
-      ¿No llegó el correo?&nbsp;
-      <button id="btn-resend" disabled>
-        Reenviar código <span id="countdown"></span>
-      </button>
+      ¿No llegó?&nbsp;<button id="btn-resend" disabled>Reenviar <span id="countdown"></span></button>
     </div>
   </div>
-
-  <!-- success view -->
   <div class="success-overlay" id="success-view">
     <div class="check-circle">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -318,147 +112,109 @@
   </div>
 </div>
 
-<!-- Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
-const SUPABASE_URL  = 'https://iuhhoqmiyndltxcxiiud.supabase.co';      // ← reemplaza
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1aGhvcW1peW5kbHR4Y3hpaXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTEwOTYsImV4cCI6MjA5NjUyNzA5Nn0.Tu0aBSMIzl2b8SO_R4I1MelLpDecIxYirkvbbYW_fsE'; // ← reemplaza
+const SUPABASE_URL  = 'https://iuhhoqmiyndltxcxiiud.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1aGhvcW1peW5kbHR4Y3hpaXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTEwOTYsImV4cCI6MjA5NjUyNzA5Nn0.Tu0aBSMIzl2b8SO_R4I1MelLpDecIxYirkvbbYW_fsE';
+const RUTAS = { docente:'/paginas/panel_docente.html', estudiante:'/paginas/panel_estudiante.html', _default:'/index.html' };
 
-// ─── Rutas según rol ──────────────────────────────────────────────────────────
-const RUTAS_ROL = {
-  docente:    '/paginas/panel_docente.html',
-  estudiante: '/paginas/panel_estudiante.html',
-  _default:   '/index.html',
-};
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+const userEmail = sessionStorage.getItem('pending_email') || '';
+if (!userEmail) window.location.replace('/paginas/registrarse.html');
+document.getElementById('email-display').textContent = userEmail;
 
-// ─── DOM refs ─────────────────────────────────────────────────────────────────
-const inputs    = Array.from(document.querySelectorAll('.otp-input'));
-const btnVerify = document.getElementById('btn-verify');
-const btnResend = document.getElementById('btn-resend');
-const feedback  = document.getElementById('feedback');
-const countdown = document.getElementById('countdown');
-const formView  = document.getElementById('form-view');
+const inputs      = Array.from(document.querySelectorAll('.otp-input'));
+const btnVerify   = document.getElementById('btn-verify');
+const btnResend   = document.getElementById('btn-resend');
+const feedbackEl  = document.getElementById('feedback');
+const countdownEl = document.getElementById('countdown');
+const formView    = document.getElementById('form-view');
 const successView = document.getElementById('success-view');
 
-// ─── EMAIL from sessionStorage (guardado en el registro) ──────────────────────
-const userEmail = sessionStorage.getItem('pending_email') || '';
-if (userEmail) {
-  document.getElementById('email-display').textContent = userEmail;
-}
-
-// ─── OTP INPUT LOGIC ──────────────────────────────────────────────────────────
 inputs.forEach((input, i) => {
   input.addEventListener('input', e => {
-    const val = e.target.value.replace(/[^0-9]/g, '');
-    input.value = val ? val[0] : '';
+    input.value = e.target.value.replace(/\D/g, '').slice(0,1);
     input.classList.toggle('filled', !!input.value);
-    if (val && i < 7) inputs[i + 1].focus();
+    if (input.value && i < inputs.length - 1) inputs[i+1].focus();
     updateBtn();
   });
-
   input.addEventListener('keydown', e => {
     if (e.key === 'Backspace' && !input.value && i > 0) {
-      inputs[i - 1].focus();
-      inputs[i - 1].value = '';
-      inputs[i - 1].classList.remove('filled');
-      updateBtn();
+      inputs[i-1].value = ''; inputs[i-1].classList.remove('filled'); inputs[i-1].focus(); updateBtn();
     }
-    if (e.key === 'ArrowLeft'  && i > 0) inputs[i - 1].focus();
-    if (e.key === 'ArrowRight' && i < 7) inputs[i + 1].focus();
+    if (e.key === 'ArrowLeft'  && i > 0)               inputs[i-1].focus();
+    if (e.key === 'ArrowRight' && i < inputs.length-1) inputs[i+1].focus();
   });
-
-  // paste full code
   input.addEventListener('paste', e => {
     e.preventDefault();
-    const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-    if (!text) return;
-    inputs.forEach((inp, idx) => {
-      inp.value = text[idx] || '';
-      inp.classList.toggle('filled', !!inp.value);
-    });
-    const last = Math.min(text.length - 1, 7);
-    inputs[last].focus();
+    const text = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
+    inputs.forEach((inp,idx) => { inp.value=text[idx]||''; inp.classList.toggle('filled',!!inp.value); });
+    inputs[Math.min(text.length-1, inputs.length-1)].focus();
     updateBtn();
   });
 });
 
-function getCode() {
-  return inputs.map(i => i.value).join('');
-}
-
-function updateBtn() {
-  btnVerify.disabled = getCode().length < 8;
-}
+function getCode() { return inputs.map(i=>i.value).join(''); }
+function updateBtn() { btnVerify.disabled = getCode().length < 6; }
 
 function setError(msg) {
-  feedback.textContent = msg;
-  feedback.className = 'feedback error';
-  inputs.forEach(i => i.classList.add('error-state'));
-  setTimeout(() => inputs.forEach(i => i.classList.remove('error-state')), 600);
+  feedbackEl.textContent = msg; feedbackEl.className = 'feedback error';
+  inputs.forEach(i => { i.classList.add('error-state'); setTimeout(()=>i.classList.remove('error-state'),600); });
 }
+function clearFeedback() { feedbackEl.textContent=''; feedbackEl.className='feedback'; }
 
-function clearFeedback() {
-  feedback.textContent = '';
-  feedback.className = 'feedback';
-}
-
-// ─── VERIFY ───────────────────────────────────────────────────────────────────
-btnVerify.addEventListener('click', verifyCode);
-
-async function verifyCode() {
+// ── Verificar contra nuestra API ──────────────
+btnVerify.addEventListener('click', async () => {
   const code = getCode();
-  if (code.length < 8) return;
-
+  if (code.length < 6) return;
   clearFeedback();
   setLoading(true);
 
-  // 1. Verificar el OTP
-  const { data: otpData, error: otpError } = await sb.auth.verifyOtp({
-    email: userEmail,
-    token: code,
-    type: 'email',
-  });
+  try {
+    // 1. Verificar el código con nuestra API
+    const resp = await fetch('/api/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: userEmail, action: 'verify', code }),
+    });
+    const data = await resp.json();
 
-  if (otpError) {
-    setLoading(false);
-    setError(
-      otpError.message.includes('expired')
-        ? 'El código expiró. Solicita uno nuevo.'
-        : 'Código incorrecto. Revisa e intenta de nuevo.'
-    );
-    return;
-  }
-
-  // 2. Obtener usuario activo y consultar rol en perfiles
-  let destino = RUTAS_ROL._default;
-
-  const { data: { user } } = await sb.auth.getUser();
-  const userId = user?.id;
-
-  if (userId) {
-    const { data: perfil, error: perfilError } = await sb
-      .from('perfiles')
-      .select('rol')
-      .eq('id', userId)
-      .single();
-
-    console.log('perfil:', perfil, 'error:', perfilError);
-
-    if (!perfilError && perfil?.rol) {
-      const rol = perfil.rol.toLowerCase().trim();
-      destino = RUTAS_ROL[rol] ?? RUTAS_ROL._default;
+    if (!resp.ok) {
+      setLoading(false);
+      setError(data.error || 'Código incorrecto.');
+      return;
     }
-  }
 
-  setLoading(false);
-  sessionStorage.removeItem('pending_email');
-  showSuccess(destino);
-}
+    // 2. Confirmar email en Supabase para que el usuario pueda iniciar sesión
+    await sb.auth.verifyOtp({ email: userEmail, token: code, type: 'signup' }).catch(() => {});
+
+    // 3. Obtener sesión y rol
+    const { data: { session } } = await sb.auth.getSession();
+    let destino = RUTAS._default;
+
+    if (session?.user?.id) {
+      const { data: perfil } = await sb.from('perfiles').select('rol').eq('id', session.user.id).single();
+      const rol = perfil?.rol?.toLowerCase().trim();
+      if (rol) destino = RUTAS[rol] ?? RUTAS._default;
+    } else {
+      // Si no hay sesión aún, usar el metadata
+      const rol = session?.user?.user_metadata?.rol || 'estudiante';
+      destino = RUTAS[rol] ?? RUTAS._default;
+    }
+
+    setLoading(false);
+    sessionStorage.removeItem('pending_email');
+    formView.style.display   = 'none';
+    successView.style.display = 'flex';
+    setTimeout(() => window.location.href = destino, 2200);
+
+  } catch(err) {
+    setLoading(false);
+    setError('Error de conexión. Intenta de nuevo.');
+    console.error(err);
+  }
+});
 
 function setLoading(on) {
   btnVerify.classList.toggle('loading', on);
@@ -466,60 +222,36 @@ function setLoading(on) {
   inputs.forEach(i => i.disabled = on);
 }
 
-function showSuccess(destino) {
-  formView.style.display = 'none';
-  successView.style.display = 'flex';
-  setTimeout(() => window.location.href = destino, 2200);
-}
-
-// ─── RESEND + COUNTDOWN ───────────────────────────────────────────────────────
-let timer = null;
-let seconds = 60;
+// ── Reenviar ──────────────────────────────────
+let timer, seconds = 60;
 
 function startCountdown() {
-  seconds = 60;
-  btnResend.disabled = true;
-  tick();
-  timer = setInterval(tick, 1000);
+  seconds = 60; btnResend.disabled = true;
+  tick(); timer = setInterval(tick, 1000);
 }
-
 function tick() {
-  countdown.textContent = `(${seconds}s)`;
-  if (--seconds < 0) {
-    clearInterval(timer);
-    btnResend.disabled = false;
-    countdown.textContent = '';
-  }
+  countdownEl.textContent = `(${seconds}s)`;
+  if (--seconds < 0) { clearInterval(timer); btnResend.disabled=false; countdownEl.textContent=''; }
 }
 
 btnResend.addEventListener('click', async () => {
-  if (!userEmail) {
-    setError('No hay correo registrado. Vuelve al registro.');
-    return;
-  }
-
-  clearFeedback();
-  btnResend.disabled = true;
-
-  const { error } = await sb.auth.resend({
-    type: 'email',
-    email: userEmail,
-  });
-
-  if (error) {
-    setError('No se pudo reenviar el código. Inténtalo más tarde.');
-    btnResend.disabled = false;
-    return;
-  }
-
-  feedback.textContent = '✓ Código reenviado. Revisa tu bandeja.';
-  feedback.className = 'feedback success';
-  inputs.forEach(i => { i.value = ''; i.classList.remove('filled'); });
-  updateBtn();
-  startCountdown();
+  clearFeedback(); btnResend.disabled = true;
+  try {
+    const resp = await fetch('/api/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: userEmail, action: 'send' }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) { setError(data.error||'No se pudo reenviar.'); btnResend.disabled=false; return; }
+    inputs.forEach(i=>{ i.value=''; i.classList.remove('filled'); });
+    updateBtn();
+    feedbackEl.textContent = '✓ Código reenviado. Revisa tu bandeja.';
+    feedbackEl.className = 'feedback success';
+    startCountdown();
+  } catch(err) { setError('Error de conexión.'); btnResend.disabled=false; }
 });
 
-// Start countdown on load
 startCountdown();
 </script>
 </body>

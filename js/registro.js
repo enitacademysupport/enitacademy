@@ -1,12 +1,11 @@
 /* ════════════════════════════════════════════
    ENIT Academy — registro.js
-   Flujo: signUp → OTP de 6 dígitos → verificar-email.html
+   Flujo: signUp → /api/send-otp → verificar-email.html
    ════════════════════════════════════════════ */
 
 import { supabase } from "./supabase.js";
 
-// ══ Selección de rol ══════════════════════════════════════════════════════════
-
+// ══ Selección de rol ══════════════════════════
 let rolActual = null;
 
 const ROL_ICONOS = {
@@ -36,8 +35,7 @@ window.volverARol = function () {
   document.getElementById("stepRol").classList.remove("step-oculto");
 };
 
-// ══ Ojito ════════════════════════════════════════════════════════════════════
-
+// ══ Ojito ═════════════════════════════════════
 function initTogglePassword() {
   document.querySelectorAll(".toggle-pw").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -51,8 +49,7 @@ function initTogglePassword() {
   });
 }
 
-// ══ Feedback ═════════════════════════════════════════════════════════════════
-
+// ══ Feedback ══════════════════════════════════
 function setFieldError(fieldName, mensaje) {
   const input = document.querySelector(`input[name="${fieldName}"]`);
   if (!input) return;
@@ -81,13 +78,12 @@ function ocultarAlerta() {
   alerta.innerHTML = "";
 }
 
-// ══ Submit ════════════════════════════════════════════════════════════════════
-
+// ══ Submit ═════════════════════════════════════
 window.addEventListener("DOMContentLoaded", () => {
   initTogglePassword();
 
   const form = document.getElementById("registerForm");
-  if (!form) { console.error("❌ No se encontró registerForm"); return; }
+  if (!form) { console.error("No se encontró registerForm"); return; }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -101,9 +97,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const password  = form.querySelector('[name="password"]').value;
     const confirmar = form.querySelector('[name="confirmar"]').value;
 
-    // ── Validaciones ─────────────────────────────────────────────────────────
     let valido = true;
-
     if (!rol) { mostrarAlerta("error", "Por favor elige tu rol antes de continuar."); return; }
     if (!nombre)   { setFieldError("nombre",   "El nombre es obligatorio.");   valido = false; }
     if (!apellido) { setFieldError("apellido", "El apellido es obligatorio."); valido = false; }
@@ -120,44 +114,59 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (!valido) return;
 
-    // ── Registro ─────────────────────────────────────────────────────────────
     const btn = document.getElementById("btnRegister");
     btn.disabled    = true;
     btn.textContent = "Registrando...";
 
-    const { error } = await supabase.auth.signUp({
+    // PASO 1: Crear cuenta en Supabase
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: { nombre, apellido, rol },
-        // ⚠️ Sin emailRedirectTo → Supabase envía el código OTP de 6 dígitos
-        //    (requiere "Enable email confirmations" ON en Auth → Settings)
-      },
+      options: { data: { nombre, apellido, rol } },
     });
+
+    if (signUpError) {
+      btn.disabled    = false;
+      btn.textContent = "Registrarme";
+      const msgs = {
+        "User already registered":   "Este correo ya está registrado. Intenta iniciar sesión.",
+        "Email rate limit exceeded": "Demasiados intentos. Espera unos minutos.",
+      };
+      mostrarAlerta("error", msgs[signUpError.message] || signUpError.message);
+      return;
+    }
+
+    // PASO 2: Enviar OTP via Vercel Function
+    btn.textContent = "Enviando código...";
+
+    try {
+      const resp = await fetch("/api/send-otp", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ email, action: "send" }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        btn.disabled    = false;
+        btn.textContent = "Registrarme";
+        mostrarAlerta("error", data.error || "No se pudo enviar el código.");
+        return;
+      }
+    } catch (err) {
+      btn.disabled    = false;
+      btn.textContent = "Registrarme";
+      mostrarAlerta("error", "Error de conexión. Intenta de nuevo.");
+      return;
+    }
 
     btn.disabled    = false;
     btn.textContent = "Registrarme";
 
-    if (error) {
-      console.error(error);
-      const msgs = {
-        "User already registered":    "Este correo ya está registrado. Intenta iniciar sesión.",
-        "Email rate limit exceeded":  "Demasiados intentos. Espera unos minutos.",
-      };
-      mostrarAlerta("error", msgs[error.message] || error.message);
-      return;
-    }
-
-    // ── Éxito → guardar email y redirigir a verificación ─────────────────────
+    // PASO 3: Redirigir a verificación
     sessionStorage.setItem("pending_email", email);
     window.location.href = "/paginas/verificar-email.html";
   });
 });
 
-window.addEventListener("error", e => {
-  console.error("ERROR GLOBAL:", e.error);
-});
-
-window.addEventListener("unhandledrejection", e => {
-  console.error("PROMESA FALLIDA:", e.reason);
-});
+window.addEventListener("error", e => console.error("ERROR GLOBAL:", e.error));
+window.addEventListener("unhandledrejection", e => console.error("PROMESA FALLIDA:", e.reason));
