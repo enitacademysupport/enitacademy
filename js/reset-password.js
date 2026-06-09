@@ -1,9 +1,4 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — reset-password.js
-   Maneja el restablecimiento de contraseña
-   después de que el usuario llega desde el
-   enlace del correo de Supabase.
-   ════════════════════════════════════════════ */
+
 
 import { supabase } from "./supabase.js";
 
@@ -16,19 +11,15 @@ const errNueva     = document.getElementById("errNueva");
 const errConfirmar = document.getElementById("errConfirmar");
 const alerta       = document.getElementById("alerta");
 
-// ── Detectar sesión desde el enlace del correo ──
-// Supabase pone el token en el hash (#access_token=...) o como query param
-// onAuthStateChange lo captura automáticamente con el evento PASSWORD_RECOVERY
+
 
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
-    // El usuario llegó desde el enlace de reset — mostrar el formulario normalmente
     console.log("Modo recuperación de contraseña activo");
   }
 
   if (event === "SIGNED_IN" && session) {
-    // Si llegó desde un enlace de CONFIRMACIÓN de email (registro)
-    // redirigir al panel según su rol
+    // redirgir al panel según su rol
     const { data: perfil } = await supabase
       .from("perfiles").select("rol").eq("id", session.user.id).single();
     const RUTAS = {
