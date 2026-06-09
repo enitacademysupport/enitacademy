@@ -1,574 +1,590 @@
+/* ════════════════════════════════════════════
+   ENIT Academy — panel_docente.js
+   ════════════════════════════════════════════ */
+
 import { supabase } from "./supabase.js";
 
-// ── Verificar sesión ──────────────────────────
+// ══ ESTADO ════════════════════════════════════════════════════════════════════
+let perfilActual  = null;
+let cursosDocente = [];
+let cursoActivo   = null;
+
+// ══ INIT ══════════════════════════════════════════════════════════════════════
+window.addEventListener("DOMContentLoaded", async () => {
+  await verificarSesion();
+  await cargarPerfil();
+  await cargarCursos();
+  initNav();
+  initSidebar();
+  initCerrarSesion();
+  initFormCrearCurso();
+  initFormPerfil();
+});
+
+// ══ SESIÓN ════════════════════════════════════════════════════════════════════
 async function verificarSesion() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) { window.location.replace("/index.html"); return null; }
+  if (!session) window.location.href = "/index.html";
+}
+
+// ══ PERFIL ════════════════════════════════════════════════════════════════════
+async function cargarPerfil() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
 
   const { data: perfil } = await supabase
-    .from("perfiles").select("*").eq("id", session.user.id).single();
+    .from("perfiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
 
-  if (!perfil) { window.location.replace("/index.html"); return null; }
-  if (perfil.rol !== "docente") { window.location.replace("/paginas/panel_estudiante.html"); return null; }
+  if (!perfil) return;
+  perfilActual = { ...perfil, email: user.email, created_at: user.created_at };
 
-  return { usuario: session.user, perfil };
+  const nombreCompleto = `${perfil.nombre} ${perfil.apellido}`;
+  const sideNombre = document.getElementById("sideNombre");
+  if (sideNombre) sideNombre.textContent = nombreCompleto;
+
+  // Formulario perfil
+  const pNombre    = document.getElementById("pNombre");
+  const pApellido  = document.getElementById("pApellido");
+  const pEmail     = document.getElementById("pEmail");
+  const pDesde     = document.getElementById("perfilDesde");
+
+  if (pNombre)   pNombre.value   = perfil.nombre;
+  if (pApellido) pApellido.value = perfil.apellido;
+  if (pEmail)    pEmail.value    = user.email;
+  if (pDesde)    pDesde.textContent = `Miembro desde ${formatFecha(user.created_at)}`;
 }
 
-// ── Helpers ───────────────────────────────────
-function generarCodigo() {
-  const letras = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  return Array.from({ length: 8 }, () => letras[Math.floor(Math.random() * letras.length)]).join("");
-}
+// ══ CARGAR CURSOS ═════════════════════════════════════════════════════════════
+async function cargarCursos() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
 
-function mostrarAlerta(id, tipo, msg) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.className = `alerta alerta-${tipo}`;
-  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${msg}`;
-}
-
-function limpiarAlerta(id) {
-  const el = document.getElementById(id);
-  if (el) { el.className = "alerta"; el.innerHTML = ""; }
-}
-
-function mostrarVista(nombre) {
-  document.querySelectorAll(".vista").forEach(v => v.classList.add("oculto"));
-  document.getElementById("vista-" + nombre)?.classList.remove("oculto");
-  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("activo", b.dataset.vista === nombre));
-  document.querySelector(".panel-sidebar")?.classList.remove("sidebar-abierto");
-  document.getElementById("fondoSidebar")?.classList.remove("visible");
-}
-
-function activarPestana(nombre) {
-  document.querySelectorAll(".pestana-btn").forEach(b => b.classList.toggle("activa", b.dataset.pestana === nombre));
-  document.querySelectorAll(".pestana-panel").forEach(p => p.classList.toggle("oculto", p.dataset.panel !== nombre));
-}
-
-// ── Cursos ────────────────────────────────────
-let cursoActual = null;
-
-async function cargarCursos(docenteId) {
   const { data: cursos } = await supabase
-    .from("cursos").select("*").eq("docente_id", docenteId)
+    .from("cursos")
+    .select("*")
+    .eq("docente_id", user.id)
     .order("creado_at", { ascending: false });
 
+  cursosDocente = cursos || [];
+  renderCursos();
+  cargarListaEstudiantes();
+}
+
+function renderCursos() {
   const contenedor = document.getElementById("listaCursos");
-  const sinDatos   = document.getElementById("msgSinCursos");
-  contenedor.innerHTML = "";
+  const msg        = document.getElementById("msgSinCursos");
+  if (!contenedor) return;
 
-  if (!cursos?.length) { contenedor.appendChild(sinDatos); sinDatos.style.display = "block"; return; }
-  sinDatos.style.display = "none";
+  if (cursosDocente.length === 0) {
+    if (msg) msg.style.display = "";
+    return;
+  }
+  if (msg) msg.style.display = "none";
 
-  cursos.forEach(c => {
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "tarjeta-curso";
-    tarjeta.innerHTML = `
-      <div class="tarjeta-top">
-        <span class="etiqueta-nivel nivel-${c.nivel}">${c.nivel || "—"}</span>
-        <span class="codigo-texto"><i class="fa-solid fa-key"></i> ${c.codigo}</span>
+  contenedor.innerHTML = cursosDocente.map(c => `
+    <div class="tarjeta-curso" onclick="abrirDetalle('${c.id}')" style="cursor:pointer;">
+      <div class="tarjeta-curso-header">
+        ${c.nivel ? `<span class="etiqueta-nivel ${c.nivel}">${c.nivel}</span>` : ""}
+        <h3>${c.nombre}</h3>
+        <p>${c.descripcion || ""}</p>
       </div>
-      <h3>${c.nombre}</h3>
-      <p>${c.descripcion || "Sin descripción"}</p>
-      <button class="btn-ver-curso">Abrir curso <i class="fa-solid fa-arrow-right"></i></button>
-    `;
-    tarjeta.querySelector(".btn-ver-curso").addEventListener("click", () => abrirCurso(c));
-    contenedor.appendChild(tarjeta);
-  });
+      <div class="tarjeta-curso-footer">
+        <span><i class="fa-solid fa-key"></i> ${c.codigo}</span>
+      </div>
+    </div>
+  `).join("");
 }
 
-async function abrirCurso(curso) {
-  cursoActual = curso;
-  document.getElementById("cursoTitulo").textContent = curso.nombre;
-  document.getElementById("cursoCodigo").textContent = curso.codigo;
-  document.getElementById("cursoDesc").textContent   = curso.descripcion || "";
+// ══ DETALLE CURSO ═════════════════════════════════════════════════════════════
+window.abrirDetalle = async function(cursoId) {
+  cursoActivo = cursosDocente.find(c => c.id === cursoId);
+  if (!cursoActivo) return;
+
+  // Llenar cabecera
+  document.getElementById("cursoTitulo").textContent = cursoActivo.nombre;
+  document.getElementById("cursoDesc").textContent   = cursoActivo.descripcion || "";
+  document.getElementById("cursoCodigo").textContent = cursoActivo.codigo;
   const nivelEl = document.getElementById("cursoNivel");
-  nivelEl.textContent = curso.nivel || "";
-  nivelEl.className   = `etiqueta-nivel nivel-${curso.nivel}`;
+  if (nivelEl) { nivelEl.textContent = cursoActivo.nivel || ""; nivelEl.className = `etiqueta-nivel ${cursoActivo.nivel || ""}`; }
 
-  await Promise.all([
-    cargarAlumnosDelCurso(curso.id),
-    cargarAnunciosDelCurso(curso.id),
-    cargarArchivosDelCurso(curso.id),
-    cargarTareasDelCurso(curso.id),
-  ]);
-
-  activarPestana("alumnos");
   mostrarVista("detalle");
-}
 
-// ── Alumnos ───────────────────────────────────
-async function cargarAlumnosDelCurso(cursoId) {
+  // Pestañas
+  document.querySelectorAll(".pestana-btn").forEach(b => b.classList.remove("activa"));
+  document.querySelectorAll(".pestana-panel").forEach(p => p.classList.add("oculto"));
+  document.querySelector(".pestana-btn[data-pestana='alumnos']")?.classList.add("activa");
+  document.querySelector(".pestana-panel[data-panel='alumnos']")?.classList.remove("oculto");
+
+  await cargarAlumnosCurso(cursoId);
+  await cargarAnunciosCurso(cursoId);
+  await cargarArchivosCurso(cursoId);
+  await cargarTareasCurso(cursoId);
+  initPestanas(cursoId);
+  initAccionesCurso(cursoId);
+};
+
+// Copiar código
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("btnCopiarCodigo")?.addEventListener("click", () => {
+    const codigo = document.getElementById("cursoCodigo")?.textContent;
+    if (codigo) navigator.clipboard.writeText(codigo).then(() => {
+      const btn = document.getElementById("btnCopiarCodigo");
+      btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+      setTimeout(() => { btn.innerHTML = `<i class="fa-regular fa-copy"></i>`; }, 1500);
+    });
+  });
+
+  document.getElementById("btnVolverCursos")?.addEventListener("click", () => {
+    mostrarVista("cursos");
+  });
+});
+
+async function cargarAlumnosCurso(cursoId) {
   const { data } = await supabase
     .from("inscripciones")
-    .select("estudiante_id, perfiles(id, nombre, apellido)")
+    .select("estudiante_id, perfiles(nombre, apellido, id)")
     .eq("curso_id", cursoId);
 
-  const lista = document.getElementById("listaAlumnosCurso");
-  lista.innerHTML = data?.length
-    ? data.map(i => `
-        <div class="fila-alumno">
-          <div class="icono-alumno"><i class="fa-solid fa-user-graduate"></i></div>
-          <span>${i.perfiles.nombre} ${i.perfiles.apellido}</span>
-          <button class="btn-ver-alumno btn-icono" data-id="${i.perfiles.id}" data-nombre="${i.perfiles.nombre} ${i.perfiles.apellido}" title="Ver archivos">
-            <i class="fa-solid fa-folder-open"></i>
-          </button>
-        </div>`).join("")
-    : "<p class='sin-datos'>Sin alumnos inscritos aún.</p>";
+  const el = document.getElementById("listaAlumnosCurso");
+  if (!el) return;
 
-  lista.querySelectorAll(".btn-ver-alumno").forEach(btn => {
-    btn.addEventListener("click", () => verArchivosAlumno(btn.dataset.id, btn.dataset.nombre));
-  });
-}
-
-async function verArchivosAlumno(estudianteId, nombre) {
-  const { data } = await supabase
-    .from("archivos_estudiante")
-    .select("*, cursos(nombre)")
-    .eq("estudiante_id", estudianteId)
-    .order("creado_at", { ascending: false });
-
-  const modal = document.getElementById("modalArchivosAlumno");
-  document.getElementById("modalAlumnoNombre").textContent = nombre;
-
-  const lista = document.getElementById("modalListaArchivos");
-  lista.innerHTML = data?.length
-    ? data.map(a => `
-        <div class="tarjeta-archivo">
-          <i class="fa-solid fa-file icono-archivo"></i>
-          <div class="info-archivo">
-            <span class="nombre-archivo">${a.nombre}</span>
-            <span class="texto-curso"><i class="fa-solid fa-book-open"></i> ${a.cursos?.nombre || "—"}</span>
-            <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
-          </div>
-          <a href="${a.url}" target="_blank" class="btn-icono"><i class="fa-solid fa-download"></i></a>
-        </div>`).join("")
-    : "<p class='sin-datos'>Este estudiante no ha subido archivos.</p>";
-
-  modal.style.display = "flex";
-}
-
-// ── Anuncios ──────────────────────────────────
-async function cargarAnunciosDelCurso(cursoId) {
-  const { data } = await supabase
-    .from("anuncios").select("*").eq("curso_id", cursoId)
-    .order("creado_at", { ascending: false });
-
-  const lista = document.getElementById("listaAnunciosCurso");
-  lista.innerHTML = data?.length
-    ? data.map(a => `
-        <div class="tarjeta-anuncio">
-          <div class="anuncio-cabecera">
-            <h4>${a.titulo}</h4>
-            <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
-            <button class="btn-icono btn-eliminar" data-id="${a.id}" data-tabla="anuncios">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-          <p>${a.contenido}</p>
-        </div>`).join("")
-    : "<p class='sin-datos'>No hay anuncios en este curso.</p>";
-
-  lista.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => eliminarItem(btn.dataset.tabla, btn.dataset.id, () => cargarAnunciosDelCurso(cursoId)));
-  });
-}
-
-async function publicarAnuncio(docenteId) {
-  const titulo    = document.getElementById("anuncioTitulo").value.trim();
-  const contenido = document.getElementById("anuncioContenido").value.trim();
-  if (!titulo || !contenido) { mostrarAlerta("alertaAnuncio", "error", "Completa título y contenido."); return; }
-
-  const { error } = await supabase.from("anuncios").insert({ curso_id: cursoActual.id, docente_id: docenteId, titulo, contenido });
-  if (error) { mostrarAlerta("alertaAnuncio", "error", error.message); return; }
-
-  mostrarAlerta("alertaAnuncio", "ok", "Anuncio publicado.");
-  document.getElementById("anuncioTitulo").value    = "";
-  document.getElementById("anuncioContenido").value = "";
-  setTimeout(() => cargarAnunciosDelCurso(cursoActual.id), 800);
-}
-
-// ── Archivos ──────────────────────────────────
-const ICONOS = { pdf:"fa-file-pdf", doc:"fa-file-word", docx:"fa-file-word", ppt:"fa-file-powerpoint", pptx:"fa-file-powerpoint", mp4:"fa-file-video", mp3:"fa-file-audio", jpg:"fa-file-image", jpeg:"fa-file-image", png:"fa-file-image" };
-
-async function cargarArchivosDelCurso(cursoId) {
-  const { data } = await supabase
-    .from("archivos").select("*").eq("curso_id", cursoId)
-    .order("creado_at", { ascending: false });
-
-  const lista = document.getElementById("listaArchivosCurso");
-  lista.innerHTML = data?.length
-    ? data.map(a => {
-        const ext  = a.nombre_archivo?.split(".").pop()?.toLowerCase() || "";
-        const icon = ICONOS[ext] || "fa-file";
-        return `<div class="tarjeta-archivo">
-          <i class="fa-solid ${icon} icono-archivo"></i>
-          <div class="info-archivo">
-            <span class="nombre-archivo">${a.nombre_archivo}</span>
-            <span class="fecha-texto">${new Date(a.creado_at).toLocaleDateString("es-PE")}</span>
-          </div>
-          <div class="acciones-archivo">
-            <a href="${a.url}" target="_blank" class="btn-icono"><i class="fa-solid fa-download"></i></a>
-            <button class="btn-icono btn-eliminar" data-id="${a.id}" data-tabla="archivos"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>`;
-      }).join("")
-    : "<p class='sin-datos'>No hay archivos en este curso.</p>";
-
-  lista.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => eliminarItem(btn.dataset.tabla, btn.dataset.id, () => cargarArchivosDelCurso(cursoId)));
-  });
-}
-
-async function subirArchivo(docenteId) {
-  const nombre = document.getElementById("archivoNombre").value.trim();
-  const url    = document.getElementById("archivoUrl").value.trim();
-  if (!nombre || !url) { mostrarAlerta("alertaArchivo", "error", "Completa nombre y enlace."); return; }
-
-  const { error } = await supabase.from("archivos").insert({ curso_id: cursoActual.id, docente_id: docenteId, nombre_archivo: nombre, url });
-  if (error) { mostrarAlerta("alertaArchivo", "error", error.message); return; }
-
-  mostrarAlerta("alertaArchivo", "ok", "Archivo agregado.");
-  document.getElementById("archivoNombre").value = "";
-  document.getElementById("archivoUrl").value    = "";
-  setTimeout(() => cargarArchivosDelCurso(cursoActual.id), 800);
-}
-
-// ── Tareas ────────────────────────────────────
-async function cargarTareasDelCurso(cursoId) {
-  const { data } = await supabase
-    .from("tareas").select("*").eq("curso_id", cursoId)
-    .order("fecha_entrega", { ascending: true, nullsFirst: false });
-
-  const lista = document.getElementById("listaTareasCurso");
-  const hoy   = new Date();
-
-  if (!data?.length) { lista.innerHTML = "<p class='sin-datos'>No hay tareas en este curso.</p>"; return; }
-
-  const tareasConEntregas = await Promise.all(data.map(async t => {
-    const { count }        = await supabase.from("entregas").select("id", { count: "exact", head: true }).eq("tarea_id", t.id);
-    const { count: noVistas } = await supabase.from("entregas").select("id", { count: "exact", head: true }).eq("tarea_id", t.id).eq("visto", false);
-    return { ...t, totalEntregas: count || 0, noVistas: noVistas || 0 };
-  }));
-
-  lista.innerHTML = tareasConEntregas.map(t => {
-    const vence   = t.fecha_entrega ? new Date(t.fecha_entrega).toLocaleDateString("es-PE") : "Sin fecha";
-    const vencida = t.fecha_entrega && new Date(t.fecha_entrega) < hoy;
-    return `
-      <div class="tarjeta-tarea ${vencida ? "tarea-vencida" : ""}">
-        <div class="tarea-cabecera">
-          <h4>${t.titulo}</h4>
-          <span class="fecha-texto ${vencida ? "texto-vencido" : ""}">
-            <i class="fa-solid fa-clock"></i> ${vence}
-          </span>
-          <button class="btn-icono btn-eliminar" data-id="${t.id}" data-tabla="tareas">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-        ${t.descripcion ? `<p>${t.descripcion}</p>` : ""}
-        ${t.puntos ? `<span class="puntos-badge"><i class="fa-solid fa-star"></i> ${t.puntos} pts</span>` : ""}
-        <div class="entregas-resumen">
-          <span class="entregas-total"><i class="fa-solid fa-paper-plane"></i> ${t.totalEntregas} entregas</span>
-          ${t.noVistas > 0 ? `<span class="entregas-nuevas"><i class="fa-solid fa-circle-exclamation"></i> ${t.noVistas} sin revisar</span>` : ""}
-          <button class="btn-ver-entregas btn-pequeno" data-id="${t.id}" data-titulo="${t.titulo}">Ver entregas</button>
-        </div>
-      </div>`;
-  }).join("");
-
-  lista.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => eliminarItem(btn.dataset.tabla, btn.dataset.id, () => cargarTareasDelCurso(cursoId)));
-  });
-  lista.querySelectorAll(".btn-ver-entregas").forEach(btn => {
-    btn.addEventListener("click", () => verEntregas(btn.dataset.id, btn.dataset.titulo));
-  });
-}
-
-async function verEntregas(tareaId, titulo) {
-  const { data } = await supabase
-    .from("entregas")
-    .select("*, perfiles(nombre, apellido)")
-    .eq("tarea_id", tareaId)
-    .order("entregado_at", { ascending: false });
-
-  const modal = document.getElementById("modalEntregas");
-  document.getElementById("modalEntregasTitulo").textContent = titulo;
-
-  const lista = document.getElementById("modalListaEntregas");
-  lista.innerHTML = data?.length
-    ? data.map(e => `
-        <div class="tarjeta-entrega ${!e.visto ? "entrega-nueva" : ""}">
-          <div class="entrega-cabecera">
-            <div class="icono-alumno"><i class="fa-solid fa-user-graduate"></i></div>
-            <div>
-              <strong>${e.perfiles.nombre} ${e.perfiles.apellido}</strong>
-              <span class="fecha-texto">${new Date(e.entregado_at).toLocaleDateString("es-PE")}</span>
-            </div>
-            ${!e.visto ? '<span class="badge-nueva">Nueva</span>' : '<span class="badge-vista">Revisada</span>'}
-            <button class="btn-marcar-visto btn-pequeno ${e.visto ? "oculto" : ""}" data-id="${e.id}">Marcar revisada</button>
-          </div>
-          ${e.comentario ? `<p class="entrega-comentario">${e.comentario}</p>` : ""}
-          ${e.url_archivo ? `<a href="${e.url_archivo}" target="_blank" class="btn-icono btn-descargar"><i class="fa-solid fa-download"></i> Descargar entrega</a>` : ""}
-        </div>`).join("")
-    : "<p class='sin-datos'>Ningún estudiante ha entregado aún.</p>";
-
-  lista.querySelectorAll(".btn-marcar-visto").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      await supabase.from("entregas").update({ visto: true }).eq("id", btn.dataset.id);
-      verEntregas(tareaId, titulo);
-    });
-  });
-
-  modal.style.display = "flex";
-}
-
-async function crearTarea(docenteId) {
-  const titulo = document.getElementById("tareaTitulo").value.trim();
-  const desc   = document.getElementById("tareaDesc").value.trim();
-  const fecha  = document.getElementById("tareaFecha").value;
-  const puntos = document.getElementById("tareaPuntos").value;
-  if (!titulo) { mostrarAlerta("alertaTarea", "error", "El título es obligatorio."); return; }
-
-  const { error } = await supabase.from("tareas").insert({
-    curso_id: cursoActual.id, docente_id: docenteId,
-    titulo, descripcion: desc, fecha_entrega: fecha || null, puntos: puntos || null
-  });
-  if (error) { mostrarAlerta("alertaTarea", "error", error.message); return; }
-
-  mostrarAlerta("alertaTarea", "ok", "Tarea creada.");
-  ["tareaTitulo","tareaDesc","tareaFecha","tareaPuntos"].forEach(id => { document.getElementById(id).value = ""; });
-  setTimeout(() => cargarTareasDelCurso(cursoActual.id), 800);
-}
-
-// ── Eliminar genérico ─────────────────────────
-async function eliminarItem(tabla, id, callback) {
-  if (!confirm("¿Eliminar este elemento?")) return;
-  await supabase.from(tabla).delete().eq("id", id);
-  callback();
-}
-
-// ── Estudiantes ───────────────────────────────
-async function cargarEstudiantes() {
-  const { data } = await supabase.from("perfiles").select("id,nombre,apellido").eq("rol","estudiante").order("nombre");
-  const lista = document.getElementById("listaCheckEstudiantes");
-  if (!lista) return;
-  if (!data?.length) { lista.innerHTML = "<p class='sin-datos'>No hay estudiantes registrados.</p>"; return; }
-
-  lista.innerHTML = data.map(e => `
-    <label class="item-check">
-      <input type="checkbox" value="${e.id}">
-      <div class="icono-check"><i class="fa-solid fa-user-graduate"></i></div>
-      <span>${e.nombre} ${e.apellido}</span>
-    </label>`).join("");
-
-  document.getElementById("buscarEstudiante")?.addEventListener("input", ev => {
-    const q = ev.target.value.toLowerCase();
-    lista.querySelectorAll(".item-check").forEach(item => {
-      item.style.display = item.querySelector("span").textContent.toLowerCase().includes(q) ? "" : "none";
-    });
-  });
-}
-
-async function cargarTablaEstudiantes() {
-  const { data } = await supabase.from("perfiles").select("id,nombre,apellido,creado_at").eq("rol","estudiante").order("nombre");
-  const tabla  = document.getElementById("tablaEstudiantes");
-  const filtro = document.getElementById("buscarTablaEstudiante");
-  if (!tabla) return;
-  if (!data?.length) { tabla.innerHTML = "<p class='sin-datos'>No hay estudiantes aún.</p>"; return; }
-
-  function dibujar(lista) {
-    tabla.innerHTML = `
-      <div class="fila-tabla fila-encabezado">
-        <span>Nombre</span><span>Apellido</span><span>Desde</span>
-      </div>
-      ${lista.map(e => `
-        <div class="fila-tabla">
-          <span><i class="fa-solid fa-user-graduate"></i> ${e.nombre}</span>
-          <span>${e.apellido}</span>
-          <span>${new Date(e.creado_at).toLocaleDateString("es-PE")}</span>
-        </div>`).join("")}`;
+  if (!data || data.length === 0) {
+    el.innerHTML = `<p class="sin-datos">Sin estudiantes inscritos.</p>`;
+    return;
   }
-  dibujar(data);
-  filtro?.addEventListener("input", ev => {
-    const q = ev.target.value.toLowerCase();
-    dibujar(data.filter(e => `${e.nombre} ${e.apellido}`.toLowerCase().includes(q)));
-  });
+
+  el.innerHTML = `
+    <div class="tabla-estudiantes">
+      ${data.map(i => `
+        <div class="fila-estudiante">
+          <div class="avatar-mini"><i class="fa-solid fa-user-graduate"></i></div>
+          <span>${i.perfiles?.nombre || ""} ${i.perfiles?.apellido || ""}</span>
+          <button class="btn-peligro btn-mini" onclick="expulsarEstudiante('${cursoId}','${i.estudiante_id}')">
+            <i class="fa-solid fa-user-minus"></i>
+          </button>
+        </div>
+      `).join("")}
+    </div>`;
 }
 
-// ── Crear curso ───────────────────────────────
-function initFormCurso(docenteId) {
-  document.getElementById("formCrearCurso")?.addEventListener("submit", async e => {
-    e.preventDefault();
-    limpiarAlerta("alertaCrearCurso");
+window.expulsarEstudiante = async function(cursoId, estudianteId) {
+  if (!confirm("¿Retirar a este estudiante del curso?")) return;
+  await supabase.from("inscripciones").delete()
+    .eq("curso_id", cursoId).eq("estudiante_id", estudianteId);
+  await cargarAlumnosCurso(cursoId);
+};
 
-    const nombre = document.getElementById("cNombre").value.trim();
-    const desc   = document.getElementById("cDesc").value.trim();
-    const nivel  = document.getElementById("cNivel").value;
+async function cargarAnunciosCurso(cursoId) {
+  const { data } = await supabase.from("anuncios").select("*")
+    .eq("curso_id", cursoId).order("creado_at", { ascending: false });
 
-    document.getElementById("errCNombre").textContent = "";
-    document.getElementById("errCNivel").textContent  = "";
-
-    let valido = true;
-    if (!nombre) { document.getElementById("errCNombre").textContent = "Nombre obligatorio."; valido = false; }
-    if (!nivel)  { document.getElementById("errCNivel").textContent  = "Selecciona un nivel."; valido = false; }
-    if (!valido) return;
-
-    const btn = e.target.querySelector("button[type=submit]");
-    btn.disabled = true; btn.textContent = "Guardando...";
-
-    const codigo = generarCodigo();
-    const { data: curso, error } = await supabase
-      .from("cursos")
-      .insert({ docente_id: docenteId, nombre, descripcion: desc, nivel, codigo })
-      .select().single();
-
-    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar curso';
-
-    if (error) { mostrarAlerta("alertaCrearCurso", "error", error.message); return; }
-
-    const seleccionados = [...document.querySelectorAll("#listaCheckEstudiantes input:checked")].map(c => c.value);
-    if (seleccionados.length) {
-      await supabase.from("inscripciones").insert(seleccionados.map(sid => ({ curso_id: curso.id, estudiante_id: sid })));
-    }
-
-    mostrarAlerta("alertaCrearCurso", "ok", `Curso creado. Código: ${codigo}`);
-    e.target.reset();
-    document.querySelectorAll("#listaCheckEstudiantes input").forEach(c => c.checked = false);
-    setTimeout(() => { cargarCursos(docenteId); mostrarVista("cursos"); }, 1800);
-  });
+  const el = document.getElementById("listaAnunciosCurso");
+  if (!el) return;
+  el.innerHTML = data?.length
+    ? data.map(a => `
+      <div class="item-anuncio">
+        <div class="anuncio-meta"><span class="meta-fecha">${formatFecha(a.creado_at)}</span>
+          <button class="btn-peligro btn-mini" onclick="eliminarAnuncio('${a.id}','${cursoId}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        <strong>${a.titulo}</strong>
+        <p>${a.contenido}</p>
+      </div>`).join("")
+    : `<p class="sin-datos">Sin anuncios.</p>`;
 }
 
-// ── Eliminar curso ────────────────────────────
-function initEliminarCurso(docenteId) {
+async function cargarArchivosCurso(cursoId) {
+  const { data } = await supabase.from("archivos").select("*")
+    .eq("curso_id", cursoId).order("creado_at", { ascending: false });
+
+  const el = document.getElementById("listaArchivosCurso");
+  if (!el) return;
+  el.innerHTML = data?.length
+    ? data.map(a => `
+      <div class="item-archivo">
+        <a href="${a.url}" target="_blank"><i class="fa-solid fa-file"></i> ${a.nombre_archivo}</a>
+        <span class="meta-fecha">${formatFecha(a.creado_at)}</span>
+        <button class="btn-peligro btn-mini" onclick="eliminarArchivo('${a.id}','${cursoId}')"><i class="fa-solid fa-trash"></i></button>
+      </div>`).join("")
+    : `<p class="sin-datos">Sin archivos.</p>`;
+}
+
+async function cargarTareasCurso(cursoId) {
+  const { data } = await supabase.from("tareas").select("*")
+    .eq("curso_id", cursoId).order("fecha_entrega", { ascending: true });
+
+  const el = document.getElementById("listaTareasCurso");
+  if (!el) return;
+  el.innerHTML = data?.length
+    ? data.map(t => `
+      <div class="item-tarea">
+        <div class="anuncio-meta">
+          ${t.fecha_entrega ? `<span class="vence-tag ${urgencia(t.fecha_entrega)}">Vence: ${formatFecha(t.fecha_entrega)}</span>` : ""}
+          <button class="btn-peligro btn-mini" onclick="eliminarTarea('${t.id}','${cursoId}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        <strong>${t.titulo}</strong>
+        <p>${t.descripcion || ""}</p>
+        ${t.puntos ? `<span style="font-size:0.8rem;color:#8b5cf6;font-weight:700;">${t.puntos} pts</span>` : ""}
+      </div>`).join("")
+    : `<p class="sin-datos">Sin tareas.</p>`;
+}
+
+// ══ ACCIONES DETALLE ══════════════════════════════════════════════════════════
+function initAccionesCurso(cursoId) {
+  // Publicar anuncio
+  document.getElementById("btnPublicarAnuncio")?.replaceWith(
+    document.getElementById("btnPublicarAnuncio").cloneNode(true)
+  );
+  document.getElementById("btnPublicarAnuncio")?.addEventListener("click", async () => {
+    const titulo    = document.getElementById("anuncioTitulo")?.value.trim();
+    const contenido = document.getElementById("anuncioContenido")?.value.trim();
+    const alerta    = document.getElementById("alertaAnuncio");
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!titulo || !contenido) { mostrarAlerta(alerta, "error", "Completa título y contenido."); return; }
+
+    const { error } = await supabase.from("anuncios")
+      .insert({ curso_id: cursoId, docente_id: user.id, titulo, contenido });
+
+    if (error) { mostrarAlerta(alerta, "error", "Error al publicar."); return; }
+    mostrarAlerta(alerta, "ok", "Anuncio publicado.");
+    document.getElementById("anuncioTitulo").value = "";
+    document.getElementById("anuncioContenido").value = "";
+    await cargarAnunciosCurso(cursoId);
+  });
+
+  // Subir archivo
+  document.getElementById("btnSubirArchivo")?.replaceWith(
+    document.getElementById("btnSubirArchivo").cloneNode(true)
+  );
+  document.getElementById("btnSubirArchivo")?.addEventListener("click", async () => {
+    const nombre = document.getElementById("archivoNombre")?.value.trim();
+    const url    = document.getElementById("archivoUrl")?.value.trim();
+    const alerta = document.getElementById("alertaArchivo");
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!nombre || !url) { mostrarAlerta(alerta, "error", "Completa nombre y URL."); return; }
+
+    const { error } = await supabase.from("archivos")
+      .insert({ curso_id: cursoId, docente_id: user.id, nombre_archivo: nombre, url });
+
+    if (error) { mostrarAlerta(alerta, "error", "Error al agregar archivo."); return; }
+    mostrarAlerta(alerta, "ok", "Archivo agregado.");
+    document.getElementById("archivoNombre").value = "";
+    document.getElementById("archivoUrl").value    = "";
+    await cargarArchivosCurso(cursoId);
+  });
+
+  // Crear tarea
+  document.getElementById("btnCrearTarea")?.replaceWith(
+    document.getElementById("btnCrearTarea").cloneNode(true)
+  );
+  document.getElementById("btnCrearTarea")?.addEventListener("click", async () => {
+    const titulo  = document.getElementById("tareaTitulo")?.value.trim();
+    const desc    = document.getElementById("tareaDesc")?.value.trim();
+    const fecha   = document.getElementById("tareaFecha")?.value;
+    const puntos  = document.getElementById("tareaPuntos")?.value;
+    const alerta  = document.getElementById("alertaTarea");
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!titulo) { mostrarAlerta(alerta, "error", "El título es obligatorio."); return; }
+
+    const { error } = await supabase.from("tareas").insert({
+      curso_id: cursoId,
+      docente_id: user.id,
+      titulo,
+      descripcion: desc || null,
+      fecha_entrega: fecha || null,
+      puntos: puntos ? parseInt(puntos) : null,
+    });
+
+    if (error) { mostrarAlerta(alerta, "error", "Error al crear tarea."); return; }
+    mostrarAlerta(alerta, "ok", "Tarea creada.");
+    document.getElementById("tareaTitulo").value = "";
+    document.getElementById("tareaDesc").value   = "";
+    document.getElementById("tareaFecha").value  = "";
+    document.getElementById("tareaPuntos").value = "";
+    await cargarTareasCurso(cursoId);
+  });
+
+  // Eliminar curso
+  document.getElementById("btnEliminarCurso")?.replaceWith(
+    document.getElementById("btnEliminarCurso").cloneNode(true)
+  );
   document.getElementById("btnEliminarCurso")?.addEventListener("click", async () => {
-    if (!cursoActual) return;
-    if (!confirm(`¿Eliminar "${cursoActual.nombre}"? No se puede deshacer.`)) return;
-    await supabase.from("cursos").delete().eq("id", cursoActual.id);
-    cursoActual = null;
-    await cargarCursos(docenteId);
+    if (!confirm(`¿Eliminar "${cursoActivo.nombre}"? Esta acción no se puede deshacer.`)) return;
+    const { error } = await supabase.from("cursos").delete().eq("id", cursoId);
+    if (error) { alert("Error al eliminar."); return; }
+    cursosDocente = cursosDocente.filter(c => c.id !== cursoId);
+    renderCursos();
     mostrarVista("cursos");
   });
 }
 
-// ── Copiar código ─────────────────────────────
-function initCopiarCodigo() {
-  document.getElementById("btnCopiarCodigo")?.addEventListener("click", () => {
-    navigator.clipboard.writeText(document.getElementById("cursoCodigo").textContent).then(() => {
-      const btn = document.getElementById("btnCopiarCodigo");
-      btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-      setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500);
+// Eliminar elementos
+window.eliminarAnuncio = async function(id, cursoId) {
+  if (!confirm("¿Eliminar este anuncio?")) return;
+  await supabase.from("anuncios").delete().eq("id", id);
+  await cargarAnunciosCurso(cursoId);
+};
+window.eliminarArchivo = async function(id, cursoId) {
+  if (!confirm("¿Eliminar este archivo?")) return;
+  await supabase.from("archivos").delete().eq("id", id);
+  await cargarArchivosCurso(cursoId);
+};
+window.eliminarTarea = async function(id, cursoId) {
+  if (!confirm("¿Eliminar esta tarea?")) return;
+  await supabase.from("tareas").delete().eq("id", id);
+  await cargarTareasCurso(cursoId);
+};
+
+// ══ PESTAÑAS DETALLE ══════════════════════════════════════════════════════════
+function initPestanas(cursoId) {
+  document.querySelectorAll(".pestana-btn").forEach(btn => {
+    btn.replaceWith(btn.cloneNode(true));
+  });
+  document.querySelectorAll(".pestana-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".pestana-btn").forEach(b => b.classList.remove("activa"));
+      document.querySelectorAll(".pestana-panel").forEach(p => p.classList.add("oculto"));
+      btn.classList.add("activa");
+      document.querySelector(`.pestana-panel[data-panel="${btn.dataset.pestana}"]`)?.classList.remove("oculto");
     });
   });
 }
 
-// ── Modales ───────────────────────────────────
-function initModales() {
-  document.querySelectorAll(".modal-fondo").forEach(modal => {
-    modal.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
-  });
-  document.querySelectorAll(".btn-cerrar-modal").forEach(btn => {
-    btn.addEventListener("click", () => { btn.closest(".modal-fondo").style.display = "none"; });
-  });
-}
+// ══ CREAR CURSO ═══════════════════════════════════════════════════════════════
+function initFormCrearCurso() {
+  const form = document.getElementById("formCrearCurso");
+  if (!form) return;
 
-// ── Perfil ────────────────────────────────────
-function initFormPerfil(usuario, perfil) {
-  document.getElementById("pNombre").value   = perfil.nombre   || "";
-  document.getElementById("pApellido").value = perfil.apellido || "";
-  document.getElementById("pEmail").value    = usuario.email   || "";
-  document.getElementById("perfilDesde").textContent =
-    "Miembro desde " + new Date(perfil.creado_at).toLocaleDateString("es-PE", { year: "numeric", month: "long" });
+  // Cargar lista de estudiantes para asignar
+  cargarCheckEstudiantes();
 
-  document.querySelector(".btn-ojo")?.addEventListener("click", function() {
-    const input = document.getElementById(this.dataset.objetivo);
-    const ver   = input.type === "password";
-    input.type  = ver ? "text" : "password";
-    this.querySelector("i").className = ver ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+  // Buscador
+  document.getElementById("buscarEstudiante")?.addEventListener("input", e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll(".check-item").forEach(item => {
+      item.style.display = item.textContent.toLowerCase().includes(q) ? "" : "none";
+    });
   });
 
-  document.getElementById("formPerfil")?.addEventListener("submit", async e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
-    limpiarAlerta("alertaPerfil");
-
-    const nombre   = document.getElementById("pNombre").value.trim();
-    const apellido = document.getElementById("pApellido").value.trim();
-    const clave    = document.getElementById("pClave").value;
-
-    document.getElementById("errPNombre").textContent   = "";
-    document.getElementById("errPApellido").textContent = "";
-    document.getElementById("errPClave").textContent    = "";
+    const nombre = document.getElementById("cNombre")?.value.trim();
+    const nivel  = document.getElementById("cNivel")?.value;
+    const desc   = document.getElementById("cDesc")?.value.trim();
+    const alerta = document.getElementById("alertaCrearCurso");
 
     let valido = true;
-    if (!nombre)   { document.getElementById("errPNombre").textContent   = "Nombre obligatorio.";   valido = false; }
-    if (!apellido) { document.getElementById("errPApellido").textContent = "Apellido obligatorio."; valido = false; }
-    if (clave && clave.length < 6) { document.getElementById("errPClave").textContent = "Mínimo 6 caracteres."; valido = false; }
+    if (!nombre) { setErr("errCNombre", "Campo obligatorio."); valido = false; } else setErr("errCNombre", "");
+    if (!nivel)  { setErr("errCNivel", "Elige un nivel."); valido = false; }  else setErr("errCNivel", "");
     if (!valido) return;
 
-    const btn = e.target.querySelector("button[type=submit]");
-    btn.disabled = true; btn.textContent = "Guardando...";
+    const { data: { user } } = await supabase.auth.getUser();
+    const codigo = generarCodigo();
 
-    await supabase.from("perfiles").update({ nombre, apellido }).eq("id", usuario.id);
-    await supabase.auth.updateUser({ data: { nombre, apellido } });
+    const { data: cursoDB, error } = await supabase.from("cursos").insert({
+      docente_id: user.id,
+      nombre,
+      descripcion: desc || null,
+      nivel,
+      codigo,
+    }).select().single();
 
-    if (clave) {
-      const { error } = await supabase.auth.updateUser({ password: clave });
-      if (error) {
-        mostrarAlerta("alertaPerfil", "error", error.message);
-        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
-        return;
-      }
+    if (error) { mostrarAlerta(alerta, "error", "Error al crear el curso."); return; }
+
+    // Inscribir estudiantes seleccionados
+    const checks = document.querySelectorAll(".check-estudiante:checked");
+    if (checks.length > 0) {
+      const inscripciones = Array.from(checks).map(c => ({
+        curso_id: cursoDB.id,
+        estudiante_id: c.value,
+      }));
+      await supabase.from("inscripciones").insert(inscripciones);
     }
 
-    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+    mostrarAlerta(alerta, "ok", `Curso creado. Código: ${codigo}`);
+    form.reset();
+    await cargarCursos();
+    setTimeout(() => mostrarVista("cursos"), 1500);
+  });
+}
+
+async function cargarCheckEstudiantes() {
+  const { data } = await supabase.from("perfiles").select("id, nombre, apellido").eq("rol", "estudiante");
+  const lista = document.getElementById("listaCheckEstudiantes");
+  if (!lista || !data) return;
+
+  lista.innerHTML = data.length
+    ? data.map(e => `
+      <label class="check-item">
+        <input type="checkbox" class="check-estudiante" value="${e.id}">
+        ${e.nombre} ${e.apellido}
+      </label>`).join("")
+    : `<p class="sin-datos" style="font-size:0.82rem;">No hay estudiantes registrados aún.</p>`;
+}
+
+// ══ LISTA ESTUDIANTES VISTA ═══════════════════════════════════════════════════
+async function cargarListaEstudiantes() {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Obtener todos los estudiantes inscritos en cursos de este docente
+  const cursoIds = cursosDocente.map(c => c.id);
+  if (cursoIds.length === 0) {
+    const tabla = document.getElementById("tablaEstudiantes");
+    if (tabla) tabla.innerHTML = `<p class="sin-datos">Aún no tienes cursos.</p>`;
+    return;
+  }
+
+  const { data } = await supabase
+    .from("inscripciones")
+    .select("estudiante_id, curso_id, perfiles(nombre, apellido), cursos(nombre)")
+    .in("curso_id", cursoIds);
+
+  const tabla = document.getElementById("tablaEstudiantes");
+  if (!tabla || !data) return;
+
+  const buscador = document.getElementById("buscarTablaEstudiante");
+  let items = data;
+
+  const renderTabla = (lista) => {
+    tabla.innerHTML = lista.length
+      ? `<div class="tabla-estudiantes">
+          ${lista.map(i => `
+            <div class="fila-estudiante">
+              <div class="avatar-mini"><i class="fa-solid fa-user-graduate"></i></div>
+              <span>${i.perfiles?.nombre || ""} ${i.perfiles?.apellido || ""}</span>
+              <span class="curso-tag">${i.cursos?.nombre || ""}</span>
+            </div>`).join("")}
+        </div>`
+      : `<p class="sin-datos">Sin resultados.</p>`;
+  };
+
+  renderTabla(items);
+
+  buscador?.addEventListener("input", e => {
+    const q = e.target.value.toLowerCase();
+    renderTabla(items.filter(i =>
+      `${i.perfiles?.nombre} ${i.perfiles?.apellido}`.toLowerCase().includes(q)
+    ));
+  });
+}
+
+// ══ PERFIL FORM ═══════════════════════════════════════════════════════════════
+function initFormPerfil() {
+  const form = document.getElementById("formPerfil");
+  if (!form) return;
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const nombre   = document.getElementById("pNombre")?.value.trim();
+    const apellido = document.getElementById("pApellido")?.value.trim();
+    const clave    = document.getElementById("pClave")?.value;
+    const alerta   = document.getElementById("alertaPerfil");
+
+    let valido = true;
+    if (!nombre)   { setErr("errPNombre", "Campo obligatorio."); valido = false; } else setErr("errPNombre", "");
+    if (!apellido) { setErr("errPApellido", "Campo obligatorio."); valido = false; } else setErr("errPApellido", "");
+    if (clave && clave.length < 6) { setErr("errPClave", "Mínimo 6 caracteres."); valido = false; } else setErr("errPClave", "");
+    if (!valido) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const { error } = await supabase.from("perfiles").update({ nombre, apellido }).eq("id", user.id);
+    if (error) { mostrarAlerta(alerta, "error", "Error al guardar."); return; }
+
+    if (clave) {
+      const { error: errClave } = await supabase.auth.updateUser({ password: clave });
+      if (errClave) { mostrarAlerta(alerta, "error", "Perfil guardado pero error al cambiar contraseña."); return; }
+    }
+
+    mostrarAlerta(alerta, "ok", "¡Cambios guardados!");
     document.getElementById("sideNombre").textContent = `${nombre} ${apellido}`;
-    document.getElementById("pClave").value = "";
-    mostrarAlerta("alertaPerfil", "ok", "Perfil actualizado.");
+  });
+
+  // Ojo contraseña
+  document.querySelectorAll(".btn-ojo").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.objetivo);
+      const icon  = btn.querySelector("i");
+      if (!input) return;
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      icon.className = show ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+    });
   });
 }
 
-// ── Sidebar móvil ─────────────────────────────
-function initSidebarMovil() {
-  const btn     = document.getElementById("btnAbrirSidebar");
-  const sidebar = document.querySelector(".panel-sidebar");
-  const fondo   = document.getElementById("fondoSidebar");
-  btn?.addEventListener("click",   () => { sidebar?.classList.toggle("sidebar-abierto"); fondo?.classList.toggle("visible"); });
-  fondo?.addEventListener("click", () => { sidebar?.classList.remove("sidebar-abierto"); fondo?.classList.remove("visible"); });
+// ══ NAV ═══════════════════════════════════════════════════════════════════════
+function initNav() {
+  document.querySelectorAll(".nav-btn[data-vista]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("activo"));
+      btn.classList.add("activo");
+      mostrarVista(btn.dataset.vista);
+      document.querySelector(".panel-sidebar")?.classList.remove("abierto");
+      document.getElementById("fondoSidebar")?.classList.remove("activo");
+    });
+  });
 }
 
-// ── INICIO ────────────────────────────────────
-window.addEventListener("DOMContentLoaded", async () => {
-  const sesion = await verificarSesion();
-  if (!sesion) return;
+function mostrarVista(nombre) {
+  document.querySelectorAll(".vista").forEach(v => v.classList.add("oculto"));
+  document.getElementById(`vista-${nombre}`)?.classList.remove("oculto");
+}
 
-  const { usuario, perfil } = sesion;
-  document.getElementById("sideNombre").textContent = `${perfil.nombre} ${perfil.apellido}`;
+function initSidebar() {
+  const btnAbrir = document.getElementById("btnAbrirSidebar");
+  const sidebar  = document.querySelector(".panel-sidebar");
+  const fondo    = document.getElementById("fondoSidebar");
 
-  await Promise.all([
-    cargarCursos(perfil.id),
-    cargarEstudiantes(),
-    cargarTablaEstudiantes(),
-  ]);
-
-  initFormCurso(perfil.id);
-  initEliminarCurso(perfil.id);
-  initCopiarCodigo();
-  initFormPerfil(usuario, perfil);
-  initSidebarMovil();
-  initModales();
-
-  document.querySelectorAll(".nav-btn").forEach(btn => {
-    btn.addEventListener("click", () => mostrarVista(btn.dataset.vista));
+  btnAbrir?.addEventListener("click", () => {
+    sidebar?.classList.toggle("abierto");
+    fondo?.classList.toggle("activo");
   });
-  document.querySelectorAll(".pestana-btn").forEach(btn => {
-    btn.addEventListener("click", () => activarPestana(btn.dataset.pestana));
+  fondo?.addEventListener("click", () => {
+    sidebar?.classList.remove("abierto");
+    fondo?.classList.remove("activo");
   });
+}
 
-  document.getElementById("btnVolverCursos")?.addEventListener("click", () => mostrarVista("cursos"));
-  document.getElementById("btnPublicarAnuncio")?.addEventListener("click", () => publicarAnuncio(perfil.id));
-  document.getElementById("btnSubirArchivo")?.addEventListener("click",    () => subirArchivo(perfil.id));
-  document.getElementById("btnCrearTarea")?.addEventListener("click",      () => crearTarea(perfil.id));
-
+function initCerrarSesion() {
   document.getElementById("btnCerrarSesion2")?.addEventListener("click", async () => {
     await supabase.auth.signOut();
     window.location.href = "/index.html";
   });
-});
+}
+
+// ══ UTILS ═════════════════════════════════════════════════════════════════════
+function generarCodigo() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
+function formatFecha(str) {
+  if (!str) return "";
+  return new Date(str).toLocaleDateString("es-PE", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+function urgencia(fecha) {
+  if (!fecha) return "";
+  const diff = (new Date(fecha) - new Date()) / (1000 * 60 * 60 * 24);
+  if (diff < 0) return "vencida";
+  if (diff < 2) return "urgente";
+  return "";
+}
+
+function mostrarAlerta(el, tipo, msg) {
+  if (!el) return;
+  el.className = `alerta alerta-${tipo} visible`;
+  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${msg}`;
+  setTimeout(() => el.classList.remove("visible"), 4000);
+}
+
+function setErr(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = msg;
+}

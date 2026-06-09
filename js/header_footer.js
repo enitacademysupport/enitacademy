@@ -22,26 +22,6 @@ cargarComponente("/paginas/header.html",      "header",          iniciarHeader);
 cargarComponente("/paginas/footer.html",      "footer");
 cargarComponente("/paginas/modal_login.html", "modal-container");
 
-// ── Cerrar sesión — delegación global ─────────
-// Funciona aunque el header cargue tarde
-document.addEventListener("click", async function(e) {
-  if (!e.target.closest("#btnSalir")) return;
-  try {
-    await supabase.auth.signOut();
-  } catch(err) {
-    console.warn("Error cerrando sesión:", err);
-  }
-  window.location.href = "/index.html";
-});
-
-// ── Ir a mi panel — delegación global ─────────
-document.addEventListener("click", function(e) {
-  const btn = e.target.closest("#btnMiPanel");
-  if (!btn) return;
-  const href = btn.dataset.href;
-  if (href) window.location.href = href;
-});
-
 // ── Header ────────────────────────────────────
 function iniciarHeader() {
   const botonesAuth   = document.getElementById("botonesAuth");
@@ -54,6 +34,23 @@ function iniciarHeader() {
   const menuAuthMovil = document.getElementById("menuAuthMovil");
 
   if (!botonesAuth || !cajaUsuario) return;
+
+  // ── Cerrar sesión ──────────────────────────
+  // Se registra AQUÍ, después de que el header ya está en el DOM
+  document.getElementById("btnSalir")?.addEventListener("click", async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn("Error cerrando sesión:", err);
+    }
+    window.location.href = "/index.html";
+  });
+
+  // ── Ir a mi panel ──────────────────────────
+  btnMiPanel?.addEventListener("click", () => {
+    const href = btnMiPanel.dataset.href;
+    if (href) window.location.href = href;
+  });
 
   async function actualizarUI() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -139,3 +136,4 @@ function iniciarHeader() {
     });
   });
 }
+

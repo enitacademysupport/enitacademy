@@ -1,82 +1,74 @@
 import { supabase } from "./supabase.js";
 
-// ── Contador de visitas ───────────────────────
+/* ── Contador de visitas ─── */
 async function contarVisita() {
   const span = document.getElementById("contadorVisitas");
   if (!span) return;
 
-  const { data } = await supabase.from("site_stats").select("visitas").eq("id", 1).single();
-  if (!data) return;
+  try {
+    const { data } = await supabase
+      .from("site_stats").select("visitas").eq("id", 1).single();
 
-  let total = data.visitas || 0;
+    if (!data) { span.textContent = "—"; return; }
 
-  if (!sessionStorage.getItem("visita_contada")) {
-    sessionStorage.setItem("visita_contada", "1");
-    total++;
-    await supabase.from("site_stats").update({ visitas: total }).eq("id", 1);
+    let total = data.visitas || 0;
+
+    if (!sessionStorage.getItem("visita_contada")) {
+      sessionStorage.setItem("visita_contada", "1");
+      total++;
+      await supabase.from("site_stats").update({ visitas: total }).eq("id", 1);
+    }
+
+    let actual = 0;
+    const paso = Math.max(1, Math.ceil(total / 60));
+    const intervalo = setInterval(() => {
+      actual = Math.min(actual + paso, total);
+      span.textContent = actual.toLocaleString("es-PE");
+      if (actual >= total) clearInterval(intervalo);
+    }, 30);
+
+  } catch (e) {
+    console.warn("contador: tabla site_stats no disponible", e);
+    const span = document.getElementById("contadorVisitas");
+    if (span) span.textContent = "—";
   }
-
-  let actual = 0;
-  const paso = Math.ceil(total / 60);
-  const intervalo = setInterval(() => {
-    actual = Math.min(actual + paso, total);
-    span.textContent = actual.toLocaleString("es-PE");
-    if (actual >= total) clearInterval(intervalo);
-  }, 30);
 }
 
-// ── Estadísticas de la plataforma ────────────
+/* ── Stats de la plataforma ─── */
 async function cargarStats() {
-  const { count: totalEst } = await supabase
-    .from("perfiles").select("id", { count: "exact", head: true }).eq("rol", "estudiante");
+  try {
+    const [{ count: totalEst }, { count: totalCursos }] = await Promise.all([
+      supabase.from("perfiles").select("id", { count: "exact", head: true }).eq("rol", "estudiante"),
+      supabase.from("cursos").select("id", { count: "exact", head: true }),
+    ]);
+    const elEst    = document.getElementById("totalEstudiantes");
+    const elCursos = document.getElementById("totalCursos");
+    if (elEst)    elEst.textContent    = (totalEst    || 0).toLocaleString("es-PE");
+    if (elCursos) elCursos.textContent = (totalCursos || 0).toLocaleString("es-PE");
+  } catch (e) {
+    console.warn("stats no disponibles", e);
+  }
+}
 
-  const { count: totalCursos } = await supabase
-    .from("cursos").select("id", { count: "exact", head: true });
+/* ── Modo oscuro ─── */
+function initModoOscuro() {
+  const btn = document.getElementById("modoOscuro");
+  if (!btn) { setTimeout(initModoOscuro, 300); return; }
 
-  const elEst    = document.getElementById("totalEstudiantes");
-  const elCursos = document.getElementById("totalCursos");
-  if (elEst)    elEst.textContent    = totalEst    || 0;
-  if (elCursos) elCursos.textContent = totalCursos || 0;
+  if (localStorage.getItem("modoOscuro") === "true") {
+    document.body.classList.add("dark");
+    const i = btn.querySelector("i");
+    if (i) { i.classList.remove("fa-moon"); i.classList.add("fa-sun"); }
+  }
+
+  btn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    const i = btn.querySelector("i");
+    if (i) { i.classList.toggle("fa-moon"); i.classList.toggle("fa-sun"); }
+    localStorage.setItem("modoOscuro", document.body.classList.contains("dark"));
+  });
 }
 
 contarVisita();
 cargarStats();
-
-
-
-// ── Modo oscuro ───────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    const btnOscuro = document.getElementById("modoOscuro");
-    if (!btnOscuro) return;
-
-    // Aplicar modo guardado
-    const modoOscuroActivo = localStorage.getItem("modoOscuro") === "true";
-
-    if (modoOscuroActivo) {
-      document.body.classList.add("dark");
-
-      const icono = btnOscuro.querySelector("i");
-      if (icono) {
-        icono.classList.remove("fa-moon");
-        icono.classList.add("fa-sun");
-      }
-    }
-
-    btnOscuro.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-
-      const icono = btnOscuro.querySelector("i");
-      if (icono) {
-        icono.classList.toggle("fa-moon");
-        icono.classList.toggle("fa-sun");
-      }
-
-      // Guardar preferencia
-      localStorage.setItem(
-        "modoOscuro",
-        document.body.classList.contains("dark")
-      );
-    });
-  }, 400);
-});
+initModoOscuro();

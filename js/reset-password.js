@@ -1,87 +1,128 @@
 /* ════════════════════════════════════════════
    ENIT Academy — reset-password.js
+   Maneja el restablecimiento de contraseña
+   después de que el usuario llega desde el
+   enlace del correo de Supabase.
    ════════════════════════════════════════════ */
+
 import { supabase } from "./supabase.js";
 
-// ── Ojitos ────────────────────────────────────
-document.querySelectorAll(".btn-ojo").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const input = document.getElementById(btn.dataset.objetivo);
-    const ver   = input.type === "password";
-    input.type  = ver ? "text" : "password";
-    btn.querySelector("i").className = ver ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
-  });
+const formulario   = document.getElementById("formulario");
+const estadoExito  = document.getElementById("estadoExito");
+const btnGuardar   = document.getElementById("btnGuardar");
+const inputNueva   = document.getElementById("nuevaClave");
+const inputConfirm = document.getElementById("confirmarClave");
+const errNueva     = document.getElementById("errNueva");
+const errConfirmar = document.getElementById("errConfirmar");
+const alerta       = document.getElementById("alerta");
+
+// ── Detectar sesión desde el enlace del correo ──
+// Supabase pone el token en el hash (#access_token=...) o como query param
+// onAuthStateChange lo captura automáticamente con el evento PASSWORD_RECOVERY
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    // El usuario llegó desde el enlace de reset — mostrar el formulario normalmente
+    console.log("Modo recuperación de contraseña activo");
+  }
+
+  if (event === "SIGNED_IN" && session) {
+    // Si llegó desde un enlace de CONFIRMACIÓN de email (registro)
+    // redirigir al panel según su rol
+    const { data: perfil } = await supabase
+      .from("perfiles").select("rol").eq("id", session.user.id).single();
+    const RUTAS = {
+      docente:    "/paginas/panel_docente.html",
+      estudiante: "/paginas/panel_estudiante.html",
+    };
+    // Solo redirigir si NO estamos en flujo de reset (no hay hash de recovery)
+    if (!window.location.hash.includes("type=recovery")) {
+      window.location.href = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
+    }
+  }
 });
 
-// ── Requisitos en tiempo real ─────────────────
-const inputNueva = document.getElementById("nuevaClave");
-
+// ── Requisitos visuales ───────────────────────
 inputNueva?.addEventListener("input", () => {
   const val = inputNueva.value;
-  marcarRequisito("reqLongitud", val.length >= 6);
-  marcarRequisito("reqMayuscula", /[A-Z]/.test(val));
-  marcarRequisito("reqNumero",   /[0-9]/.test(val));
+  toggle("reqLongitud",  val.length >= 6);
+  toggle("reqMayuscula", /[A-Z]/.test(val));
+  toggle("reqNumero",    /[0-9]/.test(val));
 });
 
-function marcarRequisito(id, cumple) {
+function toggle(id, cumple) {
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.toggle("cumple", cumple);
-  el.querySelector("i").className = cumple ? "fa-solid fa-circle-check" : "fa-regular fa-circle";
+  el.querySelector("i").className = cumple
+    ? "fa-solid fa-circle-check"
+    : "fa-regular fa-circle";
 }
 
-// ── Alertas ───────────────────────────────────
-function mostrarAlerta(tipo, msg) {
-  const el = document.getElementById("alerta");
-  if (!el) return;
-  el.className = `alerta visible alerta-${tipo}`;
-  el.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i><span>${msg}</span>`;
-}
+// ── Ojito ──────────────────────────────────────
+document.querySelectorAll(".btn-ojo").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const input = document.getElementById(btn.dataset.objetivo);
+    if (!input) return;
+    const ver = input.type === "password";
+    input.type = ver ? "text" : "password";
+    btn.querySelector("i").className = ver
+      ? "fa-regular fa-eye-slash"
+      : "fa-regular fa-eye";
+  });
+});
 
-// ── Guardar contraseña ────────────────────────
-document.getElementById("btnGuardar")?.addEventListener("click", async () => {
-  const nueva     = document.getElementById("nuevaClave").value;
-  const confirmar = document.getElementById("confirmarClave").value;
+// ── Guardar nueva contraseña ───────────────────
+btnGuardar?.addEventListener("click", async () => {
+  // Limpiar errores
+  errNueva.textContent     = "";
+  errConfirmar.textContent = "";
+  ocultarAlerta();
 
-  document.getElementById("errNueva").textContent     = "";
-  document.getElementById("errConfirmar").textContent = "";
+  const nueva     = inputNueva.value;
+  const confirmar = inputConfirm.value;
 
   let valido = true;
-  if (!nueva || nueva.length < 6) {
-    document.getElementById("errNueva").textContent = "Mínimo 6 caracteres.";
-    valido = false;
-  }
-  if (!confirmar) {
-    document.getElementById("errConfirmar").textContent = "Confirma tu contraseña.";
-    valido = false;
-  } else if (nueva !== confirmar) {
-    document.getElementById("errConfirmar").textContent = "Las contraseñas no coinciden.";
-    valido = false;
-  }
+
+  if (!nueva)             { errNueva.textContent = "Ingresa una contraseña.";   valido = false; }
+  else if (nueva.length < 6) { errNueva.textContent = "Mínimo 6 caracteres.";  valido = false; }
+
+  if (!confirmar)               { errConfirmar.textContent = "Confirma la contraseña.";       valido = false; }
+  else if (nueva !== confirmar) { errConfirmar.textContent = "Las contraseñas no coinciden."; valido = false; }
+
   if (!valido) return;
 
-  const btn = document.getElementById("btnGuardar");
-  btn.disabled    = true;
-  btn.textContent = "Guardando...";
+  btnGuardar.disabled     = true;
+  btnGuardar.textContent  = "Guardando...";
 
-  try {
-    const { error } = await supabase.auth.updateUser({ password: nueva });
+  const { error } = await supabase.auth.updateUser({ password: nueva });
 
-    if (error) {
-      mostrarAlerta("error", error.message);
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar contraseña';
-      return;
-    }
-
-    // Mostrar estado éxito
-    document.getElementById("formulario").style.display   = "none";
-    document.getElementById("estadoExito").style.display  = "flex";
-
-  } catch(err) {
-    console.error(err);
-    mostrarAlerta("error", "Error de conexión. Intenta de nuevo.");
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar contraseña';
+  if (error) {
+    btnGuardar.disabled    = false;
+    btnGuardar.innerHTML   = '<i class="fa-solid fa-floppy-disk"></i> Guardar contraseña';
+    mostrarAlerta("error", error.message);
+    return;
   }
+
+  // Éxito — mostrar pantalla de confirmación
+  formulario.style.display  = "none";
+  estadoExito.style.display = "flex";
+});
+
+// ── Helpers alerta ─────────────────────────────
+function mostrarAlerta(tipo, msg) {
+  alerta.className = `alerta visible alerta-${tipo}`;
+  alerta.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${msg}`;
+}
+function ocultarAlerta() {
+  alerta.className = "alerta";
+  alerta.innerHTML = "";
+}
+
+window.addEventListener("error", e => {
+  console.error("ERROR GLOBAL:", e.error);
+});
+
+window.addEventListener("unhandledrejection", e => {
+  console.error("PROMESA FALLIDA:", e.reason);
 });

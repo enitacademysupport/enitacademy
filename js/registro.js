@@ -1,12 +1,11 @@
 /* ════════════════════════════════════════════
    ENIT Academy — registro.js
+   Flujo: signUp → OTP de 6 dígitos → verificar-email.html
    ════════════════════════════════════════════ */
 
 import { supabase } from "./supabase.js";
 
-console.log("🔥 registro.js cargado");
-
-// ══ Selección de rol ══════════════════════════
+// ══ Selección de rol ══════════════════════════════════════════════════════════
 
 let rolActual = null;
 
@@ -37,7 +36,7 @@ window.volverARol = function () {
   document.getElementById("stepRol").classList.remove("step-oculto");
 };
 
-// ══ Ojito ════════════════════════════════════
+// ══ Ojito ════════════════════════════════════════════════════════════════════
 
 function initTogglePassword() {
   document.querySelectorAll(".toggle-pw").forEach(btn => {
@@ -52,7 +51,7 @@ function initTogglePassword() {
   });
 }
 
-// ══ Feedback ═════════════════════════════════
+// ══ Feedback ═════════════════════════════════════════════════════════════════
 
 function setFieldError(fieldName, mensaje) {
   const input = document.querySelector(`input[name="${fieldName}"]`);
@@ -82,14 +81,7 @@ function ocultarAlerta() {
   alerta.innerHTML = "";
 }
 
-// ══ Redirección según rol ════════════════════
-
-const RUTAS = {
-  docente:    "../paginas/panel_docente.html",
-  estudiante: "../paginas/panel_estudiante.html",
-};
-
-// ══ Submit ════════════════════════════════════
+// ══ Submit ════════════════════════════════════════════════════════════════════
 
 window.addEventListener("DOMContentLoaded", () => {
   initTogglePassword();
@@ -109,6 +101,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const password  = form.querySelector('[name="password"]').value;
     const confirmar = form.querySelector('[name="confirmar"]').value;
 
+    // ── Validaciones ─────────────────────────────────────────────────────────
     let valido = true;
 
     if (!rol) { mostrarAlerta("error", "Por favor elige tu rol antes de continuar."); return; }
@@ -116,17 +109,18 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!apellido) { setFieldError("apellido", "El apellido es obligatorio."); valido = false; }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email)                    { setFieldError("email", "El correo es obligatorio.");   valido = false; }
-    else if (!emailRegex.test(email)) { setFieldError("email", "Ingresa un correo válido."); valido = false; }
+    if (!email)                       { setFieldError("email", "El correo es obligatorio.");  valido = false; }
+    else if (!emailRegex.test(email)) { setFieldError("email", "Ingresa un correo válido.");  valido = false; }
 
-    if (!password)              { setFieldError("password", "La contraseña es obligatoria."); valido = false; }
-    else if (password.length < 6) { setFieldError("password", "Mínimo 6 caracteres.");        valido = false; }
+    if (!password)                { setFieldError("password", "La contraseña es obligatoria."); valido = false; }
+    else if (password.length < 6) { setFieldError("password", "Mínimo 6 caracteres.");          valido = false; }
 
-    if (!confirmar)                      { setFieldError("confirmar", "Confirma tu contraseña.");       valido = false; }
-    else if (password !== confirmar)     { setFieldError("confirmar", "Las contraseñas no coinciden."); valido = false; }
+    if (!confirmar)                  { setFieldError("confirmar", "Confirma tu contraseña.");        valido = false; }
+    else if (password !== confirmar) { setFieldError("confirmar", "Las contraseñas no coinciden."); valido = false; }
 
     if (!valido) return;
 
+    // ── Registro ─────────────────────────────────────────────────────────────
     const btn = document.getElementById("btnRegister");
     btn.disabled    = true;
     btn.textContent = "Registrando...";
@@ -134,15 +128,36 @@ window.addEventListener("DOMContentLoaded", () => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { nombre, apellido, rol } },
+      options: {
+        data: { nombre, apellido, rol },
+        // ⚠️ Sin emailRedirectTo → Supabase envía el código OTP de 6 dígitos
+        //    (requiere "Enable email confirmations" ON en Auth → Settings)
+      },
     });
 
     btn.disabled    = false;
     btn.textContent = "Registrarme";
 
-    if (error) { console.error(error); mostrarAlerta("error", error.message); return; }
+    if (error) {
+      console.error(error);
+      const msgs = {
+        "User already registered":    "Este correo ya está registrado. Intenta iniciar sesión.",
+        "Email rate limit exceeded":  "Demasiados intentos. Espera unos minutos.",
+      };
+      mostrarAlerta("error", msgs[error.message] || error.message);
+      return;
+    }
 
-    mostrarAlerta("ok", "¡Registro exitoso! Redirigiendo...");
-    setTimeout(() => { window.location.href = RUTAS[rol]; }, 1800);
+    // ── Éxito → guardar email y redirigir a verificación ─────────────────────
+    sessionStorage.setItem("pending_email", email);
+    window.location.href = "/paginas/verificar-email.html";
   });
+});
+
+window.addEventListener("error", e => {
+  console.error("ERROR GLOBAL:", e.error);
+});
+
+window.addEventListener("unhandledrejection", e => {
+  console.error("PROMESA FALLIDA:", e.reason);
 });

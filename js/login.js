@@ -102,3 +102,12 @@ function limpiarAlerta() {
   const el = document.getElementById("loginAlerta");
   if (el) { el.className = "form-alerta"; el.innerHTML = ""; }
 }
+
+
+window.addEventListener("error", e => {
+  console.error("ERROR GLOBAL:", e.error);
+});
+
+window.addEventListener("unhandledrejection", e => {
+  console.error("PROMESA FALLIDA:", e.reason);
+});
