@@ -15,21 +15,18 @@ const alerta       = document.getElementById("alerta");
 
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
-    console.log("Modo recuperación de contraseña activo");
+    console.log("Modo recuperación activo");
+    return; // no redirigir
   }
 
-  if (event === "SIGNED_IN" && session) {
-    // redirgir al panel según su rol
+  if (event === "SIGNED_IN" && session && !window.location.hash.includes("type=recovery")) {
     const { data: perfil } = await supabase
       .from("perfiles").select("rol").eq("id", session.user.id).single();
     const RUTAS = {
       docente:    "/paginas/panel_docente.html",
       estudiante: "/paginas/panel_estudiante.html",
     };
-    // Solo redirigir si NO estamos en flujo de reset (no hay hash de recovery)
-    if (!window.location.hash.includes("type=recovery")) {
-      window.location.href = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
-    }
+    window.location.href = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
   }
 });
 
