@@ -95,8 +95,9 @@ btnGuardar?.addEventListener("click", async () => {
   btnGuardar.disabled     = true;
   btnGuardar.textContent  = "Guardando...";
 
-  const { error } = await supabase.auth.updateUser({ password: nueva });
-
+const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  redirectTo: 'https://enitacademy.vercel.app/paginas/reset-password.html',
+});
   if (error) {
     btnGuardar.disabled    = false;
     btnGuardar.innerHTML   = '<i class="fa-solid fa-floppy-disk"></i> Guardar contraseña';
