@@ -264,8 +264,8 @@
 
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/paginas/nueva-contrasena.html',
-    });
+  redirectTo: 'https://enitacademy.vercel.app/paginas/nueva-contraseña.html',
+});
     setLoading(false);
 
     if (error) { setError('No se pudo enviar el correo. Intenta de nuevo.'); return; }
