@@ -373,18 +373,32 @@
   btnSave.addEventListener('click', async () => {
     clearFeedback();
     const pw = passwordInput.value;
-    if (pw.length < 8)                   { setError('La contraseña debe tener al menos 8 caracteres.'); return; }
-    if (pw !== confirmInput.value)       { setError('Las contraseñas no coinciden.'); return; }
+    if (pw.length < 8)             { setError('La contraseña debe tener al menos 8 caracteres.'); return; }
+    if (pw !== confirmInput.value) { setError('Las contraseñas no coinciden.'); return; }
 
     setLoading(true);
+
+    // ✅ 1. Obtener rol ANTES de cambiar contraseña
+    const { data: { session } } = await supabase.auth.getSession();
+    const { data: perfil } = await supabase
+      .from('perfiles').select('rol').eq('id', session?.user?.id).single();
+
+    const RUTAS = {
+      docente:    '/paginas/panel_docente.html',
+      estudiante: '/paginas/panel_estudiante.html',
+    };
+    const destino = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
+
+    // ✅ 2. Actualizar contraseña
     const { error } = await supabase.auth.updateUser({ password: pw });
     setLoading(false);
 
     if (error) { setError('No se pudo actualizar. El enlace puede haber expirado.'); return; }
 
+    // ✅ 3. Mostrar éxito y redirigir al panel según rol
     formView.style.display = 'none';
     successView.style.display = 'flex';
-    setTimeout(() => window.location.href = '/paginas/iniciar-sesion.html', 2200);
+    setTimeout(() => window.location.href = destino, 2200);
   });
 </script>
 </body>
