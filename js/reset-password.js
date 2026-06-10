@@ -86,8 +86,8 @@ btnGuardar?.addEventListener("click", async () => {
     .from("perfiles").select("rol").eq("id", session?.user?.id).single();
 
   const RUTAS = {
-    docente:    "/paginas/panel_docente.html",
-    estudiante: "/paginas/panel_estudiante.html",
+    docente:    "../paginas/panel_docente.html",
+    estudiante: "../paginas/panel_estudiante.html",
   };
   const destino = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
 
