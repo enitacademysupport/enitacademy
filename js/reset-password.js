@@ -13,7 +13,7 @@ const alerta       = document.getElementById("alerta");
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
     console.log("Modo recuperación activo ✅");
-    return; // No redirigir — dejar que el usuario cambie su contraseña
+    return;
   }
 
   if (event === "SIGNED_IN" && session) {
@@ -25,7 +25,6 @@ supabase.auth.onAuthStateChange(async (event, session) => {
       estudiante: "/paginas/panel_estudiante.html",
     };
 
-    // Solo redirigir si NO es flujo de reset
     if (!window.location.hash.includes("type=recovery")) {
       window.location.href = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
     }
@@ -72,18 +71,27 @@ btnGuardar?.addEventListener("click", async () => {
   const confirmar = inputConfirm.value;
   let valido = true;
 
-  if (!nueva)                { errNueva.textContent = "Ingresa una contraseña.";      valido = false; }
-  else if (nueva.length < 6) { errNueva.textContent = "Mínimo 6 caracteres.";         valido = false; }
-
+  if (!nueva)                { errNueva.textContent = "Ingresa una contraseña.";             valido = false; }
+  else if (nueva.length < 6) { errNueva.textContent = "Mínimo 6 caracteres.";                valido = false; }
   if (!confirmar)              { errConfirmar.textContent = "Confirma la contraseña.";        valido = false; }
   else if (nueva !== confirmar){ errConfirmar.textContent = "Las contraseñas no coinciden.";  valido = false; }
-
   if (!valido) return;
 
   btnGuardar.disabled    = true;
   btnGuardar.innerHTML   = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
 
-  // ✅ Actualizar contraseña con el token activo
+  // ✅ 1. Obtener rol ANTES de cambiar contraseña
+  const { data: { session } } = await supabase.auth.getSession();
+  const { data: perfil } = await supabase
+    .from("perfiles").select("rol").eq("id", session?.user?.id).single();
+
+  const RUTAS = {
+    docente:    "/paginas/panel_docente.html",
+    estudiante: "/paginas/panel_estudiante.html",
+  };
+  const destino = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
+
+  // ✅ 2. Actualizar contraseña
   const { error } = await supabase.auth.updateUser({ password: nueva });
 
   if (error) {
@@ -93,21 +101,12 @@ btnGuardar?.addEventListener("click", async () => {
     return;
   }
 
-  // ✅ Éxito — mostrar pantalla y redirigir al panel según rol
+  // ✅ 3. Éxito — mostrar pantalla y redirigir según rol
   formulario.style.display  = "none";
   estadoExito.style.display = "flex";
 
-  const { data: { session } } = await supabase.auth.getSession();
-  const { data: perfil } = await supabase
-    .from("perfiles").select("rol").eq("id", session.user.id).single();
-
-  const RUTAS = {
-    docente:    "/paginas/panel_docente.html",
-    estudiante: "/paginas/panel_estudiante.html",
-  };
-
   setTimeout(() => {
-    window.location.href = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
+    window.location.href = destino;
   }, 2500);
 });
 
@@ -120,3 +119,11 @@ function ocultarAlerta() {
   alerta.className = "alerta";
   alerta.innerHTML = "";
 }
+
+window.addEventListener("error", e => {
+  console.error("ERROR GLOBAL:", e.error);
+});
+
+window.addEventListener("unhandledrejection", e => {
+  console.error("PROMESA FALLIDA:", e.reason);
+});
