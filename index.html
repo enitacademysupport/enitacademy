@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/css/index.css">
   <link rel="stylesheet" href="/css/header_footer.css">
   <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="/css/cursos_publicos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
 
@@ -215,21 +216,35 @@
 
     <!-- CTA -->
     <div class="aside-card aside-cta">
-      <h3>¿Listo para empezar?</h3>
-      <p>Regístrate gratis y comienza hoy.</p>
-      <a href="/paginas/registrarse.html" class="btn-aside">Crear cuenta <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
+    <h3>¿Listo para empezar?</h3>
+    <p>Regístrate gratis y comienza hoy.</p>
+
+    <a href="/paginas/registrarse.html" target="_blank" rel="noopener noreferrer" class="btn-aside">
+        Crear cuenta <i class="fa-solid fa-arrow-right"></i>
+    </a>
+</div>
+
 
   </aside>
 
 </div><!-- fin contenedor-principal -->
+<section class="seccion-cursos-publicos">
+     <h2 class="titulo-seccion-pub">
+       <i class="fa-solid fa-globe"></i> Cursos disponibles
+     </h2>
+     <p class="subtitulo-seccion-pub">Explora los cursos abiertos de ENIT Academy.</p>
+     <div id="gridCursosPublicos" class="grid-cursos-pub">
+       <p class="cargando-pub"><i class="fa-solid fa-spinner fa-spin"></i> Cargando cursos...</p>
+     </div>
+   </section>
+
 
 <footer id="footer"></footer>
-
-  <script type="module" src="/js/header_footer.js"></script>
+<script type="module" src="/js/header_footer.js"></script>
 <script type="module" src="/js/login.js"></script>
 <script type="module" src="/js/reset-password.js"></script>
 <script type="module" src="/js/contador.js"></script>
+<script type="module" src="/js/cursos_publicos_index.js"></script>
 
 </body>
 </html>

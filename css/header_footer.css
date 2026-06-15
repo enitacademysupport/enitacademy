@@ -706,3 +706,9 @@
   .footer-brand { grid-column: auto; }
   .footer-bottom { flex-direction: column; text-align: center; }
 }
+
+@media (max-width: 768px) {
+  #botonesAuth {
+    display: none !important;
+  }
+}

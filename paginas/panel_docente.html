@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
   <style>
+    /* ── Hero saludo ── */
     .saludo-hero {
       display: flex;
       align-items: center;
@@ -50,8 +51,83 @@
       .saludo-hero { flex-direction: column; align-items: flex-start; padding: 1.3rem; }
       .saludo-reloj { text-align: left; }
     }
+
+    /* ── Badge de visibilidad ── */
+    .badge-visibilidad {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge-visibilidad.publico  { background: #e0f7ef; color: #1aaa6b; }
+    .badge-visibilidad.privado  { background: #ede9fe; color: #7c3aed; }
+
+    /* Badge grande en detalle */
+    #cursoVisibilidad {
+      font-size: 0.8rem;
+      padding: 0.28rem 0.85rem;
+      margin-top: 0.5rem;
+      display: inline-flex;
+    }
+
+    /* ── Selector de visibilidad en el formulario ── */
+    .visibilidad-opciones {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .visibilidad-opcion {
+      flex: 1;
+      min-width: 140px;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--borde);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.87rem;
+      font-weight: 700;
+      color: var(--texto-claro);
+      background: var(--blanco);
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .visibilidad-opcion input { display: none; }
+    .visibilidad-opcion i { font-size: 1.1rem; }
+    .visibilidad-opcion:has(input:checked).op-publico  { border-color: #1aaa6b; color: #1aaa6b; background: #f0fdf8; }
+    .visibilidad-opcion:has(input:checked).op-privado  { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+    .visibilidad-opcion:hover { border-color: var(--rosa); color: var(--rosa); background: #ffe0f0; }
+    .vis-desc { font-size: 0.74rem; font-weight: 600; color: inherit; opacity: 0.75; display: block; }
+
+    /* Zona de acciones de visibilidad en detalle */
+    .zona-visibilidad {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .btn-vis-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.42rem 1rem;
+      border: 1.5px solid var(--borde);
+      border-radius: 50px;
+      background: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--texto-claro);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-vis-toggle:hover { border-color: var(--rosa); color: var(--rosa); background: #ffe0f0; }
   </style>
-  
 </head>
 <body>
   <div id="header"></div>
@@ -95,7 +171,7 @@
           </div>
         </div>
 
-        <!-- Vista: mis cursos -->
+        <!-- ═══ Vista: mis cursos ═══ -->
         <div id="vista-cursos" class="vista">
           <div class="vista-cabecera">
             <h2>Mis cursos</h2>
@@ -108,14 +184,19 @@
           </div>
         </div>
 
-        <!-- Vista: detalle -->
+        <!-- ═══ Vista: detalle ═══ -->
         <div id="vista-detalle" class="vista oculto">
           <button class="btn-volver" id="btnVolverCursos"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+
           <div class="detalle-cabecera">
             <div>
               <span id="cursoNivel" class="etiqueta-nivel"></span>
               <h2 id="cursoTitulo"></h2>
               <p id="cursoDesc" class="texto-descripcion"></p>
+              <!-- Badge de visibilidad actual -->
+              <span id="cursoVisibilidad" class="badge-visibilidad privado">
+                <i class="fa-solid fa-lock"></i> Con código — acceso restringido
+              </span>
             </div>
             <div class="caja-codigo">
               <p>Código del curso</p>
@@ -123,15 +204,26 @@
               <button id="btnCopiarCodigo" class="btn-icono" title="Copiar"><i class="fa-regular fa-copy"></i></button>
             </div>
           </div>
-          <button class="btn-peligro btn-pequeno" id="btnEliminarCurso">
-            <i class="fa-solid fa-trash"></i> Eliminar curso
-          </button>
+
+          <!-- Zona de visibilidad + eliminar -->
+          <div class="zona-visibilidad">
+            <button class="btn-vis-toggle" id="btnCambiarVisibilidad">
+              <i class="fa-solid fa-globe"></i> Hacer público
+            </button>
+            <button class="btn-peligro btn-pequeno" id="btnEliminarCurso" style="margin-bottom:0;">
+              <i class="fa-solid fa-trash"></i> Eliminar curso
+            </button>
+          </div>
+          <div id="alertaVisibilidad" class="alerta" style="margin-bottom:0.8rem;"></div>
+
+          <!-- Pestañas -->
           <div class="pestanas-nav">
             <button class="pestana-btn activa" data-pestana="alumnos"><i class="fa-solid fa-users"></i> Alumnos</button>
             <button class="pestana-btn" data-pestana="anuncios"><i class="fa-solid fa-bullhorn"></i> Anuncios</button>
             <button class="pestana-btn" data-pestana="archivos"><i class="fa-solid fa-folder-open"></i> Archivos</button>
             <button class="pestana-btn" data-pestana="tareas"><i class="fa-solid fa-clipboard-list"></i> Tareas</button>
           </div>
+
           <div class="pestana-panel" data-panel="alumnos">
             <div id="listaAlumnosCurso" class="lista-alumnos"></div>
           </div>
@@ -171,7 +263,7 @@
           </div>
         </div>
 
-        <!-- Vista: crear curso -->
+        <!-- ═══ Vista: crear curso ═══ -->
         <div id="vista-crear" class="vista oculto">
           <h2>Crear nuevo curso</h2>
           <form id="formCrearCurso" class="formulario" novalidate>
@@ -196,6 +288,25 @@
               <label for="cDesc">Descripción</label>
               <textarea id="cDesc" rows="3" placeholder="¿De qué trata el curso?"></textarea>
             </div>
+
+            <!-- ── Visibilidad ─────────────────────────────────────────── -->
+            <div class="campo">
+              <label>Visibilidad del curso</label>
+              <div class="visibilidad-opciones">
+                <label class="visibilidad-opcion op-privado">
+                  <input type="radio" name="cVisibilidad" value="privado" checked>
+                  <i class="fa-solid fa-lock"></i>
+                  <span>Con código<span class="vis-desc">Solo quien tenga el código puede inscribirse</span></span>
+                </label>
+                <label class="visibilidad-opcion op-publico">
+                  <input type="radio" name="cVisibilidad" value="publico">
+                  <i class="fa-solid fa-globe"></i>
+                  <span>Público<span class="vis-desc">Aparece en el inicio para todos</span></span>
+                </label>
+              </div>
+            </div>
+            <!-- ─────────────────────────────────────────────────────────── -->
+
             <div class="campo">
               <label>Asignar estudiantes</label>
               <div class="tabs-asignar">
@@ -210,19 +321,20 @@
                 <p class="info-codigo"><i class="fa-solid fa-circle-info"></i> Al guardar el curso se genera un código único. Compártelo con tus estudiantes para que se inscriban.</p>
               </div>
             </div>
+
             <div id="alertaCrearCurso" class="alerta"></div>
             <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar curso</button>
           </form>
         </div>
 
-        <!-- Vista: estudiantes -->
+        <!-- ═══ Vista: estudiantes ═══ -->
         <div id="vista-estudiantes" class="vista oculto">
           <h2>Todos los estudiantes</h2>
           <input type="text" id="buscarTablaEstudiante" class="buscador" placeholder="Buscar por nombre...">
           <div id="tablaEstudiantes" class="tabla-estudiantes"></div>
         </div>
 
-        <!-- Vista: perfil -->
+        <!-- ═══ Vista: perfil ═══ -->
         <div id="vista-perfil" class="vista oculto">
           <h2>Mi perfil</h2>
           <form id="formPerfil" class="formulario" novalidate>
@@ -271,11 +383,11 @@
 
   <footer id="footer"></footer>
 
-    <script type="module" src="../js/header_footer.js"></script>
+  <script type="module" src="../js/header_footer.js"></script>
   <script type="module" src="../js/panel_docente.js"></script>
 
-  <!-- Tabs crear curso (sin módulo, sin await) -->
   <script>
+    /* Tabs crear curso */
     document.addEventListener("click", function(e) {
       const btn = e.target.closest(".tab-asignar");
       if (!btn) return;
@@ -285,10 +397,9 @@
       document.getElementById("panel-" + btn.dataset.panelTab)?.classList.remove("oculto");
     });
 
-    // Reloj (sin módulo, sin await — no bloquea nada)
+    /* Reloj */
     const DIAS  = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
     const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-
     function actualizarReloj() {
       const ahora = new Date();
       const hh = String(ahora.getHours()).padStart(2,"0");
@@ -303,12 +414,12 @@
     actualizarReloj();
     setInterval(actualizarReloj, 1000);
 
-    // Saludo: se ejecuta después de que panel_docente.js pone el nombre en #sideNombre
+    /* Saludo */
     function aplicarSaludo() {
       const nombre = (document.getElementById("sideNombre")?.textContent || "").split(" ")[0];
       if (!nombre || nombre === "Cargando...") { setTimeout(aplicarSaludo, 300); return; }
-      const h  = new Date().getHours();
-      const emoji   = h < 12 ? "☀️" : h < 19 ? "🌤️" : "🌙";
+      const h = new Date().getHours();
+      const emoji    = h < 12 ? "☀️" : h < 19 ? "🌤️" : "🌙";
       const greeting = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
       const frases = [
         "Empieza el día revisando tus cursos.",

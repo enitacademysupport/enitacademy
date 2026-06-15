@@ -9,29 +9,38 @@ const errNueva     = document.getElementById("errNueva");
 const errConfirmar = document.getElementById("errConfirmar");
 const alerta       = document.getElementById("alerta");
 
-// ── Detectar flujo de recuperación ──
+// ── Expiración de 10 minutos ───────────────────
+const LIMITE_MS = 10 * 60 * 1000; // 10 minutos
+
+const timerExpiracion = setTimeout(() => {
+  // Deshabilitar todo el formulario
+  if (inputNueva)   inputNueva.disabled   = true;
+  if (inputConfirm) inputConfirm.disabled = true;
+  if (btnGuardar)   btnGuardar.disabled   = true;
+
+  mostrarAlerta("error", "⏱ El tiempo para restablecer tu contraseña ha expirado. Solicita un nuevo enlace.");
+}, LIMITE_MS);
+
+
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
-    console.log("Modo recuperación activo ✅");
-    return;
+    console.log("Modo recuperación de contraseña activo");
   }
 
   if (event === "SIGNED_IN" && session) {
     const { data: perfil } = await supabase
       .from("perfiles").select("rol").eq("id", session.user.id).single();
-
     const RUTAS = {
       docente:    "/paginas/panel_docente.html",
       estudiante: "/paginas/panel_estudiante.html",
     };
-
     if (!window.location.hash.includes("type=recovery")) {
       window.location.href = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
     }
   }
 });
 
-// ── Requisitos visuales ──
+// ── Requisitos visuales ───────────────────────
 inputNueva?.addEventListener("input", () => {
   const val = inputNueva.value;
   toggle("reqLongitud",  val.length >= 6);
@@ -48,7 +57,7 @@ function toggle(id, cumple) {
     : "fa-regular fa-circle";
 }
 
-// ── Ojito ──
+// ── Ojito ──────────────────────────────────────
 document.querySelectorAll(".btn-ojo").forEach(btn => {
   btn.addEventListener("click", () => {
     const input = document.getElementById(btn.dataset.objetivo);
@@ -61,7 +70,7 @@ document.querySelectorAll(".btn-ojo").forEach(btn => {
   });
 });
 
-// ── Guardar nueva contraseña ──
+// ── Guardar nueva contraseña ───────────────────
 btnGuardar?.addEventListener("click", async () => {
   errNueva.textContent     = "";
   errConfirmar.textContent = "";
@@ -69,48 +78,36 @@ btnGuardar?.addEventListener("click", async () => {
 
   const nueva     = inputNueva.value;
   const confirmar = inputConfirm.value;
+
   let valido = true;
 
-  if (!nueva)                { errNueva.textContent = "Ingresa una contraseña.";             valido = false; }
-  else if (nueva.length < 6) { errNueva.textContent = "Mínimo 6 caracteres.";                valido = false; }
-  if (!confirmar)              { errConfirmar.textContent = "Confirma la contraseña.";        valido = false; }
-  else if (nueva !== confirmar){ errConfirmar.textContent = "Las contraseñas no coinciden.";  valido = false; }
+  if (!nueva)                { errNueva.textContent = "Ingresa una contraseña.";  valido = false; }
+  else if (nueva.length < 6) { errNueva.textContent = "Mínimo 6 caracteres.";    valido = false; }
+
+  if (!confirmar)               { errConfirmar.textContent = "Confirma la contraseña.";       valido = false; }
+  else if (nueva !== confirmar) { errConfirmar.textContent = "Las contraseñas no coinciden."; valido = false; }
+
   if (!valido) return;
 
   btnGuardar.disabled    = true;
-  btnGuardar.innerHTML   = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+  btnGuardar.textContent = "Guardando...";
 
-  // ✅ 1. Obtener rol ANTES de cambiar contraseña
-  const { data: { session } } = await supabase.auth.getSession();
-  const { data: perfil } = await supabase
-    .from("perfiles").select("rol").eq("id", session?.user?.id).single();
-
-  const RUTAS = {
-    docente:    "../paginas/panel_docente.html",
-    estudiante: "../paginas/panel_estudiante.html",
-  };
-  const destino = RUTAS[perfil?.rol] ?? RUTAS.estudiante;
-
-  // ✅ 2. Actualizar contraseña
   const { error } = await supabase.auth.updateUser({ password: nueva });
 
   if (error) {
     btnGuardar.disabled  = false;
     btnGuardar.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar contraseña';
-    mostrarAlerta("error", "No se pudo actualizar. El enlace puede haber expirado.");
+    mostrarAlerta("error", error.message);
     return;
   }
 
-  // ✅ 3. Éxito — mostrar pantalla y redirigir según rol
+  // Éxito — cancelar el timer y mostrar pantalla de confirmación
+  clearTimeout(timerExpiracion);
   formulario.style.display  = "none";
   estadoExito.style.display = "flex";
-
-  setTimeout(() => {
-    window.location.href = destino;
-  }, 2500);
 });
 
-// ── Helpers alerta ──
+// ── Helpers alerta ─────────────────────────────
 function mostrarAlerta(tipo, msg) {
   alerta.className = `alerta visible alerta-${tipo}`;
   alerta.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${msg}`;

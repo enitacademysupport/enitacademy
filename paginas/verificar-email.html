@@ -4,360 +4,101 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Verificar correo — ENIT Academy</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --pink: #ff4fa0;
-      --pink-dim: rgba(255, 79, 160, 0.15);
-      --pink-glow: rgba(255, 79, 160, 0.35);
-      --bg: #0d0d14;
-      --surface: #14141f;
-      --border: rgba(255,255,255,0.08);
-      --text: #f0f0f8;
-      --muted: #888;
-      --success: #3ddc97;
-      --error: #ff5f6d;
-      --radius: 12px;
-    }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100dvh;
-    }
-
-    /* ambient glow */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 600px 400px at 50% -80px, rgba(255,79,160,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .card {
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px 40px 40px;
-      width: 100%;
-      max-width: 420px;
-      margin: 24px;
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--pink);
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    .icon-wrap {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 20px;
-      background: var(--pink-dim);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .icon-wrap svg {
-      width: 28px;
-      height: 28px;
-      stroke: var(--pink);
-    }
-
-    h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 36px;
-    }
-
-    .subtitle span {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* OTP inputs */
-    .otp-row {
-      display: flex;
-      gap: 7px;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
-
-    .otp-input {
-      width: 44px;
-      height: 56px;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 1.3rem;
-      font-weight: 700;
-      font-family: 'Inter', monospace;
-      text-align: center;
-      caret-color: var(--pink);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      -webkit-appearance: none;
-    }
-
-    .otp-input:focus {
-      border-color: var(--pink);
-      box-shadow: 0 0 0 3px var(--pink-dim);
-    }
-
-    .otp-input.filled {
-      border-color: rgba(255,79,160,0.5);
-    }
-
-    .otp-input.error-state {
-      border-color: var(--error);
-      box-shadow: 0 0 0 3px rgba(255,95,109,0.15);
-      animation: shake 0.4s ease;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
-    }
-
-    /* feedback messages */
-    .feedback {
-      height: 22px;
-      font-size: 0.82rem;
-      margin-bottom: 20px;
-      transition: opacity 0.2s;
-    }
-
-    .feedback.error  { color: var(--error); }
-    .feedback.success { color: var(--success); }
-
-    /* verify button */
-    .btn-verify {
-      width: 100%;
-      padding: 15px;
-      background: var(--pink);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-verify:hover:not(:disabled) { opacity: 0.88; }
-    .btn-verify:active:not(:disabled) { transform: scale(0.98); }
-    .btn-verify:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* spinner */
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.35);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .btn-verify.loading .spinner { display: block; }
-    .btn-verify.loading .btn-label { display: none; }
-
-    /* resend area */
-    .resend {
-      margin-top: 24px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .resend button {
-      background: none;
-      border: none;
-      color: var(--pink);
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0;
-      transition: opacity 0.2s;
-    }
-
-    .resend button:disabled {
-      color: var(--muted);
-      cursor: default;
-    }
-
-    #countdown {
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* success overlay */
-    .success-overlay {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0 4px;
-    }
-
-    .success-overlay .check-circle {
-      width: 64px; height: 64px;
-      background: rgba(61,220,151,0.15);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .success-overlay .check-circle svg {
-      width: 30px; height: 30px;
-      stroke: var(--success);
-      stroke-dasharray: 40;
-      stroke-dashoffset: 40;
-      animation: draw 0.5s ease forwards 0.1s;
-    }
-
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-
-    .success-overlay p {
-      color: var(--success);
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .success-overlay small {
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/header_footer.css">
+  <link rel="stylesheet" href="/css/verificar-email.css">
 </head>
 <body>
 
-<div class="card">
-  <div class="logo">ENIT Academy</div>
+<header id="header"></header>
 
-  <!-- main form view -->
-  <div id="form-view">
-    <div class="icon-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"/>
-        <path d="m22 7-10 7L2 7"/>
-      </svg>
+<main class="verificar-main">
+  <div class="card">
+
+    <!-- Cabecera de la card -->
+    <div class="card-header">
+      <div class="card-logo">ENIT Academy</div>
+      <div class="icon-wrap">✉️</div>
+      <h1>Verifica tu correo</h1>
+      <p>
+        Enviamos un código de <span>6 dígitos</span> a<br>
+        <span id="email-display">tu correo electrónico</span>
+      </p>
     </div>
 
-    <h1>Verifica tu correo</h1>
-    <p class="subtitle" id="subtitle-text">
-      Enviamos un código de 8 caracteres a<br>
-      <span id="email-display">tu correo electrónico</span>
-    </p>
+    <!-- Vista formulario -->
+    <div class="card-body" id="form-view">
 
-    <div class="otp-row" id="otp-row">
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" data-index="0" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="1" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="2" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="3" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="4" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="5" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="6" />
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="7" />
-    </div>
+      <div class="otp-row" id="otp-row">
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" data-index="0" />
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="1" />
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="2" />
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="3" />
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="4" />
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="5" />
+      </div>
 
-    <div class="feedback" id="feedback"></div>
+      <div class="feedback" id="feedback"></div>
 
-    <button class="btn-verify" id="btn-verify" disabled>
-      <span class="spinner"></span>
-      <span class="btn-label">Verificar cuenta</span>
-    </button>
-
-    <div class="resend">
-      ¿No llegó el correo?&nbsp;
-      <button id="btn-resend" disabled>
-        Reenviar código <span id="countdown"></span>
+      <button class="btn-verify" id="btn-verify" disabled>
+        <span class="spinner"></span>
+        <span class="btn-label">✓ Verificar cuenta</span>
       </button>
-    </div>
-  </div>
 
-  <!-- success view -->
-  <div class="success-overlay" id="success-view">
-    <div class="check-circle">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
-    </div>
-    <p>¡Cuenta verificada!</p>
-    <small>Redirigiendo al panel…</small>
-  </div>
-</div>
+      <div class="resend">
+        ¿No llegó el correo?&nbsp;
+        <button id="btn-resend" disabled>
+          Reenviar código <span id="countdown"></span>
+        </button>
+      </div>
 
-<!-- Supabase JS -->
+    </div>
+
+    <!-- Vista éxito -->
+    <div class="success-overlay" id="success-view">
+      <div class="check-circle">✓</div>
+      <h2>¡Cuenta verificada!</h2>
+      <p>Redirigiendo a tu panel…</p>
+    </div>
+
+  </div>
+</main>
+
+<footer id="footer"></footer>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
-const SUPABASE_URL  = 'https://iuhhoqmiyndltxcxiiud.supabase.co';      // ← reemplaza
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1aGhvcW1peW5kbHR4Y3hpaXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTEwOTYsImV4cCI6MjA5NjUyNzA5Nn0.Tu0aBSMIzl2b8SO_R4I1MelLpDecIxYirkvbbYW_fsE'; // ← reemplaza
+const SUPABASE_URL  = 'https://iuhhoqmiyndltxcxiiud.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1aGhvcW1peW5kbHR4Y3hpaXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTEwOTYsImV4cCI6MjA5NjUyNzA5Nn0.Tu0aBSMIzl2b8SO_R4I1MelLpDecIxYirkvbbYW_fsE';
 
-// ─── Rutas según rol ──────────────────────────────────────────────────────────
 const RUTAS_ROL = {
   docente:    '/paginas/panel_docente.html',
   estudiante: '/paginas/panel_estudiante.html',
   _default:   '/index.html',
 };
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ─── DOM refs ─────────────────────────────────────────────────────────────────
-const inputs    = Array.from(document.querySelectorAll('.otp-input'));
-const btnVerify = document.getElementById('btn-verify');
-const btnResend = document.getElementById('btn-resend');
-const feedback  = document.getElementById('feedback');
-const countdown = document.getElementById('countdown');
-const formView  = document.getElementById('form-view');
+const inputs      = Array.from(document.querySelectorAll('.otp-input'));
+const btnVerify   = document.getElementById('btn-verify');
+const btnResend   = document.getElementById('btn-resend');
+const feedback    = document.getElementById('feedback');
+const countdown   = document.getElementById('countdown');
+const formView    = document.getElementById('form-view');
 const successView = document.getElementById('success-view');
 
-// ─── EMAIL from sessionStorage (guardado en el registro) ──────────────────────
 const userEmail = sessionStorage.getItem('pending_email') || '';
-if (userEmail) {
-  document.getElementById('email-display').textContent = userEmail;
-}
+if (userEmail) document.getElementById('email-display').textContent = userEmail;
 
-// ─── OTP INPUT LOGIC ──────────────────────────────────────────────────────────
+// ── OTP input logic ────────────────────────────────────────────────────────────
 inputs.forEach((input, i) => {
   input.addEventListener('input', e => {
     const val = e.target.value.replace(/[^0-9]/g, '');
     input.value = val ? val[0] : '';
     input.classList.toggle('filled', !!input.value);
-    if (val && i < 7) inputs[i + 1].focus();
+    if (val && i < 5) inputs[i + 1].focus();
     updateBtn();
   });
 
@@ -369,10 +110,9 @@ inputs.forEach((input, i) => {
       updateBtn();
     }
     if (e.key === 'ArrowLeft'  && i > 0) inputs[i - 1].focus();
-    if (e.key === 'ArrowRight' && i < 7) inputs[i + 1].focus();
+    if (e.key === 'ArrowRight' && i < 5) inputs[i + 1].focus();
   });
 
-  // paste full code
   input.addEventListener('paste', e => {
     e.preventDefault();
     const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
@@ -381,19 +121,13 @@ inputs.forEach((input, i) => {
       inp.value = text[idx] || '';
       inp.classList.toggle('filled', !!inp.value);
     });
-    const last = Math.min(text.length - 1, 7);
-    inputs[last].focus();
+    inputs[Math.min(text.length - 1, 5)].focus();
     updateBtn();
   });
 });
 
-function getCode() {
-  return inputs.map(i => i.value).join('');
-}
-
-function updateBtn() {
-  btnVerify.disabled = getCode().length < 8;
-}
+function getCode()   { return inputs.map(i => i.value).join(''); }
+function updateBtn() { btnVerify.disabled = getCode().length < 6; }
 
 function setError(msg) {
   feedback.textContent = msg;
@@ -407,18 +141,17 @@ function clearFeedback() {
   feedback.className = 'feedback';
 }
 
-// ─── VERIFY ───────────────────────────────────────────────────────────────────
+// ── Verificar ──────────────────────────────────────────────────────────────────
 btnVerify.addEventListener('click', verifyCode);
 
 async function verifyCode() {
   const code = getCode();
-  if (code.length < 8) return;
+  if (code.length < 6) return;
 
   clearFeedback();
   setLoading(true);
 
-  // 1. Verificar el OTP
-  const { data: otpData, error: otpError } = await sb.auth.verifyOtp({
+  const { error: otpError } = await sb.auth.verifyOtp({
     email: userEmail,
     token: code,
     type: 'email',
@@ -434,24 +167,14 @@ async function verifyCode() {
     return;
   }
 
-  // 2. Obtener usuario activo y consultar rol en perfiles
   let destino = RUTAS_ROL._default;
-
   const { data: { user } } = await sb.auth.getUser();
-  const userId = user?.id;
 
-  if (userId) {
-    const { data: perfil, error: perfilError } = await sb
-      .from('perfiles')
-      .select('rol')
-      .eq('id', userId)
-      .single();
-
-    console.log('perfil:', perfil, 'error:', perfilError);
-
-    if (!perfilError && perfil?.rol) {
-      const rol = perfil.rol.toLowerCase().trim();
-      destino = RUTAS_ROL[rol] ?? RUTAS_ROL._default;
+  if (user?.id) {
+    const { data: perfil } = await sb
+      .from('perfiles').select('rol').eq('id', user.id).single();
+    if (perfil?.rol) {
+      destino = RUTAS_ROL[perfil.rol.toLowerCase().trim()] ?? RUTAS_ROL._default;
     }
   }
 
@@ -467,14 +190,13 @@ function setLoading(on) {
 }
 
 function showSuccess(destino) {
-  formView.style.display = 'none';
+  formView.style.display    = 'none';
   successView.style.display = 'flex';
   setTimeout(() => window.location.href = destino, 2200);
 }
 
-// ─── RESEND + COUNTDOWN ───────────────────────────────────────────────────────
-let timer = null;
-let seconds = 60;
+// ── Reenvío + countdown ────────────────────────────────────────────────────────
+let timer, seconds = 60;
 
 function startCountdown() {
   seconds = 60;
@@ -493,18 +215,11 @@ function tick() {
 }
 
 btnResend.addEventListener('click', async () => {
-  if (!userEmail) {
-    setError('No hay correo registrado. Vuelve al registro.');
-    return;
-  }
-
+  if (!userEmail) { setError('No hay correo registrado. Vuelve al registro.'); return; }
   clearFeedback();
   btnResend.disabled = true;
 
-  const { error } = await sb.auth.resend({
-    type: 'email',
-    email: userEmail,
-  });
+  const { error } = await sb.auth.resend({ type: 'email', email: userEmail });
 
   if (error) {
     setError('No se pudo reenviar el código. Inténtalo más tarde.');
@@ -519,8 +234,9 @@ btnResend.addEventListener('click', async () => {
   startCountdown();
 });
 
-// Start countdown on load
 startCountdown();
 </script>
+<script type="module" src="/js/header_footer.js"></script>
+
 </body>
 </html>

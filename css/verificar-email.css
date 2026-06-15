@@ -1,0 +1,235 @@
+/* ============================================================
+   verificar-email.css — página de verificación OTP
+   Depende de header_footer.css para las variables :root
+   ============================================================ */
+
+/* ── Layout de página ── */
+body {
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: 'Nunito', sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El header ocupa su espacio sticky, el contenido crece */
+main.verificar-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px var(--sombra);
+  text-align: center;
+}
+
+/* ── Cabecera de la card ── */
+.card-header {
+  background: var(--gradiente);
+  padding: 2.2rem 2rem 1.8rem;
+  color: var(--blanco);
+}
+
+/* evitar conflicto con .logo del header global */
+.card-header .card-logo {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin-bottom: 1.2rem;
+}
+
+.card-header .icon-wrap {
+  width: 64px; height: 64px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 1.7rem;
+}
+
+.card-header h1 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.35rem;
+  margin-bottom: 0.3rem;
+  color: var(--blanco);
+}
+
+.card-header p {
+  font-size: 0.88rem;
+  opacity: 0.88;
+  line-height: 1.6;
+  color: var(--blanco);
+}
+
+.card-header p span {
+  font-weight: 800;
+  opacity: 1;
+}
+
+/* ── Cuerpo ── */
+.card-body {
+  padding: 2rem;
+}
+
+/* ── OTP inputs ── */
+.otp-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+
+.otp-input {
+  width: 48px;
+  height: 58px;
+  background: var(--fondo);
+  border: 1.8px solid var(--borde);
+  border-radius: 12px;
+  color: var(--texto);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: 'Nunito', monospace;
+  text-align: center;
+  caret-color: var(--rosa);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.otp-input:focus {
+  border-color: var(--rosa);
+  box-shadow: 0 0 0 3px rgba(255,79,160,0.12);
+}
+
+.otp-input.filled {
+  border-color: rgba(255,79,160,0.5);
+  background: #fff0f7;
+}
+
+.otp-input.error-state {
+  border-color: #d6185a;
+  box-shadow: 0 0 0 3px rgba(214,24,90,0.12);
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-6px); }
+  40%     { transform: translateX(6px); }
+  60%     { transform: translateX(-4px); }
+  80%     { transform: translateX(4px); }
+}
+
+/* ── Feedback ── */
+.feedback {
+  height: 22px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.feedback.error   { color: #d6185a; }
+.feedback.success { color: #1aaa6b; }
+
+/* ── Botón verificar ── */
+.btn-verify {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--gradiente);
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--sombra);
+  transition: opacity 0.2s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-verify:hover:not(:disabled)  { opacity: 0.88; transform: translateY(-2px); }
+.btn-verify:active:not(:disabled) { transform: scale(0.98); }
+.btn-verify:disabled { background: #e2d5ee; color: #b8a8cc; box-shadow: none; cursor: not-allowed; }
+
+/* ── Spinner ── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-verify.loading .spinner   { display: block; }
+.btn-verify.loading .btn-label { display: none; }
+
+/* ── Reenvío ── */
+.resend {
+  margin-top: 1.4rem;
+  font-size: 0.85rem;
+  color: var(--texto-claro);
+}
+.resend button {
+  background: none;
+  border: none;
+  color: var(--rosa);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+.resend button:disabled { color: var(--texto-claro); cursor: default; }
+
+/* ── Estado éxito ── */
+.success-overlay {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 2.5rem 2rem;
+}
+
+.check-circle {
+  width: 72px; height: 72px;
+  background: var(--gradiente);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+  box-shadow: 0 8px 24px var(--sombra);
+}
+
+.success-overlay h2 {
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.3rem;
+  color: var(--texto);
+}
+
+.success-overlay p {
+  font-size: 0.88rem;
+  color: var(--texto-claro);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .otp-input { width: 42px; height: 52px; font-size: 1.3rem; }
+  .otp-row   { gap: 6px; }
+}

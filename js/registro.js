@@ -1,8 +1,3 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — registro.js
-   Flujo: signUp → OTP de 6 dígitos → verificar-email.html
-   ════════════════════════════════════════════ */
-
 import { supabase } from "./supabase.js";
 
 // ══ Selección de rol ══════════════════════════════════════════════════════════
@@ -125,13 +120,11 @@ window.addEventListener("DOMContentLoaded", () => {
     btn.disabled    = true;
     btn.textContent = "Registrando...";
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { nombre, apellido, rol },
-        // ⚠️ Sin emailRedirectTo → Supabase envía el código OTP de 6 dígitos
-        //    (requiere "Enable email confirmations" ON en Auth → Settings)
       },
     });
 
@@ -141,14 +134,27 @@ window.addEventListener("DOMContentLoaded", () => {
     if (error) {
       console.error(error);
       const msgs = {
-        "User already registered":    "Este correo ya está registrado. Intenta iniciar sesión.",
-        "Email rate limit exceeded":  "Demasiados intentos. Espera unos minutos.",
+        "User already registered":   "Este correo ya está registrado. Intenta iniciar sesión.",
+        "Email rate limit exceeded": "Demasiados intentos. Espera unos minutos.",
       };
       mostrarAlerta("error", msgs[error.message] || error.message);
       return;
     }
 
-    // ── Éxito → guardar email y redirigir a verificación ─────────────────────
+    if (data?.user && data.user.identities?.length === 0) {
+      mostrarAlerta("error", "Este correo ya está registrado. Intenta iniciar sesión.");
+      return;
+    }
+
+    // ── Guardar email en perfiles ─────────────────────────────────────────────
+    if (data?.user?.id) {
+      await supabase
+        .from("perfiles")
+        .update({ email })
+        .eq("id", data.user.id);
+    }
+
+    // ── Éxito → redirigir a verificación ─────────────────────────────────────
     sessionStorage.setItem("pending_email", email);
     window.location.href = "/paginas/verificar-email.html";
   });

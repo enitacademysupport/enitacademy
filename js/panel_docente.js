@@ -45,7 +45,6 @@ async function cargarPerfil() {
   const sideNombre = document.getElementById("sideNombre");
   if (sideNombre) sideNombre.textContent = nombreCompleto;
 
-  // Formulario perfil
   const pNombre    = document.getElementById("pNombre");
   const pApellido  = document.getElementById("pApellido");
   const pEmail     = document.getElementById("pEmail");
@@ -87,7 +86,13 @@ function renderCursos() {
   contenedor.innerHTML = cursosDocente.map(c => `
     <div class="tarjeta-curso" onclick="abrirDetalle('${c.id}')" style="cursor:pointer;">
       <div class="tarjeta-curso-header">
-        ${c.nivel ? `<span class="etiqueta-nivel ${c.nivel}">${c.nivel}</span>` : ""}
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem;">
+          ${c.nivel ? `<span class="etiqueta-nivel ${c.nivel}">${c.nivel}</span>` : ""}
+          <span class="badge-visibilidad ${c.es_publico ? 'publico' : 'privado'}">
+            <i class="fa-solid ${c.es_publico ? 'fa-globe' : 'fa-lock'}"></i>
+            ${c.es_publico ? "Público" : "Con código"}
+          </span>
+        </div>
         <h3>${c.nombre}</h3>
         <p>${c.descripcion || ""}</p>
       </div>
@@ -103,16 +108,26 @@ window.abrirDetalle = async function(cursoId) {
   cursoActivo = cursosDocente.find(c => c.id === cursoId);
   if (!cursoActivo) return;
 
-  // Llenar cabecera
   document.getElementById("cursoTitulo").textContent = cursoActivo.nombre;
   document.getElementById("cursoDesc").textContent   = cursoActivo.descripcion || "";
   document.getElementById("cursoCodigo").textContent = cursoActivo.codigo;
+
   const nivelEl = document.getElementById("cursoNivel");
-  if (nivelEl) { nivelEl.textContent = cursoActivo.nivel || ""; nivelEl.className = `etiqueta-nivel ${cursoActivo.nivel || ""}`; }
+  if (nivelEl) {
+    nivelEl.textContent = cursoActivo.nivel || "";
+    nivelEl.className = `etiqueta-nivel ${cursoActivo.nivel || ""}`;
+  }
+
+  // Badge de visibilidad en detalle
+  const badgeVis = document.getElementById("cursoVisibilidad");
+  if (badgeVis) {
+    badgeVis.className = `badge-visibilidad ${cursoActivo.es_publico ? "publico" : "privado"}`;
+    badgeVis.innerHTML = `<i class="fa-solid ${cursoActivo.es_publico ? "fa-globe" : "fa-lock"}"></i>
+      ${cursoActivo.es_publico ? "Público — aparece en el inicio" : "Con código — acceso restringido"}`;
+  }
 
   mostrarVista("detalle");
 
-  // Pestañas
   document.querySelectorAll(".pestana-btn").forEach(b => b.classList.remove("activa"));
   document.querySelectorAll(".pestana-panel").forEach(p => p.classList.add("oculto"));
   document.querySelector(".pestana-btn[data-pestana='alumnos']")?.classList.add("activa");
@@ -309,15 +324,62 @@ function initAccionesCurso(cursoId) {
     await cargarTareasCurso(cursoId);
   });
 
+  // ── Cambiar visibilidad ────────────────────────────────────────────────────
+  const btnVis = document.getElementById("btnCambiarVisibilidad");
+  if (btnVis) {
+    const nuevoEstado = !cursoActivo.es_publico;
+    btnVis.innerHTML  = nuevoEstado
+      ? `<i class="fa-solid fa-globe"></i> Hacer público`
+      : `<i class="fa-solid fa-lock"></i> Hacer privado (código)`;
+
+    btnVis.replaceWith(btnVis.cloneNode(true));
+    document.getElementById("btnCambiarVisibilidad")?.addEventListener("click", async () => {
+      const toggle = !cursoActivo.es_publico;
+      const { error } = await supabase.from("cursos")
+        .update({ es_publico: toggle })
+        .eq("id", cursoActivo.id);
+
+      if (error) { alert("Error al cambiar visibilidad."); return; }
+
+      // Actualizar estado local
+      cursoActivo.es_publico = toggle;
+      cursosDocente = cursosDocente.map(c =>
+        c.id === cursoActivo.id ? { ...c, es_publico: toggle } : c
+      );
+
+      // Refrescar badge en detalle
+      const badgeVis = document.getElementById("cursoVisibilidad");
+      if (badgeVis) {
+        badgeVis.className = `badge-visibilidad ${toggle ? "publico" : "privado"}`;
+        badgeVis.innerHTML = `<i class="fa-solid ${toggle ? "fa-globe" : "fa-lock"}"></i>
+          ${toggle ? "Público — aparece en el inicio" : "Con código — acceso restringido"}`;
+      }
+
+      // Actualizar el propio botón
+      const b = document.getElementById("btnCambiarVisibilidad");
+      if (b) {
+        b.innerHTML = toggle
+          ? `<i class="fa-solid fa-lock"></i> Hacer privado (código)`
+          : `<i class="fa-solid fa-globe"></i> Hacer público`;
+      }
+
+      mostrarAlerta(
+        document.getElementById("alertaVisibilidad"),
+        "ok",
+        toggle ? "Curso publicado. Ahora aparece en el inicio." : "Curso privado. Solo con código."
+      );
+    });
+  }
+
   // Eliminar curso
   document.getElementById("btnEliminarCurso")?.replaceWith(
     document.getElementById("btnEliminarCurso").cloneNode(true)
   );
   document.getElementById("btnEliminarCurso")?.addEventListener("click", async () => {
     if (!confirm(`¿Eliminar "${cursoActivo.nombre}"? Esta acción no se puede deshacer.`)) return;
-    const { error } = await supabase.from("cursos").delete().eq("id", cursoId);
+    const { error } = await supabase.from("cursos").delete().eq("id", cursoActivo.id);
     if (error) { alert("Error al eliminar."); return; }
-    cursosDocente = cursosDocente.filter(c => c.id !== cursoId);
+    cursosDocente = cursosDocente.filter(c => c.id !== cursoActivo.id);
     renderCursos();
     mostrarVista("cursos");
   });
@@ -360,10 +422,8 @@ function initFormCrearCurso() {
   const form = document.getElementById("formCrearCurso");
   if (!form) return;
 
-  // Cargar lista de estudiantes para asignar
   cargarCheckEstudiantes();
 
-  // Buscador
   document.getElementById("buscarEstudiante")?.addEventListener("input", e => {
     const q = e.target.value.toLowerCase();
     document.querySelectorAll(".check-item").forEach(item => {
@@ -373,14 +433,16 @@ function initFormCrearCurso() {
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
-    const nombre = document.getElementById("cNombre")?.value.trim();
-    const nivel  = document.getElementById("cNivel")?.value;
-    const desc   = document.getElementById("cDesc")?.value.trim();
-    const alerta = document.getElementById("alertaCrearCurso");
+    const nombre    = document.getElementById("cNombre")?.value.trim();
+    const nivel     = document.getElementById("cNivel")?.value;
+    const desc      = document.getElementById("cDesc")?.value.trim();
+    // ── Visibilidad ──────────────────────────────────────────────────────────
+    const esPublico = document.querySelector('input[name="cVisibilidad"]:checked')?.value === "publico";
+    const alerta    = document.getElementById("alertaCrearCurso");
 
     let valido = true;
     if (!nombre) { setErr("errCNombre", "Campo obligatorio."); valido = false; } else setErr("errCNombre", "");
-    if (!nivel)  { setErr("errCNivel", "Elige un nivel."); valido = false; }  else setErr("errCNivel", "");
+    if (!nivel)  { setErr("errCNivel", "Elige un nivel.");    valido = false; } else setErr("errCNivel", "");
     if (!valido) return;
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -392,11 +454,11 @@ function initFormCrearCurso() {
       descripcion: desc || null,
       nivel,
       codigo,
+      es_publico: esPublico,       // ← campo nuevo
     }).select().single();
 
     if (error) { mostrarAlerta(alerta, "error", "Error al crear el curso."); return; }
 
-    // Inscribir estudiantes seleccionados
     const checks = document.querySelectorAll(".check-estudiante:checked");
     if (checks.length > 0) {
       const inscripciones = Array.from(checks).map(c => ({
@@ -406,7 +468,11 @@ function initFormCrearCurso() {
       await supabase.from("inscripciones").insert(inscripciones);
     }
 
-    mostrarAlerta(alerta, "ok", `Curso creado. Código: ${codigo}`);
+    mostrarAlerta(alerta, "ok",
+      esPublico
+        ? `Curso creado y publicado en el inicio. Código: ${codigo}`
+        : `Curso creado. Código: ${codigo}`
+    );
     form.reset();
     await cargarCursos();
     setTimeout(() => mostrarVista("cursos"), 1500);
@@ -429,9 +495,6 @@ async function cargarCheckEstudiantes() {
 
 // ══ LISTA ESTUDIANTES VISTA ═══════════════════════════════════════════════════
 async function cargarListaEstudiantes() {
-  const { data: { user } } = await supabase.auth.getUser();
-
-  // Obtener todos los estudiantes inscritos en cursos de este docente
   const cursoIds = cursosDocente.map(c => c.id);
   if (cursoIds.length === 0) {
     const tabla = document.getElementById("tablaEstudiantes");
@@ -486,7 +549,7 @@ function initFormPerfil() {
     const alerta   = document.getElementById("alertaPerfil");
 
     let valido = true;
-    if (!nombre)   { setErr("errPNombre", "Campo obligatorio."); valido = false; } else setErr("errPNombre", "");
+    if (!nombre)   { setErr("errPNombre",   "Campo obligatorio."); valido = false; } else setErr("errPNombre", "");
     if (!apellido) { setErr("errPApellido", "Campo obligatorio."); valido = false; } else setErr("errPApellido", "");
     if (clave && clave.length < 6) { setErr("errPClave", "Mínimo 6 caracteres."); valido = false; } else setErr("errPClave", "");
     if (!valido) return;
@@ -505,7 +568,6 @@ function initFormPerfil() {
     document.getElementById("sideNombre").textContent = `${nombre} ${apellido}`;
   });
 
-  // Ojo contraseña
   document.querySelectorAll(".btn-ojo").forEach(btn => {
     btn.addEventListener("click", () => {
       const input = document.getElementById(btn.dataset.objetivo);

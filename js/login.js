@@ -49,16 +49,30 @@ document.addEventListener("click", async function(e) {
   btn.textContent = "Ingresando...";
 
   try {
+    // ── Verificar si el correo existe en auth.users via RPC ──
+    const { data: existe } = await supabase.rpc("email_existe", { p_email: email });
+
+    if (!existe) {
+      mostrarAlerta("error", "No existe una cuenta con ese correo.");
+      btn.disabled    = false;
+      btn.textContent = "Ingresar";
+      return;
+    }
+
+    // ── Intentar login ──
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       btn.disabled    = false;
       btn.textContent = "Ingresar";
-      const msgs = {
-        "Invalid login credentials": "Correo o contraseña incorrectos.",
-        "Email not confirmed":       "Debes confirmar tu correo primero.",
-      };
-      mostrarAlerta("error", msgs[error.message] || error.message);
+
+      const msgLower = error.message.toLowerCase();
+      const msg =
+        msgLower.includes("email not confirmed")
+          ? "Debes confirmar tu correo primero."
+          : "Contraseña incorrecta.";
+
+      mostrarAlerta("error", msg);
       return;
     }
 
@@ -78,8 +92,6 @@ document.addEventListener("click", async function(e) {
   }
 });
 
-
-
 // ── Helpers ───────────────────────────────────
 function mostrarAlerta(tipo, msg) {
   const el = document.getElementById("loginAlerta");
@@ -91,7 +103,6 @@ function limpiarAlerta() {
   const el = document.getElementById("loginAlerta");
   if (el) { el.className = "form-alerta"; el.innerHTML = ""; }
 }
-
 
 window.addEventListener("error", e => {
   console.error("ERROR GLOBAL:", e.error);
