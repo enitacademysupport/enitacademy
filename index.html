@@ -237,7 +237,47 @@
     <p class="cargando-pub"><i class="fa-solid fa-spinner fa-spin"></i> Cargando cursos...</p>
   </div>
 </section>
+<div class="fab-wrap">
+  <button class="fab-dot-btn" id="fabDot" aria-label="Contacto">
+    <span></span><span></span><span></span>
+  </button>
 
+  <div class="fab-items" id="fabMenu">
+    <div class="fab-item">
+      <a href="https://wa.me/51914237616" target="_blank" class="fab-icon-btn i-wa" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.057 23.535a.75.75 0 0 0 .916.932l5.85-1.53A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.806 9.806 0 0 1-5.034-1.388l-.36-.214-3.733.977.997-3.64-.234-.373A9.818 9.818 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+      </a>
+      <span class="fab-label">WhatsApp</span>
+    </div>
+    <div class="fab-item">
+      <a href="https://open.spotify.com/playlist/7asKiqTfZE4TAYkcSuCOIF?si=8nEzjzp5QyeGwTO_v4RCnw&pi=AveU2HD2S1mhY" target="_blank" class="fab-icon-btn i-sp" aria-label="Spotify">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </a>
+      <span class="fab-label">Spotify</span>
+    </div>
+    <div class="fab-item">
+      <a href="tel:+51914237616" class="fab-icon-btn i-call" aria-label="Llamar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </a>
+      <span class="fab-label">Llamar</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const fabDot = document.getElementById('fabDot');
+  const fabMenu = document.getElementById('fabMenu');
+  fabDot.addEventListener('click', () => {
+    fabDot.classList.toggle('open');
+    fabMenu.classList.toggle('visible');
+  });
+  document.addEventListener('click', (e) => {
+    if (!fabDot.contains(e.target) && !fabMenu.contains(e.target)) {
+      fabDot.classList.remove('open');
+      fabMenu.classList.remove('visible');
+    }
+  });
+</script>
 
 <footer id="footer"></footer>
 <script type="module" src="/js/header_footer.js"></script>

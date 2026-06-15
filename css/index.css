@@ -520,3 +520,71 @@ body.dark .hero {
   .titulo-animado { font-size: 1.4rem; }
   .btn-hero { font-size: 0.85rem; padding: 0.65rem 1.4rem; }
 }
+
+/* === FAB INFERIOR DERECHO === */
+.fab-wrap {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 10px;
+}
+.fab-dot-btn {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: #222;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  gap: 3px;
+  transition: background 0.2s, transform 0.2s;
+}
+.fab-dot-btn:hover { background: #333; transform: scale(1.06); }
+.fab-dot-btn span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: white;
+  display: block;
+}
+.fab-items {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.22s, transform 0.22s;
+}
+.fab-items.visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.fab-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 10px;
+}
+.fab-icon-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.fab-icon-btn:hover { transform: scale(1.1); }
+.fab-icon-btn svg { width: 22px; height: 22px; }
+.i-wa   { background: #25D366; }
+.i-sp   { background: #1DB954; }
+.i-call { background: #3b82f6; }
+.fab-label {
+  font-size: 13px; font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: white;
+  border: 0.5px solid #ddd;
+  white-space: nowrap;
+}
