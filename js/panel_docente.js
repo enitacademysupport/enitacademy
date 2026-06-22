@@ -650,3 +650,7 @@ function setErr(id, msg) {
   const el = document.getElementById(id);
   if (el) el.textContent = msg;
 }
+
+document.getElementById("btnVistaEstudiante")?.addEventListener("click", () => {
+    window.open("/pages/panel_estudiante.html", "_blank");
+});
