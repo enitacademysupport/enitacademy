@@ -18,9 +18,33 @@ function cargarComponente(url, idContenedor, callback) {
     .catch(err => console.warn("Error cargando:", url, err));
 }
 
-cargarComponente("/paginas/header.html",      "header",          iniciarHeader);
+cargarComponente("/paginas/header.html",      "header",          () => { iniciarHeader(); initModoOscuroGlobal(); });
 cargarComponente("/paginas/footer.html",      "footer");
 cargarComponente("/paginas/modal_login.html", "modal-container");
+
+// ── Modo oscuro GLOBAL (funciona en todas las páginas) ──────────────────────
+function initModoOscuroGlobal() {
+  if (localStorage.getItem("modoOscuro") === "true") {
+    document.body.classList.add("dark");
+  }
+  const btn = document.getElementById("modoOscuro");
+  if (!btn) return;
+  const actualizarIcono = () => {
+    const i = btn.querySelector("i");
+    if (!i) return;
+    if (document.body.classList.contains("dark")) {
+      i.classList.remove("fa-moon"); i.classList.add("fa-sun");
+    } else {
+      i.classList.remove("fa-sun"); i.classList.add("fa-moon");
+    }
+  };
+  actualizarIcono();
+  btn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("modoOscuro", document.body.classList.contains("dark"));
+    actualizarIcono();
+  });
+}
 
 // ── Header ────────────────────────────────────
 function iniciarHeader() {

@@ -13,7 +13,7 @@ async function cargarCursosPublicos() {
   const { data: cursos, error } = await supabase
     .from("cursos")
     .select(`
-      id, nombre, descripcion, nivel, codigo, creado_at,
+      id, nombre, descripcion, nivel, codigo, imagen_url, creado_at,
       perfiles:docente_id ( nombre, apellido )
     `)
     .eq("es_publico", true)
@@ -24,12 +24,18 @@ async function cargarCursosPublicos() {
     return;
   }
 
-  grid.innerHTML = cursos.map(c => {
+  // Wrap each card in Bootstrap col
+  grid.innerHTML = "<div class=\"row g-3 w-100\">" + cursos.map(c => {
+    const wrapper_start = '<div class="col-sm-6 col-lg-4">';
+    const wrapper_end   = '</div>';
     const docente = c.perfiles
       ? `${c.perfiles.nombre} ${c.perfiles.apellido}`
       : "Docente ENIT";
-    return `
+    const card = `
       <div class="tarjeta-pub">
+        ${c.imagen_url
+          ? `<img src="${c.imagen_url}" class="tarjeta-pub-img" alt="${c.nombre}">`
+          : `<div class="tarjeta-pub-img-placeholder"><i class="fa-solid fa-book-open"></i></div>`}
         <div class="tarjeta-pub-top">
           ${c.nivel ? `<span class="etiqueta-nivel ${c.nivel}">${c.nivel}</span>` : ""}
           <span class="badge-visibilidad publico" style="margin-left:auto;">
@@ -47,7 +53,8 @@ async function cargarCursosPublicos() {
           </button>
         </div>
       </div>`;
-  }).join("");
+      return wrapper_start + card + wrapper_end;
+  }).join("") + "</div>";
 }
 
 /* ── Modal de inscripción ─────────────────────────────────────────────────── */
@@ -55,24 +62,33 @@ window.abrirModalInscripcion = async function(cursoId, nombreCurso) {
   const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
-    // Guardar el curso que quería inscribirse para retomar después del login
+    // No hay sesión: guardar pendiente y abrir login
     sessionStorage.setItem("inscribir_pendiente", cursoId);
     sessionStorage.setItem("inscribir_nombre",    nombreCurso);
-
-    // Abrir el modal de login del header en lugar de redirigir
     const modal = document.getElementById("modalLogin");
     if (modal) {
-      modal.style.display = "flex";          // como lo abre tu header_footer.js
+      modal.style.display = "flex";
     } else {
-      // Fallback: si el modal aún no cargó, esperar y reintentar
       setTimeout(() => window.abrirModalInscripcion(cursoId, nombreCurso), 400);
     }
     return;
   }
 
+  // ── Verificar si el usuario es docente ────────────────────────────────────
   const userId = session.user.id;
+  const { data: perfil } = await supabase
+    .from("perfiles")
+    .select("rol")
+    .eq("id", userId)
+    .single();
 
-  // Verificar si ya está inscrito
+  if (perfil?.rol === "docente") {
+    // El docente solo ve el curso, NO se inscribe
+    mostrarToast("Como docente puedes explorar los cursos libremente. Para inscribirse usa una cuenta de estudiante.", "info");
+    return;
+  }
+
+  // ── Verificar si ya está inscrito ─────────────────────────────────────────
   const { data: yaInscrito } = await supabase
     .from("inscripciones")
     .select("id")
@@ -85,7 +101,7 @@ window.abrirModalInscripcion = async function(cursoId, nombreCurso) {
     return;
   }
 
-  // Inscribir
+  // ── Inscribir al estudiante ────────────────────────────────────────────────
   const { error } = await supabase.from("inscripciones").insert({
     curso_id:      cursoId,
     estudiante_id: userId,
@@ -101,23 +117,19 @@ window.abrirModalInscripcion = async function(cursoId, nombreCurso) {
 };
 
 /* ── Retomar inscripción pendiente tras login ─────────────────────────────── */
-// Se ejecuta cuando el usuario cierra sesión/inicia sesión (evento del header)
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event !== "SIGNED_IN" || !session) return;
 
-  const cursoId    = sessionStorage.getItem("inscribir_pendiente");
+  const cursoId     = sessionStorage.getItem("inscribir_pendiente");
   const nombreCurso = sessionStorage.getItem("inscribir_nombre");
   if (!cursoId) return;
 
-  // Limpiar antes de inscribir para no repetir
   sessionStorage.removeItem("inscribir_pendiente");
   sessionStorage.removeItem("inscribir_nombre");
 
-  // Cerrar modal de login si sigue abierto
   const modal = document.getElementById("modalLogin");
   if (modal) modal.style.display = "none";
 
-  // Intentar inscribir automáticamente
   await window.abrirModalInscripcion(cursoId, nombreCurso);
 });
 

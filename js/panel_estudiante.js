@@ -5,18 +5,98 @@
 import { supabase } from "./supabase.js";
 
 // ══ ESTADO GLOBAL ═════════════════════════════════════════════════════════════
-let perfilActual = null;
+let perfilActual    = null;
 let cursosInscritos = [];
+
+const URL_PARAMS      = new URLSearchParams(window.location.search);
+const PREVIEW_DOCENTE = URL_PARAMS.get("preview_docente");
 
 // ══ INIT ══════════════════════════════════════════════════════════════════════
 window.addEventListener("DOMContentLoaded", async () => {
-  await verificarSesion();
-  await cargarPerfil();
-  await cargarDatos();
+  if (PREVIEW_DOCENTE) {
+    mostrarBannerPreview();
+    await cargarDatosPreview(PREVIEW_DOCENTE);
+  } else {
+    await verificarSesion();
+    await cargarPerfil();
+    await cargarDatos();
+  }
   initNav();
   initSidebar();
   initCerrarSesion();
 });
+
+// ══ BANNER PREVIEW ════════════════════════════════════════════════════════════
+function mostrarBannerPreview() {
+  const banner = document.createElement("div");
+  banner.style.cssText = `
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
+    color: white; padding: .7rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-weight: 700; font-size: .9rem; font-family: 'Nunito', sans-serif;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  `;
+  banner.innerHTML = `
+    <span><i class="fa-solid fa-eye" style="margin-right:.5rem;"></i>
+      Modo vista previa — así ven tus cursos los estudiantes
+    </span>
+    <button onclick="window.close()" style="
+      background:white; color:#8b5cf6; border:none;
+      border-radius:8px; padding:.3rem .9rem;
+      font-weight:800; cursor:pointer; font-size:.85rem;
+    ">✕ Cerrar</button>
+  `;
+  document.body.prepend(banner);
+  document.body.style.paddingTop = "48px";
+}
+
+// ══ CARGA DE DATOS EN MODO PREVIEW ════════════════════════════════════════════
+async function cargarDatosPreview(docenteId) {
+  // Ajustar saludo
+  const h2 = document.getElementById("saludoH2");
+  const p  = document.getElementById("saludoFrase");
+  if (h2) h2.innerHTML = `Vista previa <span>del estudiante</span> 👁️`;
+  if (p)  p.textContent = "Así verían tus cursos tus estudiantes.";
+  const sideNombre = document.getElementById("sideNombre");
+  if (sideNombre) sideNombre.textContent = "Vista Previa";
+
+  // Ocultar secciones que no aplican
+  ["vista-unirse","vista-perfil"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+  document.querySelectorAll(".nav-btn[data-vista='unirse'], .nav-btn[data-vista='perfil']")
+    .forEach(btn => btn.remove());
+
+  // Cargar cursos del docente
+  const { data: cursos } = await supabase
+    .from("cursos")
+    .select("id, nombre, descripcion, nivel, codigo, docente_id, imagen_url, perfiles(nombre, apellido)")
+    .eq("docente_id", docenteId)
+    .order("creado_at", { ascending: false });
+
+  cursosInscritos = cursos || [];
+  renderCursosInicio();
+  renderCursosLista();
+
+  if (cursosInscritos.length === 0) { renderAsideVacio(); return; }
+
+  const cursoIds = cursosInscritos.map(c => c.id);
+  const [{ data: anuncios }, { data: tareas }, { data: archivos }] = await Promise.all([
+    supabase.from("anuncios").select("*, cursos(nombre)").in("curso_id", cursoIds).order("creado_at", { ascending: false }).limit(5),
+    supabase.from("tareas").select("*, cursos(nombre)").in("curso_id", cursoIds).order("fecha_entrega", { ascending: true }),
+    supabase.from("archivos").select("*, cursos(nombre)").in("curso_id", cursoIds).order("creado_at", { ascending: false }).limit(5),
+  ]);
+
+  renderAsideAnuncios(anuncios || []);
+  renderAsideTareas(tareas || []);
+  renderAsideArchivos(archivos || []);
+  renderAnunciosVista(anuncios || [], cursoIds);
+  renderTareasVista(tareas || [], cursoIds);
+  renderArchivosVista(archivos || [], cursoIds);
+  llenarFiltros(cursosInscritos);
+}
 
 // ══ SESIÓN ════════════════════════════════════════════════════════════════════
 async function verificarSesion() {
@@ -38,25 +118,23 @@ async function cargarPerfil() {
   if (!perfil) return;
   perfilActual = { ...perfil, email: user.email, created_at: user.created_at };
 
-  // Sidebar
   const nombreCompleto = `${perfil.nombre} ${perfil.apellido}`;
   const el = document.getElementById("sideNombre");
   if (el) el.textContent = nombreCompleto;
 
-  // Perfil vista
   const pNombreCompleto = document.getElementById("perfilNombreCompleto");
-  const pEmail = document.getElementById("perfilEmailVista");
-  const pDesde = document.getElementById("perfilDesde");
-  const pNombre = document.getElementById("pNombre");
-  const pApellido = document.getElementById("pApellido");
-  const pEmailInput = document.getElementById("pEmail");
+  const pEmail          = document.getElementById("perfilEmailVista");
+  const pDesde          = document.getElementById("perfilDesde");
+  const pNombre         = document.getElementById("pNombre");
+  const pApellido       = document.getElementById("pApellido");
+  const pEmailInput     = document.getElementById("pEmail");
 
   if (pNombreCompleto) pNombreCompleto.textContent = nombreCompleto;
-  if (pEmail) pEmail.textContent = user.email;
-  if (pDesde) pDesde.textContent = `Miembro desde ${formatFecha(user.created_at)}`;
-  if (pNombre) pNombre.value = perfil.nombre;
-  if (pApellido) pApellido.value = perfil.apellido;
-  if (pEmailInput) pEmailInput.value = user.email;
+  if (pEmail)          pEmail.textContent = user.email;
+  if (pDesde)          pDesde.textContent = `Miembro desde ${formatFecha(user.created_at)}`;
+  if (pNombre)         pNombre.value = perfil.nombre;
+  if (pApellido)       pApellido.value = perfil.apellido;
+  if (pEmailInput)     pEmailInput.value = user.email;
 }
 
 // ══ CARGAR TODOS LOS DATOS ════════════════════════════════════════════════════
@@ -64,10 +142,9 @@ async function cargarDatos() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
-  // Cursos inscritos
   const { data: inscripciones } = await supabase
     .from("inscripciones")
-    .select("curso_id, cursos(id, nombre, descripcion, nivel, codigo, docente_id, perfiles(nombre, apellido))")
+    .select("curso_id, cursos(id, nombre, descripcion, nivel, codigo, imagen_url, docente_id, perfiles(nombre, apellido))")
     .eq("estudiante_id", user.id);
 
   cursosInscritos = (inscripciones || []).map(i => i.cursos).filter(Boolean);
@@ -75,12 +152,8 @@ async function cargarDatos() {
   renderCursosInicio();
   renderCursosLista();
 
-  // Anuncios, tareas, archivos de todos sus cursos
   const cursoIds = cursosInscritos.map(c => c.id);
-  if (cursoIds.length === 0) {
-    renderAsideVacio();
-    return;
-  }
+  if (cursoIds.length === 0) { renderAsideVacio(); return; }
 
   const [{ data: anuncios }, { data: tareas }, { data: archivos }] = await Promise.all([
     supabase.from("anuncios").select("*, cursos(nombre)").in("curso_id", cursoIds).order("creado_at", { ascending: false }).limit(5),
@@ -100,7 +173,7 @@ async function cargarDatos() {
 // ══ RENDER CURSOS INICIO ══════════════════════════════════════════════════════
 function renderCursosInicio() {
   const contenedor = document.getElementById("listaCursosInicio");
-  const msg = document.getElementById("msgSinCursosInicio");
+  const msg        = document.getElementById("msgSinCursosInicio");
   if (!contenedor) return;
 
   if (cursosInscritos.length === 0) {
@@ -142,12 +215,10 @@ function renderCursosInicio() {
 
 window.toggleCurso = async function(cursoId) {
   const body = document.getElementById(`body-${cursoId}`);
-  const btn = document.getElementById(`toggle-${cursoId}`);
+  const btn  = document.getElementById(`toggle-${cursoId}`);
   if (!body) return;
-
   const abierto = body.classList.toggle("visible");
   btn?.classList.toggle("abierto", abierto);
-
   if (abierto) await cargarDetalleCurso(cursoId);
 };
 
@@ -158,19 +229,19 @@ async function cargarDetalleCurso(cursoId) {
     supabase.from("tareas").select("*").eq("curso_id", cursoId).order("fecha_entrega", { ascending: true }),
   ]);
 
-  const elA = document.getElementById(`${cursoId}-anuncios`);
+  const elA  = document.getElementById(`${cursoId}-anuncios`);
   const elAr = document.getElementById(`${cursoId}-archivos`);
-  const elT = document.getElementById(`${cursoId}-tareas`);
+  const elT  = document.getElementById(`${cursoId}-tareas`);
 
-  if (elA) elA.innerHTML = (anuncios?.length)
+  if (elA) elA.innerHTML = anuncios?.length
     ? anuncios.map(a => `<div class="item-anuncio"><strong>${a.titulo}</strong><p>${a.contenido}</p><span class="meta-fecha">${formatFecha(a.creado_at)}</span></div>`).join("")
     : `<p class="sin-datos">Sin anuncios.</p>`;
 
-  if (elAr) elAr.innerHTML = (archivos?.length)
+  if (elAr) elAr.innerHTML = archivos?.length
     ? archivos.map(a => `<div class="item-archivo"><a href="${a.url}" target="_blank"><i class="fa-solid fa-file"></i> ${a.nombre_archivo}</a></div>`).join("")
     : `<p class="sin-datos">Sin archivos.</p>`;
 
-  if (elT) elT.innerHTML = (tareas?.length)
+  if (elT) elT.innerHTML = tareas?.length
     ? tareas.map(t => `<div class="item-tarea"><strong>${t.titulo}</strong>${t.fecha_entrega ? `<span class="vence-tag ${urgencia(t.fecha_entrega)}">Vence: ${formatFecha(t.fecha_entrega)}</span>` : ""}<p>${t.descripcion || ""}</p></div>`).join("")
     : `<p class="sin-datos">Sin tareas.</p>`;
 }
@@ -185,7 +256,7 @@ window.verPestana = function(cursoId, pestana, btn) {
 // ══ RENDER CURSOS LISTA ═══════════════════════════════════════════════════════
 function renderCursosLista() {
   const contenedor = document.getElementById("listaCursos");
-  const msg = document.getElementById("msgSinCursos");
+  const msg        = document.getElementById("msgSinCursos");
   if (!contenedor) return;
 
   if (cursosInscritos.length === 0) {
@@ -254,7 +325,7 @@ function renderAsideArchivos(archivos) {
 }
 
 // ══ VISTAS GENERALES ══════════════════════════════════════════════════════════
-function renderAnunciosVista(anuncios, cursoIds) {
+function renderAnunciosVista(anuncios) {
   const el = document.getElementById("listaAnuncios");
   if (!el) return;
   el.innerHTML = anuncios.length
@@ -267,7 +338,7 @@ function renderAnunciosVista(anuncios, cursoIds) {
     : `<p class="sin-datos">Sin anuncios en tus cursos.</p>`;
 }
 
-function renderTareasVista(tareas, cursoIds) {
+function renderTareasVista(tareas) {
   const el = document.getElementById("listaTareas");
   if (!el) return;
   el.innerHTML = tareas.length
@@ -281,7 +352,7 @@ function renderTareasVista(tareas, cursoIds) {
     : `<p class="sin-datos">Sin tareas.</p>`;
 }
 
-function renderArchivosVista(archivos, cursoIds) {
+function renderArchivosVista(archivos) {
   const el = document.getElementById("listaArchivos");
   if (!el) return;
   el.innerHTML = archivos.length
@@ -314,8 +385,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
-    const codigo = document.getElementById("inputCodigo")?.value.trim().toUpperCase();
-    const alerta = document.getElementById("alertaCodigo");
+    const codigo    = document.getElementById("inputCodigo")?.value.trim().toUpperCase();
+    const alerta    = document.getElementById("alertaCodigo");
     const errCodigo = document.getElementById("errCodigo");
 
     if (!codigo) { if (errCodigo) errCodigo.textContent = "Ingresa un código."; return; }
@@ -323,40 +394,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    // Buscar curso
     const { data: curso, error: errBuscar } = await supabase
-      .from("cursos")
-      .select("id, nombre")
-      .eq("codigo", codigo)
-      .single();
+      .from("cursos").select("id, nombre").eq("codigo", codigo).single();
 
     if (errBuscar || !curso) {
       mostrarAlerta(alerta, "error", "Código incorrecto. Verifica con tu docente.");
       return;
     }
 
-    // Ya inscrito?
     const { data: yaInscrito } = await supabase
-      .from("inscripciones")
-      .select("id")
-      .eq("curso_id", curso.id)
-      .eq("estudiante_id", user.id)
-      .single();
+      .from("inscripciones").select("id")
+      .eq("curso_id", curso.id).eq("estudiante_id", user.id).single();
 
-    if (yaInscrito) {
-      mostrarAlerta(alerta, "info", "Ya estás inscrito en este curso.");
-      return;
-    }
+    if (yaInscrito) { mostrarAlerta(alerta, "info", "Ya estás inscrito en este curso."); return; }
 
-    // Inscribir
     const { error: errInscribir } = await supabase
-      .from("inscripciones")
-      .insert({ curso_id: curso.id, estudiante_id: user.id });
+      .from("inscripciones").insert({ curso_id: curso.id, estudiante_id: user.id });
 
-    if (errInscribir) {
-      mostrarAlerta(alerta, "error", "No se pudo inscribir. Intenta de nuevo.");
-      return;
-    }
+    if (errInscribir) { mostrarAlerta(alerta, "error", "No se pudo inscribir. Intenta de nuevo."); return; }
 
     mostrarAlerta(alerta, "ok", `¡Te uniste a "${curso.nombre}" exitosamente!`);
     document.getElementById("inputCodigo").value = "";
@@ -377,18 +432,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const alerta   = document.getElementById("alertaPerfil");
 
     let valido = true;
-    if (!nombre)   { setErr("errPNombre", "Campo obligatorio."); valido = false; } else setErr("errPNombre", "");
+    if (!nombre)   { setErr("errPNombre",   "Campo obligatorio."); valido = false; } else setErr("errPNombre", "");
     if (!apellido) { setErr("errPApellido", "Campo obligatorio."); valido = false; } else setErr("errPApellido", "");
     if (clave && clave.length < 6) { setErr("errPClave", "Mínimo 6 caracteres."); valido = false; } else setErr("errPClave", "");
     if (!valido) return;
 
     const { data: { user } } = await supabase.auth.getUser();
-
-    const { error: errPerfil } = await supabase
-      .from("perfiles")
-      .update({ nombre, apellido })
-      .eq("id", user.id);
-
+    const { error: errPerfil } = await supabase.from("perfiles").update({ nombre, apellido }).eq("id", user.id);
     if (errPerfil) { mostrarAlerta(alerta, "error", "No se pudo actualizar el perfil."); return; }
 
     if (clave) {
@@ -410,7 +460,6 @@ function initNav() {
       document.querySelectorAll(".vista").forEach(v => v.classList.add("oculto"));
       btn.classList.add("activo");
       document.getElementById(`vista-${btn.dataset.vista}`)?.classList.remove("oculto");
-      // cerrar sidebar en móvil
       document.querySelector(".panel-sidebar")?.classList.remove("abierto");
       document.getElementById("fondoSidebar")?.classList.remove("activo");
     });
@@ -433,19 +482,16 @@ function initSidebar() {
 }
 
 function initCerrarSesion() {
-  ["btnCerrarSesion3"].forEach(id => {
-    document.getElementById(id)?.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "/index.html";
-    });
+  document.getElementById("btnCerrarSesion3")?.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/index.html";
   });
 }
 
 // ══ UTILS ═════════════════════════════════════════════════════════════════════
 function formatFecha(str) {
   if (!str) return "";
-  const d = new Date(str);
-  return d.toLocaleDateString("es-PE", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(str).toLocaleDateString("es-PE", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 function urgencia(fecha) {

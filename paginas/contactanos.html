@@ -1,104 +1,108 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENIT Academy</title>
-<link rel="stylesheet" href="../css/contactanos.css">
-<link rel="stylesheet" href="../css/header_footer.css">
-<link rel="stylesheet" href="../css/login.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../css/index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENIT Academy — Contáctanos</title>
+  <script>const dm=localStorage.getItem("modoOscuro")==="true";if(dm){document.documentElement.setAttribute("data-bs-theme","dark");document.documentElement.classList.add("dark");}</script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/header_footer.css">
+  <link rel="stylesheet" href="/css/login.css">
+  <style>
+    body { font-family:'Nunito',sans-serif; }
+    :root { --rosa:#ff4fa0; --lila:#8b5cf6; --gradiente:linear-gradient(135deg,var(--rosa),var(--lila)); }
+    .seccion-contacto { padding:5rem 0; }
+    .etiqueta-contacto { display:inline-block; background:var(--gradiente); color:#fff; padding:.3rem .9rem; border-radius:50px; font-size:.82rem; font-weight:700; margin-bottom:1rem; }
+    .contacto-titulo { font-family:'Paytone One',sans-serif; font-size:clamp(1.8rem,4vw,2.6rem); background:var(--gradiente); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:.8rem; }
+    .texto-contacto { color:#6b5478; line-height:1.8; font-size:.98rem; }
+    .dato-contacto { display:flex; align-items:flex-start; gap:1rem; background:#fff; border:1.5px solid #f0d6e8; border-radius:14px; padding:1rem 1.2rem; margin-bottom:.8rem; }
+    .dato-icono { width:44px; height:44px; border-radius:50%; background:var(--gradiente); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; flex-shrink:0; }
+    .dato-contacto h4 { font-size:.88rem; font-weight:800; margin:0 0 .2rem; color:#2a1a33; }
+    .dato-contacto p { font-size:.88rem; margin:0; color:#6b5478; }
+    /* Formulario */
+    .form-contacto-wrap { background:#fff; border:1.5px solid #f0d6e8; border-radius:20px; padding:2rem; box-shadow:0 4px 24px rgba(255,79,160,.1); }
+    .form-contacto-wrap h3 { font-family:'Paytone One',sans-serif; font-size:1.2rem; margin-bottom:1.3rem; background:var(--gradiente); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .form-contacto-wrap .form-control { border:1.5px solid #f0d6e8; border-radius:10px; font-family:'Nunito',sans-serif; font-size:.93rem; padding:.7rem 1rem; }
+    .form-contacto-wrap .form-control:focus { border-color:var(--rosa); box-shadow:0 0 0 3px rgba(255,79,160,.15); }
+    .btn-enviar { width:100%; padding:.8rem; background:var(--gradiente); color:#fff; border:none; border-radius:50px; font-weight:800; font-size:1rem; font-family:'Nunito',sans-serif; cursor:pointer; transition:opacity .2s,transform .2s; }
+    .btn-enviar:hover { opacity:.88; transform:translateY(-2px); }
+    .mensaje-exito { display:none; background:#d1fae5; color:#065f46; border-radius:10px; padding:.8rem 1rem; text-align:center; font-weight:700; margin-top:1rem; }
+    .mensaje-exito.visible { display:flex; align-items:center; justify-content:center; gap:.5rem; }
 
-
-  
+    /* Dark */
+    body.dark .seccion-contacto { background:#0f0f1a!important; }
+    body.dark .dato-contacto { background:#1a1a2e; border-color:#2d2d4a; }
+    body.dark .dato-contacto h4 { color:#f0f0ff; }
+    body.dark .dato-contacto p,
+    body.dark .texto-contacto { color:#94a3b8; }
+    body.dark .form-contacto-wrap { background:#1a1a2e; border-color:#2d2d4a; }
+    body.dark .form-contacto-wrap .form-control { background:#0f0f1a; border-color:#2d2d4a; color:#e2e8f0; }
+    body.dark .form-contacto-wrap .form-control:focus { border-color:#7c3aed; }
+    body.dark .form-contacto-wrap .form-control::placeholder { color:#6b7280; }
+  </style>
 </head>
-
 <body>
-
 <div id="header"></div>
 <div id="modal-container"></div>
 
-
 <section class="seccion-contacto">
+  <div class="container">
+    <div class="row gy-5 align-items-start">
+      <!-- Info -->
+      <div class="col-lg-5">
+        <span class="etiqueta-contacto">Hablemos</span>
+        <h1 class="contacto-titulo">Contáctanos</h1>
+        <p class="texto-contacto mb-4">Estamos aquí para ayudarte. Si tienes dudas sobre cursos, registro, soporte o cualquier consulta, escríbenos.</p>
 
-    <div class="contenedor-contacto">
-
-        <div class="info-contacto">
-
-            <span class="etiqueta-contacto">Hablemos</span>
-
-            <h2>Contáctanos</h2>
-
-            <p class="texto-contacto">
-                Estamos aquí para ayudarte. Si tienes dudas sobre cursos,
-                registro, soporte o cualquier consulta, escríbenos.
-            </p>
-
-            <div class="dato-contacto">
-                <h4>Correo</h4>
-                <p>enit_academy@gmail.com</p>
-            </div>
-
-            <div class="dato-contacto">
-                <h4>Teléfono</h4>
-                <p>+51 914 237 616</p>
-            </div>
-
-
-            <div class="dato-contacto">
-                <h4>Ubicación</h4>
-                <p>Villa El Salvador, Lima-Perú</p>
-            </div>
-
+        <div class="dato-contacto">
+          <div class="dato-icono"><i class="fa-solid fa-envelope"></i></div>
+          <div><h4>Correo</h4><p>enit_academy@gmail.com</p></div>
         </div>
-
-
-        <div class="formulario-contacto">
-
-            <h3>Envíanos un mensaje</h3>
-
-            <form id="form-contacto">
-
-    <div class="grupo-campo">
-        <input type="text" id="nombre" placeholder="Nombre completo" required>
-    </div>
-
-    <div class="grupo-campo">
-        <input type="email" id="correo" placeholder="Correo electrónico" required>
-    </div>
-
-    <div class="grupo-campo">
-        <input type="text" id="asunto" placeholder="Asunto" required>
-    </div>
-
-    <div class="grupo-campo">
-        <textarea id="mensaje" placeholder="Escribe tu mensaje" required></textarea>
-    </div>
-
-    <button type="submit">Enviar Mensaje</button>
-    <div id="mensaje-exito" class="mensaje-exito">
-    <i class="fas fa-check-circle"></i>
-    ¡Tu mensaje fue enviado correctamente!
-</div>
-    
-
-</form>
-
+        <div class="dato-contacto">
+          <div class="dato-icono"><i class="fa-solid fa-phone"></i></div>
+          <div><h4>Teléfono</h4><p>+51 914 237 616</p></div>
         </div>
-
+        <div class="dato-contacto">
+          <div class="dato-icono"><i class="fa-solid fa-location-dot"></i></div>
+          <div><h4>Ubicación</h4><p>Villa El Salvador, Lima — Perú</p></div>
+        </div>
+      </div>
+      <!-- Formulario -->
+      <div class="col-lg-7">
+        <div class="form-contacto-wrap">
+          <h3><i class="fa-solid fa-paper-plane me-2"></i>Envíanos un mensaje</h3>
+          <form id="form-contacto">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <input type="text" id="nombre" class="form-control" placeholder="Nombre completo" required>
+              </div>
+              <div class="col-sm-6">
+                <input type="email" id="correo" class="form-control" placeholder="Correo electrónico" required>
+              </div>
+              <div class="col-12">
+                <input type="text" id="asunto" class="form-control" placeholder="Asunto" required>
+              </div>
+              <div class="col-12">
+                <textarea id="mensaje" class="form-control" rows="5" placeholder="Escribe tu mensaje..." required></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn-enviar"><i class="fa-solid fa-paper-plane me-2"></i>Enviar Mensaje</button>
+              </div>
+            </div>
+          </form>
+          <div id="mensaje-exito" class="mensaje-exito"><i class="fa-solid fa-circle-check"></i> ¡Tu mensaje fue enviado correctamente!</div>
+        </div>
+      </div>
     </div>
-
+  </div>
 </section>
 
-
 <div id="footer"></div>
-
-  <script type="module" src="../js/header_footer.js"></script>
-<script type="module" src="../js/contactanos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="../js/header_footer.js"></script>
+<script type="module" src="../js/contactanos.js"></script>
 <script type="module" src="/js/login.js"></script>
 </body>
-
 </html>

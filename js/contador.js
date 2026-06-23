@@ -47,28 +47,20 @@ async function cargarStats() {
     if (elCursos) elCursos.textContent = (totalCursos || 0).toLocaleString("es-PE");
   } catch (e) {
     console.warn("stats no disponibles", e);
+    const elEst    = document.getElementById("totalEstudiantes");
+    const elCursos = document.getElementById("totalCursos");
+    if (elEst)    elEst.textContent    = "0";
+    if (elCursos) elCursos.textContent = "0";
   }
 }
 
-/* ── Modo oscuro ─── */
-function initModoOscuro() {
-  const btn = document.getElementById("modoOscuro");
-  if (!btn) { setTimeout(initModoOscuro, 300); return; }
-
-  if (localStorage.getItem("modoOscuro") === "true") {
-    document.body.classList.add("dark");
-    const i = btn.querySelector("i");
-    if (i) { i.classList.remove("fa-moon"); i.classList.add("fa-sun"); }
-  }
-
-  btn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-    const i = btn.querySelector("i");
-    if (i) { i.classList.toggle("fa-moon"); i.classList.toggle("fa-sun"); }
-    localStorage.setItem("modoOscuro", document.body.classList.contains("dark"));
+// Esperar a que el DOM esté listo antes de ejecutar
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    contarVisita();
+    cargarStats();
   });
+} else {
+  contarVisita();
+  cargarStats();
 }
-
-contarVisita();
-cargarStats();
-initModoOscuro();

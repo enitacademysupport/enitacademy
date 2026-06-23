@@ -1,139 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ENIT Academy — Panel Docente</title>
-  <link rel="stylesheet" href="../css/header_footer.css">
-  <link rel="stylesheet" href="../css/panel.css">
+  <script>const dm=localStorage.getItem("modoOscuro")==="true";if(dm){document.documentElement.setAttribute("data-bs-theme","dark");document.documentElement.classList.add("dark");}</script>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
-  <style>
-    /* ── Hero saludo ── */
-    .saludo-hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.2rem;
-      background: linear-gradient(135deg, #fff0f8 0%, #f0ecff 100%);
-      border: 1.5px solid #f0d6e8;
-      border-radius: 20px;
-      padding: 1.6rem 2rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-    .saludo-texto h2 {
-      font-family: 'Paytone One', sans-serif;
-      font-size: clamp(1.2rem, 3vw, 1.7rem);
-      color: #2a1a33;
-      margin-bottom: 0.25rem;
-    }
-    .saludo-texto h2 span {
-      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .saludo-texto p { font-size: 0.9rem; color: #6b5478; }
-    .saludo-reloj { text-align: right; flex-shrink: 0; }
-    .reloj-hora {
-      font-family: 'Paytone One', sans-serif;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      background: linear-gradient(135deg, #ff4fa0, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.1;
-      letter-spacing: 2px;
-    }
-    .reloj-fecha { font-size: 0.82rem; color: #6b5478; font-weight: 600; margin-top: 0.2rem; }
-    @media (max-width: 540px) {
-      .saludo-hero { flex-direction: column; align-items: flex-start; padding: 1.3rem; }
-      .saludo-reloj { text-align: left; }
-    }
-
-    /* ── Badge de visibilidad ── */
-    .badge-visibilidad {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.18rem 0.65rem;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
-    .badge-visibilidad.publico  { background: #e0f7ef; color: #1aaa6b; }
-    .badge-visibilidad.privado  { background: #ede9fe; color: #7c3aed; }
-
-    /* Badge grande en detalle */
-    #cursoVisibilidad {
-      font-size: 0.8rem;
-      padding: 0.28rem 0.85rem;
-      margin-top: 0.5rem;
-      display: inline-flex;
-    }
-
-    /* ── Selector de visibilidad en el formulario ── */
-    .visibilidad-opciones {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
-    .visibilidad-opcion {
-      flex: 1;
-      min-width: 140px;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.75rem 1rem;
-      border: 2px solid var(--borde);
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 0.87rem;
-      font-weight: 700;
-      color: var(--texto-claro);
-      background: var(--blanco);
-      transition: border-color 0.15s, color 0.15s, background 0.15s;
-      user-select: none;
-    }
-    .visibilidad-opcion input { display: none; }
-    .visibilidad-opcion i { font-size: 1.1rem; }
-    .visibilidad-opcion:has(input:checked).op-publico  { border-color: #1aaa6b; color: #1aaa6b; background: #f0fdf8; }
-    .visibilidad-opcion:has(input:checked).op-privado  { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
-    .visibilidad-opcion:hover { border-color: var(--rosa); color: var(--rosa); background: #ffe0f0; }
-    .vis-desc { font-size: 0.74rem; font-weight: 600; color: inherit; opacity: 0.75; display: block; }
-
-    /* Zona de acciones de visibilidad en detalle */
-    .zona-visibilidad {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    .btn-vis-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.42rem 1rem;
-      border: 1.5px solid var(--borde);
-      border-radius: 50px;
-      background: none;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--texto-claro);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-vis-toggle:hover { border-color: var(--rosa); color: var(--rosa); background: #ffe0f0; }
-  </style>
+  <link rel="stylesheet" href="../css/header_footer.css">
+  <link rel="stylesheet" href="../css/panel.css">
 </head>
 <body>
   <div id="header"></div>
   <div id="fondoSidebar" class="fondo-sidebar"></div>
 
   <main class="panel-contenedor">
+    <!-- SIDEBAR -->
     <aside class="panel-sidebar">
       <div class="perfil-sidebar">
         <div class="avatar-sidebar"><i class="fa-solid fa-chalkboard-teacher"></i></div>
@@ -144,26 +28,25 @@
       </div>
       <nav class="nav-sidebar">
         <button class="nav-btn activo" data-vista="cursos"><i class="fa-solid fa-book-open"></i> Mis cursos</button>
-        <button class="nav-btn" data-vista="crear"><i class="fa-solid fa-plus"></i> Crear curso</button>
         <button class="nav-btn" data-vista="estudiantes"><i class="fa-solid fa-users"></i> Estudiantes</button>
         <button class="nav-btn" data-vista="perfil"><i class="fa-solid fa-user-pen"></i> Mi perfil</button>
-        <button class="nav-btn" id="btnVistaEstudiante">
-    <i class="fa-solid fa-eye"></i> Ver como estudiante
-</button>
-        
       </nav>
+      <!-- Vista como estudiante -->
+      <button class="btn-vista-est" id="btnVistaEstudiante" title="Ver como estudiante">
+        <i class="fa-solid fa-graduation-cap"></i> Vista estudiante
+      </button>
       <button class="btn-salir" id="btnCerrarSesion2"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
     </aside>
 
     <div class="panel-cuerpo">
+      <!-- BARRA MÓVIL -->
       <div class="barra-movil">
         <button id="btnAbrirSidebar" class="btn-hamburguesa-panel"><span></span><span></span><span></span></button>
         <span class="titulo-panel">Panel Docente</span>
       </div>
 
       <section class="panel-seccion">
-
-        <!-- SALUDO + RELOJ -->
+        <!-- SALUDO -->
         <div class="saludo-hero">
           <div class="saludo-texto">
             <h2 id="saludoH2">¡Hola, <span>Docente</span>! 👋</h2>
@@ -179,8 +62,8 @@
         <div id="vista-cursos" class="vista">
           <div class="vista-cabecera">
             <h2>Mis cursos</h2>
-            <button class="btn-primario btn-pequeno" onclick="document.querySelector('[data-vista=crear]').click()">
-              <i class="fa-solid fa-plus"></i> Nuevo
+            <button class="btn-primario btn-pequeno" onclick="abrirModalCrearCurso()">
+              <i class="fa-solid fa-plus"></i> Nuevo curso
             </button>
           </div>
           <div id="listaCursos" class="grilla-cursos">
@@ -191,16 +74,13 @@
         <!-- ═══ Vista: detalle ═══ -->
         <div id="vista-detalle" class="vista oculto">
           <button class="btn-volver" id="btnVolverCursos"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-
           <div class="detalle-cabecera">
+            
             <div>
               <span id="cursoNivel" class="etiqueta-nivel"></span>
               <h2 id="cursoTitulo"></h2>
               <p id="cursoDesc" class="texto-descripcion"></p>
-              <!-- Badge de visibilidad actual -->
-              <span id="cursoVisibilidad" class="badge-visibilidad privado">
-                <i class="fa-solid fa-lock"></i> Con código — acceso restringido
-              </span>
+              <span id="cursoVisibilidad" class="badge-visibilidad privado"><i class="fa-solid fa-lock"></i> Con código</span>
             </div>
             <div class="caja-codigo">
               <p>Código del curso</p>
@@ -208,18 +88,11 @@
               <button id="btnCopiarCodigo" class="btn-icono" title="Copiar"><i class="fa-regular fa-copy"></i></button>
             </div>
           </div>
-
-          <!-- Zona de visibilidad + eliminar -->
           <div class="zona-visibilidad">
-            <button class="btn-vis-toggle" id="btnCambiarVisibilidad">
-              <i class="fa-solid fa-globe"></i> Hacer público
-            </button>
-            <button class="btn-peligro btn-pequeno" id="btnEliminarCurso" style="margin-bottom:0;">
-              <i class="fa-solid fa-trash"></i> Eliminar curso
-            </button>
+            <button class="btn-vis-toggle" id="btnCambiarVisibilidad"><i class="fa-solid fa-globe"></i> Hacer público</button>
+            <button class="btn-peligro btn-pequeno" id="btnEliminarCurso" style="margin-bottom:0;"><i class="fa-solid fa-trash"></i> Eliminar</button>
           </div>
           <div id="alertaVisibilidad" class="alerta" style="margin-bottom:0.8rem;"></div>
-
           <!-- Pestañas -->
           <div class="pestanas-nav">
             <button class="pestana-btn activa" data-pestana="alumnos"><i class="fa-solid fa-users"></i> Alumnos</button>
@@ -227,7 +100,6 @@
             <button class="pestana-btn" data-pestana="archivos"><i class="fa-solid fa-folder-open"></i> Archivos</button>
             <button class="pestana-btn" data-pestana="tareas"><i class="fa-solid fa-clipboard-list"></i> Tareas</button>
           </div>
-
           <div class="pestana-panel" data-panel="alumnos">
             <div id="listaAlumnosCurso" class="lista-alumnos"></div>
           </div>
@@ -243,9 +115,27 @@
           </div>
           <div class="pestana-panel oculto" data-panel="archivos">
             <div class="formulario-inline">
-              <h3>Agregar archivo</h3>
+              <h3>Agregar material</h3>
               <div class="campo"><label>Nombre del archivo</label><input type="text" id="archivoNombre" placeholder="Ej: Presentación unidad 1"></div>
-              <div class="campo"><label>Enlace (URL)</label><input type="url" id="archivoUrl" placeholder="https://..."></div>
+              <!-- Tabs: URL o archivo PC -->
+              <div class="tabs-archivo-tipo">
+                <button type="button" class="tab-arch activo-tab" data-arch="url"><i class="fa-solid fa-link"></i> URL / enlace</button>
+                <button type="button" class="tab-arch" data-arch="pc"><i class="fa-solid fa-upload"></i> Subir desde PC</button>
+              </div>
+              <div id="arch-url" class="arch-panel">
+                <div class="campo mt-2"><label>Enlace (URL)</label><input type="url" id="archivoUrl" placeholder="https://..."></div>
+              </div>
+              <div id="arch-pc" class="arch-panel oculto">
+                <div class="campo mt-2">
+                  <label>Selecciona un archivo</label>
+                  <input type="file" id="archivoFile" accept="*/*" class="input-file">
+                  <small class="nota">Se subirá al almacenamiento del curso (máx. 50 MB).</small>
+                </div>
+                <div class="progreso-upload oculto" id="progresoUpload">
+                  <div class="progreso-bar"><div class="progreso-fill" id="progresoFill"></div></div>
+                  <span id="progresoTexto">Subiendo...</span>
+                </div>
+              </div>
               <div id="alertaArchivo" class="alerta"></div>
               <button id="btnSubirArchivo" class="btn-primario"><i class="fa-solid fa-cloud-arrow-up"></i> Agregar</button>
             </div>
@@ -254,81 +144,30 @@
           <div class="pestana-panel oculto" data-panel="tareas">
             <div class="formulario-inline">
               <h3>Crear tarea</h3>
-              <div class="fila-formulario">
-                <div class="campo"><label>Título</label><input type="text" id="tareaTitulo" placeholder="Título de la tarea"></div>
-                <div class="campo"><label>Fecha de entrega</label><input type="date" id="tareaFecha"></div>
+              <div class="row g-2">
+                <div class="col-sm-8"><div class="campo"><label>Título</label><input type="text" id="tareaTitulo" placeholder="Título de la tarea"></div></div>
+                <div class="col-sm-4"><div class="campo"><label>Fecha límite</label><input type="date" id="tareaFecha"></div></div>
               </div>
               <div class="campo"><label>Descripción</label><textarea id="tareaDesc" rows="2" placeholder="Instrucciones..."></textarea></div>
-              <div class="campo campo-corto"><label>Puntos</label><input type="number" id="tareaPuntos" placeholder="Ej: 20" min="0"></div>
+              <!-- Tabs: URL o archivo PC para tarea -->
+              <div class="tabs-archivo-tipo mt-2">
+                <button type="button" class="tab-tar activo-tab" data-tar="sinarchivo"><i class="fa-solid fa-pen"></i> Solo texto</button>
+                <button type="button" class="tab-tar" data-tar="urltarea"><i class="fa-solid fa-link"></i> Añadir enlace</button>
+                <button type="button" class="tab-tar" data-tar="pctarea"><i class="fa-solid fa-upload"></i> Adjuntar archivo</button>
+              </div>
+              <div id="tar-sinarchivo" class="tar-panel"></div>
+              <div id="tar-urltarea" class="tar-panel oculto">
+                <div class="campo mt-2"><label>Enlace de referencia</label><input type="url" id="tareaUrl" placeholder="https://..."></div>
+              </div>
+              <div id="tar-pctarea" class="tar-panel oculto">
+                <div class="campo mt-2"><label>Adjuntar archivo</label><input type="file" id="tareaFile" class="input-file"></div>
+              </div>
+              <div class="campo campo-corto mt-2"><label>Puntos</label><input type="number" id="tareaPuntos" placeholder="Ej: 20" min="0"></div>
               <div id="alertaTarea" class="alerta"></div>
               <button id="btnCrearTarea" class="btn-primario"><i class="fa-solid fa-plus"></i> Crear tarea</button>
             </div>
             <div id="listaTareasCurso" class="lista-tareas"></div>
           </div>
-        </div>
-
-        <!-- ═══ Vista: crear curso ═══ -->
-        <div id="vista-crear" class="vista oculto">
-          <h2>Crear nuevo curso</h2>
-          <form id="formCrearCurso" class="formulario" novalidate>
-            <div class="fila-formulario">
-              <div class="campo">
-                <label for="cNombre">Nombre del curso</label>
-                <input type="text" id="cNombre" placeholder="Ej: Inglés básico A1">
-                <small class="error" id="errCNombre"></small>
-              </div>
-              <div class="campo">
-                <label for="cNivel">Nivel</label>
-                <select id="cNivel">
-                  <option value="">— Selecciona —</option>
-                  <option value="basico">Básico</option>
-                  <option value="intermedio">Intermedio</option>
-                  <option value="avanzado">Avanzado</option>
-                </select>
-                <small class="error" id="errCNivel"></small>
-              </div>
-            </div>
-            <div class="campo">
-              <label for="cDesc">Descripción</label>
-              <textarea id="cDesc" rows="3" placeholder="¿De qué trata el curso?"></textarea>
-            </div>
-
-            <!-- ── Visibilidad ─────────────────────────────────────────── -->
-            <div class="campo">
-              <label>Visibilidad del curso</label>
-              <div class="visibilidad-opciones">
-                <label class="visibilidad-opcion op-privado">
-                  <input type="radio" name="cVisibilidad" value="privado" checked>
-                  <i class="fa-solid fa-lock"></i>
-                  <span>Con código<span class="vis-desc">Solo quien tenga el código puede inscribirse</span></span>
-                </label>
-                <label class="visibilidad-opcion op-publico">
-                  <input type="radio" name="cVisibilidad" value="publico">
-                  <i class="fa-solid fa-globe"></i>
-                  <span>Público<span class="vis-desc">Aparece en el inicio para todos</span></span>
-                </label>
-              </div>
-            </div>
-            <!-- ─────────────────────────────────────────────────────────── -->
-
-            <div class="campo">
-              <label>Asignar estudiantes</label>
-              <div class="tabs-asignar">
-                <button type="button" class="tab-asignar activo-tab" data-panel-tab="lista"><i class="fa-solid fa-list"></i> Seleccionar</button>
-                <button type="button" class="tab-asignar" data-panel-tab="codigo-info"><i class="fa-solid fa-key"></i> Por código</button>
-              </div>
-              <div id="panel-lista" class="panel-tab">
-                <input type="text" id="buscarEstudiante" placeholder="Buscar estudiante...">
-                <div id="listaCheckEstudiantes" class="lista-check"></div>
-              </div>
-              <div id="panel-codigo-info" class="panel-tab oculto">
-                <p class="info-codigo"><i class="fa-solid fa-circle-info"></i> Al guardar el curso se genera un código único. Compártelo con tus estudiantes para que se inscriban.</p>
-              </div>
-            </div>
-
-            <div id="alertaCrearCurso" class="alerta"></div>
-            <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar curso</button>
-          </form>
         </div>
 
         <!-- ═══ Vista: estudiantes ═══ -->
@@ -350,22 +189,10 @@
               </div>
             </div>
             <div class="fila-formulario">
-              <div class="campo">
-                <label for="pNombre">Nombre</label>
-                <input type="text" id="pNombre">
-                <small class="error" id="errPNombre"></small>
-              </div>
-              <div class="campo">
-                <label for="pApellido">Apellido</label>
-                <input type="text" id="pApellido">
-                <small class="error" id="errPApellido"></small>
-              </div>
+              <div class="campo"><label for="pNombre">Nombre</label><input type="text" id="pNombre"><small class="error" id="errPNombre"></small></div>
+              <div class="campo"><label for="pApellido">Apellido</label><input type="text" id="pApellido"><small class="error" id="errPApellido"></small></div>
             </div>
-            <div class="campo">
-              <label for="pEmail">Correo</label>
-              <input type="email" id="pEmail" disabled>
-              <small class="nota">El correo no se puede cambiar.</small>
-            </div>
+            <div class="campo"><label for="pEmail">Correo</label><input type="email" id="pEmail" disabled><small class="nota">El correo no se puede cambiar.</small></div>
             <hr class="divisor">
             <h3>Cambiar contraseña</h3>
             <div class="campo">
@@ -381,64 +208,213 @@
           </form>
         </div>
 
+        <!-- ═══ Vista: crear curso placeholder ═══ -->
+        <div id="vista-crear" class="vista oculto"></div>
+
       </section>
     </div>
   </main>
 
+  <!-- ══════════════════════════════════════════
+       MODAL — Crear nuevo curso
+  ══════════════════════════════════════════════ -->
+  <div id="modalCrearCurso" class="modal-overlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2><i class="fa-solid fa-plus-circle"></i> Crear nuevo curso</h2>
+        <button class="modal-cerrar" id="btnCerrarModalCurso" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-cuerpo">
+        <form id="formCrearCurso" class="formulario" novalidate>
+          <div class="row g-3">
+            <div class="col-sm-8">
+              <div class="campo">
+                <label for="cNombre">Nombre del curso</label>
+                <input type="text" id="cNombre" placeholder="Ej: Inglés básico A1">
+                <small class="error" id="errCNombre"></small>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="campo">
+                <label for="cNivel">Nivel</label>
+                <select id="cNivel">
+                  <option value="">— Selecciona —</option>
+                  <option value="basico">Básico</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                </select>
+                <small class="error" id="errCNivel"></small>
+              </div>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="cDesc">Descripción</label>
+            <textarea id="cDesc" rows="2" placeholder="¿De qué trata el curso?"></textarea>
+          </div>
+          <!-- Imagen del curso -->
+          <div class="campo">
+            <label>Imagen del curso <span class="nota-opt">(opcional)</span></label>
+            <div class="drop-imagen" id="dropImagen">
+              <i class="fa-solid fa-image"></i>
+              <span>Arrastra una imagen o <label for="cImagen" style="color:var(--rosa);cursor:pointer;text-decoration:underline;">selecciona</label></span>
+              <input type="file" id="cImagen" accept="image/*" style="display:none;">
+            </div>
+            <div id="prevImagen" style="display:none;margin-top:.6rem;">
+              <img id="imgPreview" src="" alt="Preview" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px;">
+              <button type="button" id="btnQuitarImg" class="btn-texto-rosa mt-1"><i class="fa-solid fa-xmark"></i> Quitar imagen</button>
+            </div>
+          </div>
+          <!-- Visibilidad -->
+          <div class="campo">
+            <label>Visibilidad del curso</label>
+            <div class="visibilidad-opciones">
+              <label class="visibilidad-opcion op-privado">
+                <input type="radio" name="cVisibilidad" value="privado" checked>
+                <i class="fa-solid fa-lock"></i>
+                <span>Con código<span class="vis-desc">Solo quien tenga el código</span></span>
+              </label>
+              <label class="visibilidad-opcion op-publico">
+                <input type="radio" name="cVisibilidad" value="publico">
+                <i class="fa-solid fa-globe"></i>
+                <span>Público<span class="vis-desc">Aparece en el inicio</span></span>
+              </label>
+            </div>
+          </div>
+          <!-- Asignar estudiantes -->
+          <div class="campo">
+            <label>Asignar estudiantes</label>
+            <div class="tabs-asignar">
+              <button type="button" class="tab-asignar activo-tab" data-panel-tab="lista"><i class="fa-solid fa-list"></i> Seleccionar</button>
+              <button type="button" class="tab-asignar" data-panel-tab="codigo-info"><i class="fa-solid fa-key"></i> Por código</button>
+            </div>
+            <div id="panel-lista" class="panel-tab">
+              <input type="text" id="buscarEstudiante" placeholder="Buscar estudiante...">
+              <div id="listaCheckEstudiantes" class="lista-check"></div>
+            </div>
+            <div id="panel-codigo-info" class="panel-tab oculto">
+              <p class="info-codigo"><i class="fa-solid fa-circle-info"></i> Al guardar se genera un código único. Compártelo con tus estudiantes.</p>
+            </div>
+          </div>
+          <div id="alertaCrearCurso" class="alerta"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secundario" id="btnCancelarModalCurso">Cancelar</button>
+            <button type="submit" class="btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar curso</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+ 
+
   <footer id="footer"></footer>
 
+  <script>
+    /* ── Modal crear curso ── */
+    function abrirModalCrearCurso() {
+      document.getElementById("modalCrearCurso").style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+    function cerrarModalCrearCurso() {
+      document.getElementById("modalCrearCurso").style.display = "none";
+      document.body.style.overflow = "";
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("btnCerrarModalCurso")?.addEventListener("click", cerrarModalCrearCurso);
+      document.getElementById("btnCancelarModalCurso")?.addEventListener("click", cerrarModalCrearCurso);
+      document.getElementById("modalCrearCurso")?.addEventListener("click", e => { if (e.target.id === "modalCrearCurso") cerrarModalCrearCurso(); });
+
+      /* ── Preview imagen ── */
+      const inputImg = document.getElementById("cImagen");
+      const drop     = document.getElementById("dropImagen");
+      const prev     = document.getElementById("prevImagen");
+      const imgPrev  = document.getElementById("imgPreview");
+      const btnQuitar= document.getElementById("btnQuitarImg");
+
+      function mostrarPreview(file) {
+        if (!file || !file.type.startsWith("image/")) return;
+        const url = URL.createObjectURL(file);
+        imgPrev.src = url;
+        drop.style.display = "none";
+        prev.style.display = "block";
+      }
+      inputImg?.addEventListener("change", e => mostrarPreview(e.target.files[0]));
+      drop?.addEventListener("click", () => inputImg?.click());
+      drop?.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("drag-over"); });
+      drop?.addEventListener("dragleave", () => drop.classList.remove("drag-over"));
+      drop?.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("drag-over"); mostrarPreview(e.dataTransfer.files[0]); inputImg.files = e.dataTransfer.files; });
+      btnQuitar?.addEventListener("click", () => { inputImg.value = ""; prev.style.display = "none"; drop.style.display = "flex"; });
+
+      /* ── Tabs crear curso ── */
+      document.addEventListener("click", function(e) {
+        const btn = e.target.closest(".tab-asignar");
+        if (!btn) return;
+        document.querySelectorAll(".tab-asignar").forEach(b => b.classList.remove("activo-tab"));
+        document.querySelectorAll(".panel-tab").forEach(p => p.classList.add("oculto"));
+        btn.classList.add("activo-tab");
+        document.getElementById("panel-" + btn.dataset.panelTab)?.classList.remove("oculto");
+      });
+
+      /* ── Tabs archivos (url/pc) ── */
+      document.addEventListener("click", function(e) {
+        const btn = e.target.closest(".tab-arch");
+        if (!btn) return;
+        document.querySelectorAll(".tab-arch").forEach(b => b.classList.remove("activo-tab"));
+        document.querySelectorAll(".arch-panel").forEach(p => p.classList.add("oculto"));
+        btn.classList.add("activo-tab");
+        document.getElementById("arch-" + btn.dataset.arch)?.classList.remove("oculto");
+      });
+
+      /* ── Tabs tareas (texto/url/archivo) ── */
+      document.addEventListener("click", function(e) {
+        const btn = e.target.closest(".tab-tar");
+        if (!btn) return;
+        document.querySelectorAll(".tab-tar").forEach(b => b.classList.remove("activo-tab"));
+        document.querySelectorAll(".tar-panel").forEach(p => p.classList.add("oculto"));
+        btn.classList.add("activo-tab");
+        document.getElementById("tar-" + btn.dataset.tar)?.classList.remove("oculto");
+      });
+
+
+
+      /* ESC cierra todos los modales */
+      document.addEventListener("keydown", e => {
+        if (e.key !== "Escape") return;
+        cerrarModalCrearCurso();
+        document.body.style.overflow = "";
+      });
+
+      /* ── Reloj ── */
+      const DIAS  = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+      const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+      function actualizarReloj() {
+        const ahora = new Date();
+        const hh = String(ahora.getHours()).padStart(2,"0"), mm = String(ahora.getMinutes()).padStart(2,"0"), ss = String(ahora.getSeconds()).padStart(2,"0");
+        const elH = document.getElementById("relojHora"), elF = document.getElementById("relojFecha");
+        if (elH) elH.textContent = hh+":"+mm+":"+ss;
+        if (elF) elF.textContent = DIAS[ahora.getDay()]+", "+ahora.getDate()+" de "+MESES[ahora.getMonth()]+" "+ahora.getFullYear();
+      }
+      actualizarReloj(); setInterval(actualizarReloj, 1000);
+
+      /* ── Saludo ── */
+      function aplicarSaludo() {
+        const nombre = (document.getElementById("sideNombre")?.textContent||"").split(" ")[0];
+        if (!nombre || nombre==="Cargando...") { setTimeout(aplicarSaludo,300); return; }
+        const h=new Date().getHours(), emoji=h<12?"☀️":h<19?"🌤️":"🌙";
+        const gr=h<12?"¡Buenos días":h<19?"¡Buenas tardes":"¡Buenas noches";
+        const frases=["Empieza el día revisando tus cursos.","Recuerda revisar las entregas de tus estudiantes.","Buen momento para publicar un anuncio.","Gracias por dedicar tu tiempo a enseñar. 💪"];
+        const frase=frases[h<12?0:h<15?1:h<19?2:3];
+        const h2=document.getElementById("saludoH2"), p=document.getElementById("saludoFrase");
+        if(h2) h2.innerHTML=gr+", <span>"+nombre+"</span>! "+emoji;
+        if(p) p.textContent=frase;
+      }
+      setTimeout(aplicarSaludo,500);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="../js/header_footer.js"></script>
   <script type="module" src="../js/panel_docente.js"></script>
-
-  <script>
-    /* Tabs crear curso */
-    document.addEventListener("click", function(e) {
-      const btn = e.target.closest(".tab-asignar");
-      if (!btn) return;
-      document.querySelectorAll(".tab-asignar").forEach(b => b.classList.remove("activo-tab"));
-      document.querySelectorAll(".panel-tab").forEach(p => p.classList.add("oculto"));
-      btn.classList.add("activo-tab");
-      document.getElementById("panel-" + btn.dataset.panelTab)?.classList.remove("oculto");
-    });
-
-    /* Reloj */
-    const DIAS  = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
-    const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-    function actualizarReloj() {
-      const ahora = new Date();
-      const hh = String(ahora.getHours()).padStart(2,"0");
-      const mm = String(ahora.getMinutes()).padStart(2,"0");
-      const ss = String(ahora.getSeconds()).padStart(2,"0");
-      const relojHora  = document.getElementById("relojHora");
-      const relojFecha = document.getElementById("relojFecha");
-      if (relojHora)  relojHora.textContent  = hh + ":" + mm + ":" + ss;
-      if (relojFecha) relojFecha.textContent =
-        DIAS[ahora.getDay()] + ", " + ahora.getDate() + " de " + MESES[ahora.getMonth()] + " " + ahora.getFullYear();
-    }
-    actualizarReloj();
-    setInterval(actualizarReloj, 1000);
-
-    /* Saludo */
-    function aplicarSaludo() {
-      const nombre = (document.getElementById("sideNombre")?.textContent || "").split(" ")[0];
-      if (!nombre || nombre === "Cargando...") { setTimeout(aplicarSaludo, 300); return; }
-      const h = new Date().getHours();
-      const emoji    = h < 12 ? "☀️" : h < 19 ? "🌤️" : "🌙";
-      const greeting = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
-      const frases = [
-        "Empieza el día revisando tus cursos.",
-        "Recuerda revisar las entregas de tus estudiantes.",
-        "Buen momento para publicar un anuncio.",
-        "Gracias por dedicar tu tiempo a enseñar. 💪"
-      ];
-      const frase = frases[h < 12 ? 0 : h < 15 ? 1 : h < 19 ? 2 : 3];
-      const h2 = document.getElementById("saludoH2");
-      const p  = document.getElementById("saludoFrase");
-      if (h2) h2.innerHTML = greeting + ", <span>" + nombre + "</span>! " + emoji;
-      if (p)  p.textContent = frase;
-    }
-    document.addEventListener("DOMContentLoaded", () => setTimeout(aplicarSaludo, 500));
-  </script>
   <script type="module" src="/js/login.js"></script>
 </body>
 </html>

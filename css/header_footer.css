@@ -712,3 +712,26 @@
     display: none !important;
   }
 }
+/* ══════════════════════════════════════════════
+   MODO OSCURO — Header y Footer
+   ══════════════════════════════════════════════ */
+body.dark .barra-nav,
+body.dark .encabezado { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
+body.dark .menu-nav li a { color: #c4b5fd !important; }
+body.dark .menu-nav li a:hover { color: #e879f9 !important; background: #2d2d4a !important; }
+body.dark .logo-texto span { color: #e879f9 !important; }
+body.dark .btn-modo { background: #2d2d4a !important; color: #f1c40f !important; border-color: #3d3d6a !important; }
+body.dark .dropdown-usuario { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important; }
+body.dark .opcion-dropdown { color: #e2e8f0 !important; }
+body.dark .opcion-dropdown:hover { background: #2d2d4a !important; }
+body.dark .caja-usuario { background: #2d2d4a !important; border-color: #3d3d6a !important; }
+body.dark .usuario-nombre { color: #f0f0ff !important; }
+body.dark .usuario-rol { color: #a78bfa !important; }
+body.dark .separador-dropdown { border-color: #2d2d4a !important; }
+body.dark .footer-main { background: #0a0a14 !important; border-color: #2d2d4a !important; }
+body.dark .fondo-menu { background: rgba(0,0,0,0.7) !important; }
+body.dark .btn-hamburguesa span { background: #e2e8f0 !important; }
+
+
+/* ── html root dark (anti-flash) ── */
+html.dark body { background: #0f0f1a !important; }
