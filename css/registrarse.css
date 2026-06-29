@@ -365,3 +365,13 @@ body {
 
   .rol-opciones { justify-content: center; }
 }
+/* ══ MODO OSCURO ══════════════════════════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .registro-caja { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 20px 60px rgba(0,0,0,0.4) !important; }
+body.dark .registro-caja h2 { color: #f0f0ff !important; }
+body.dark .campo label { color: #c4b5fd !important; }
+body.dark .campo input, body.dark .campo select { background: #0f0f1a !important; border-color: #2d2d4a !important; color: #e2e8f0 !important; }
+body.dark .campo input:focus, body.dark .campo select:focus { border-color: #7c3aed !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.18) !important; }
+body.dark .link-login { color: #94a3b8 !important; }
+body.dark .link-login a { color: #c4b5fd !important; }
+html.dark { background: #0f0f1a; }

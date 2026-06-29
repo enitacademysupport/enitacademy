@@ -89,14 +89,12 @@ btnGuardar?.addEventListener("click", async () => {
 
   if (!valido) return;
 
-  btnGuardar.disabled    = true;
-  btnGuardar.textContent = "Guardando...";
+  setLoading(true);
 
   const { error } = await supabase.auth.updateUser({ password: nueva });
 
   if (error) {
-    btnGuardar.disabled  = false;
-    btnGuardar.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar contraseña';
+    setLoading(false);
     mostrarAlerta("error", error.message);
     return;
   }
@@ -107,14 +105,22 @@ btnGuardar?.addEventListener("click", async () => {
   estadoExito.style.display = "flex";
 });
 
-// ── Helpers alerta ─────────────────────────────
+// ── Helpers botón (spinner + label, igual que verificar-email) ─
+function setLoading(on) {
+  btnGuardar.classList.toggle("loading", on);
+  btnGuardar.disabled = on;
+  if (inputNueva)   inputNueva.disabled   = on;
+  if (inputConfirm) inputConfirm.disabled = on;
+}
+
+// ── Helpers alerta (clases .feedback / .error / .success) ─────
 function mostrarAlerta(tipo, msg) {
-  alerta.className = `alerta visible alerta-${tipo}`;
-  alerta.innerHTML = `<i class="fa-solid ${tipo === "ok" ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${msg}`;
+  alerta.className = `feedback ${tipo === "ok" ? "success" : "error"}`;
+  alerta.textContent = msg;
 }
 function ocultarAlerta() {
-  alerta.className = "alerta";
-  alerta.innerHTML = "";
+  alerta.className = "feedback";
+  alerta.textContent = "";
 }
 
 window.addEventListener("error", e => {

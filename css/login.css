@@ -355,3 +355,16 @@ body.dark .cerrar{
     background-color: rgb(15, 12, 48);
 }
 
+
+/* ══ MODO OSCURO — Login/Reset páginas ════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .login-page-wrap { background: #0f0f1a !important; }
+body.dark .login-caja { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important; }
+body.dark .login-caja h2, body.dark .login-formulario h3 { color: #f0f0ff !important; }
+body.dark .campo label { color: #c4b5fd !important; }
+body.dark .campo input { background: #0f0f1a !important; border-color: #2d2d4a !important; color: #e2e8f0 !important; }
+body.dark .campo input:focus { border-color: #7c3aed !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.18) !important; }
+body.dark .cerrar { background: #1a1a2e !important; color: #94a3b8 !important; }
+body.dark .link-registro, body.dark .opciones-login { color: #94a3b8 !important; }
+body.dark .modal-caja { background: #1a1a2e !important; }
+html.dark { background: #0f0f1a; }

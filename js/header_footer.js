@@ -24,26 +24,37 @@ cargarComponente("/paginas/modal_login.html", "modal-container");
 
 // ── Modo oscuro GLOBAL (funciona en todas las páginas) ──────────────────────
 function initModoOscuroGlobal() {
-  if (localStorage.getItem("modoOscuro") === "true") {
-    document.body.classList.add("dark");
-  }
+  // Sincronizar body.dark con lo que ya aplicó el script inline del <head>
+  const esDark = localStorage.getItem("modoOscuro") === "true";
+  aplicarModo(esDark);
+
   const btn = document.getElementById("modoOscuro");
   if (!btn) return;
-  const actualizarIcono = () => {
-    const i = btn.querySelector("i");
-    if (!i) return;
-    if (document.body.classList.contains("dark")) {
-      i.classList.remove("fa-moon"); i.classList.add("fa-sun");
-    } else {
-      i.classList.remove("fa-sun"); i.classList.add("fa-moon");
-    }
-  };
-  actualizarIcono();
+
+  actualizarIconoModo(btn);
+
   btn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-    localStorage.setItem("modoOscuro", document.body.classList.contains("dark"));
-    actualizarIcono();
+    const ahora = !document.body.classList.contains("dark");
+    aplicarModo(ahora);
+    localStorage.setItem("modoOscuro", ahora);
+    actualizarIconoModo(btn);
   });
+}
+
+function aplicarModo(dark) {
+  // body.dark  → nuestros CSS custom
+  document.body.classList.toggle("dark", dark);
+  // html.dark  → anti-flash en páginas sin panel
+  document.documentElement.classList.toggle("dark", dark);
+  // data-bs-theme → Bootstrap oscuro/claro
+  document.documentElement.setAttribute("data-bs-theme", dark ? "dark" : "light");
+}
+
+function actualizarIconoModo(btn) {
+  const i = btn.querySelector("i");
+  if (!i) return;
+  const dark = document.body.classList.contains("dark");
+  i.className = dark ? "fa-solid fa-sun" : "fa-solid fa-moon";
 }
 
 // ── Header ────────────────────────────────────

@@ -2,7 +2,7 @@
    verificar-email.css — página de verificación OTP
    Depende de header_footer.css para las variables :root
    ============================================================ */
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 /* ── Layout de página ── */
 body {
   background: var(--fondo);
@@ -233,3 +233,9 @@ main.verificar-main {
   .otp-input { width: 42px; height: 52px; font-size: 1.3rem; }
   .otp-row   { gap: 6px; }
 }
+/* ══ MODO OSCURO ══════════════════════════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .verificar-caja { background: #1a1a2e !important; border-color: #2d2d4a !important; }
+body.dark .verificar-caja h2 { color: #f0f0ff !important; }
+body.dark .verificar-caja p { color: #94a3b8 !important; }
+html.dark { background: #0f0f1a; }

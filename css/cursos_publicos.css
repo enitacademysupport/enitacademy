@@ -139,3 +139,12 @@
 .enit-toast.toast-ok       { border-color: #a3e6c8; color: #1aaa6b; }
 .enit-toast.toast-error    { border-color: #f9b8d4; color: #d6185a; }
 .enit-toast.toast-info     { border-color: #d4c4fb; color: #7c3aed; }
+
+/* ══ MODO OSCURO ══════════════════════════════ */
+body.dark { background: #0f0f1a !important; color: #e2e8f0 !important; }
+body.dark .cursos-pub-titulo { color: #f0f0ff !important; }
+body.dark .tarjeta-pub { background: #1a1a2e !important; border-color: #2d2d4a !important; }
+body.dark .tarjeta-pub-titulo { color: #f0f0ff !important; }
+body.dark .tarjeta-pub-desc { color: #94a3b8 !important; }
+body.dark .tarjeta-pub-footer { border-color: #2d2d4a !important; color: #64748b !important; }
+html.dark { background: #0f0f1a; }

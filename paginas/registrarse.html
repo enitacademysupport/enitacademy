@@ -6,7 +6,7 @@
   <title>ENIT Academy — Registro</title>
 
     <!-- Aplicar modo oscuro ANTES de renderizar para evitar flash -->
-  <script>if(localStorage.getItem("modoOscuro")==="true")document.documentElement.classList.add("dark"),document.body&&document.body.classList.add("dark");</script>
+  <script>const dm=localStorage.getItem("modoOscuro")==="true";if(dm){document.documentElement.setAttribute("data-bs-theme","dark");document.documentElement.classList.add("dark");}</script>
   <link rel="stylesheet" href="../css/header_footer.css">
   <link rel="stylesheet" href="../css/login.css">
   <link rel="stylesheet" href="/css/index.css">

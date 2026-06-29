@@ -735,3 +735,22 @@ body.dark .btn-hamburguesa span { background: #e2e8f0 !important; }
 
 /* ── html root dark (anti-flash) ── */
 html.dark body { background: #0f0f1a !important; }
+body.dark .footer-main { background: #0a0a14 !important; border-color: #2d2d4a !important; }
+
+/* ── Textos del footer ── */
+body.dark .footer-brand p       { color: #c4b5fd !important; }
+body.dark .footer-col ul li a   { color: #c4b5fd !important; }
+body.dark .footer-col ul li a:hover { color: #e879f9 !important; }
+body.dark .footer-contacto li   { color: #c4b5fd !important; }
+body.dark .footer-bottom        { color: #9178a6 !important; }
+
+/* ── Bordes ── */
+body.dark .footer-grid          { border-color: #2d2d4a !important; }
+body.dark .footer-bottom        { border-color: #2d2d4a !important; }
+
+/* ── Iconos sociales ── */
+body.dark .footer-sociales a {
+  background: #2d2d4a !important;
+  border-color: #3d3d6a !important;
+  color: #c4b5fd !important;
+}

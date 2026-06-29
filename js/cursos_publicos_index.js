@@ -24,6 +24,21 @@ async function cargarCursosPublicos() {
     return;
   }
 
+  // ── Si hay sesión, traer en qué cursos ya está inscrito el usuario ───────
+  let inscritosSet = new Set();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (session) {
+    const { data: inscripciones } = await supabase
+      .from("inscripciones")
+      .select("curso_id")
+      .eq("estudiante_id", session.user.id);
+
+    if (inscripciones) {
+      inscritosSet = new Set(inscripciones.map(i => i.curso_id));
+    }
+  }
+
   // Wrap each card in Bootstrap col
   grid.innerHTML = "<div class=\"row g-3 w-100\">" + cursos.map(c => {
     const wrapper_start = '<div class="col-sm-6 col-lg-4">';
@@ -31,13 +46,28 @@ async function cargarCursosPublicos() {
     const docente = c.perfiles
       ? `${c.perfiles.nombre} ${c.perfiles.apellido}`
       : "Docente ENIT";
+    const yaInscrito = inscritosSet.has(c.id);
+
+    const accionFooter = yaInscrito
+      ? `<span class="badge-inscrito"><i class="fa-solid fa-circle-check"></i> Ya estás inscrito</span>`
+      : `<button
+            class="btn-inscribirse"
+            onclick="abrirModalInscripcion('${c.id}', '${c.nombre.replace(/'/g,"\\'")}')">
+            Inscribirme
+          </button>`;
+
+    const claseTarjeta = yaInscrito ? "tarjeta-pub tarjeta-pub--inscrito" : "tarjeta-pub";
+    const clickTarjeta = yaInscrito
+      ? `onclick="window.location.href='/paginas/panel_estudiante.html?curso=${c.id}'"`
+      : "";
+
     const card = `
-      <div class="tarjeta-pub">
+      <div class="${claseTarjeta}" ${clickTarjeta}>
         ${c.imagen_url
           ? `<img src="${c.imagen_url}" class="tarjeta-pub-img" alt="${c.nombre}">`
           : `<div class="tarjeta-pub-img-placeholder"><i class="fa-solid fa-book-open"></i></div>`}
         <div class="tarjeta-pub-top">
-          ${c.nivel ? `<span class="etiqueta-nivel ${c.nivel}">${c.nivel}</span>` : ""}
+          ${c.nivel ? `<span class="etiqueta-nivel ${c.nivel}">${c.nivel.toUpperCase()}</span>` : ""}
           <span class="badge-visibilidad publico" style="margin-left:auto;">
             <i class="fa-solid fa-globe"></i> Público
           </span>
@@ -46,11 +76,7 @@ async function cargarCursosPublicos() {
         <p class="tarjeta-pub-desc">${c.descripcion || "Sin descripción."}</p>
         <div class="tarjeta-pub-footer">
           <span class="pub-docente"><i class="fa-solid fa-chalkboard-teacher"></i> ${docente}</span>
-          <button
-            class="btn-inscribirse"
-            onclick="abrirModalInscripcion('${c.id}', '${c.nombre.replace(/'/g,"\\'")}')">
-            Inscribirme
-          </button>
+          ${accionFooter}
         </div>
       </div>`;
       return wrapper_start + card + wrapper_end;
@@ -113,7 +139,7 @@ window.abrirModalInscripcion = async function(cursoId, nombreCurso) {
   }
 
   mostrarToast(`¡Inscrito en "${nombreCurso}" exitosamente! 🎉`, "ok");
-  setTimeout(() => { window.location.href = "/paginas/panel_estudiante.html"; }, 1500);
+  setTimeout(() => { window.location.href = `/paginas/panel_estudiante.html?curso=${cursoId}`; }, 1500);
 };
 
 /* ── Retomar inscripción pendiente tras login ─────────────────────────────── */

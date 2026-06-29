@@ -14,10 +14,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Paytone+One&display=swap" rel="stylesheet">
-  <!-- Custom -->
+  <!-- Estilos propios -->
   <link rel="stylesheet" href="/css/header_footer.css">
   <link rel="stylesheet" href="/css/login.css">
   <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/index_popup.css">
 </head>
 <body>
 
@@ -27,9 +28,8 @@
 <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
 <section class="hero-section">
   <div class="container">
-    <div class="row align-items-center min-vh-75 py-5 gy-4">
+    <div class="row align-items-center min-vh-hero py-4 gy-4">
       <div class="col-lg-6 col-md-7">
-        <span class="badge-hero mb-3"><i class="fa-solid fa-graduation-cap me-1"></i> Plataforma educativa de inglés</span>
         <h1 class="titulo-animado" id="tituloBanner" aria-label="Aprende inglés paso a paso">
           <span class="palabra"><span class="letra">A</span><span class="letra">p</span><span class="letra">r</span><span class="letra">e</span><span class="letra">n</span><span class="letra">d</span><span class="letra">e</span></span>
           <span class="palabra"><span class="letra">i</span><span class="letra">n</span><span class="letra">g</span><span class="letra">l</span><span class="letra">é</span><span class="letra">s</span></span>
@@ -47,9 +47,8 @@
         <div class="hero-img-wrap">
           <img src="/imagenes/hero.png" alt="Aprende inglés con ENIT Academy" class="hero-img">
           <div class="hero-blob"></div>
-          <!-- Tarjetas flotantes sobre la imagen -->
           <div class="float-card float-card--1"><i class="fa-solid fa-star"></i> 3 niveles</div>
-          <div class="float-card float-card--2"><i class="fa-solid fa-certificate"></i> Certificados</div>
+          <div class="float-card float-card--2"><i class="fa-solid fa-mobile-screen"></i> 100% online</div>
         </div>
       </div>
     </div>
@@ -60,15 +59,13 @@
 <div class="ticker-cursos">
   <div class="ticker-track">
     <span><i class="fa-solid fa-rocket"></i> Próximamente nuevos cursos</span><span><i class="fa-solid fa-star"></i> Aprende a tu ritmo</span>
-    <span><i class="fa-solid fa-bullseye"></i> Certificados al completar</span><span><i class="fa-solid fa-mobile-screen"></i> 100% online y responsive</span>
+    <span><i class="fa-solid fa-mobile-screen"></i> 100% online</span><span><i class="fa-solid fa-chalkboard-teacher"></i> Docentes especializados</span>
     <span><i class="fa-solid fa-rocket"></i> Próximamente nuevos cursos</span><span><i class="fa-solid fa-star"></i> Aprende a tu ritmo</span>
-    <span><i class="fa-solid fa-bullseye"></i> Certificados al completar</span><span><i class="fa-solid fa-mobile-screen"></i> 100% online y responsive</span>
+    <span><i class="fa-solid fa-mobile-screen"></i> 100% online</span><span><i class="fa-solid fa-chalkboard-teacher"></i> Docentes especializados</span>
   </div>
 </div>
 
-<!-- (Stats movidas dentro de "¿Qué aprenderás?" como columna lateral) -->
-
-<!-- ══ ¿QUÉ APRENDERÁS? — dos columnas asimétricas + stats lateral ═════════ -->
+<!-- ══ ¿QUÉ APRENDERÁS? ════════════════════════════════════════════════════ -->
 <section class="seccion-zigzag">
   <div class="container">
     <div class="zigzag-row zigzag-row--con-stats">
@@ -99,6 +96,7 @@
         </div>
       </div>
       <aside class="stats-aside">
+        <div class="stats-aside-titulo"><i class="fa-solid fa-chart-simple"></i> En números</div>
         <div class="stat-aside-item"><span class="stat-aside-num" id="contadorVisitas">—</span><span class="stat-aside-label">Visitas</span></div>
         <div class="stat-aside-item"><span class="stat-aside-num" id="totalEstudiantes">—</span><span class="stat-aside-label">Estudiantes</span></div>
         <div class="stat-aside-item"><span class="stat-aside-num" id="totalCursos">—</span><span class="stat-aside-label">Cursos</span></div>
@@ -108,7 +106,7 @@
   </div>
 </section>
 
-<!-- ══ NIVELES — franja con fondo propio, curva de entrada ════════════════ -->
+<!-- ══ NIVELES ════════════════════════════════════════════════════════════════ -->
 <section class="seccion-niveles">
   <div class="curva-superior"></div>
   <div class="container">
@@ -120,35 +118,23 @@
     <div class="row g-3">
       <div class="col-md-4">
         <div class="tarjeta-nivel-pro h-100">
-          <div class="tn-pro-top">
-            <span class="nivel-badge basico">Básico</span>
-            <span class="tn-pro-num">01</span>
-          </div>
-          <h3>Nivel básico</h3>
-          <p>Perfecto para empezar desde cero.</p>
+          <div class="tn-pro-top"><span class="nivel-badge basico">Básico</span><span class="tn-pro-num">01</span></div>
+          <h3>Nivel básico</h3><p>Perfecto para empezar desde cero.</p>
           <a href="#" class="abrir-login tn-pro-link">Ver más <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
       <div class="col-md-4">
         <div class="tarjeta-nivel-pro tarjeta-nivel-pro--destacada h-100">
           <span class="tn-pro-destacado-tag">Más elegido</span>
-          <div class="tn-pro-top">
-            <span class="nivel-badge intermedio">Intermedio</span>
-            <span class="tn-pro-num">02</span>
-          </div>
-          <h3>Nivel intermedio</h3>
-          <p>Mejora tu fluidez y comprensión.</p>
+          <div class="tn-pro-top"><span class="nivel-badge intermedio">Intermedio</span><span class="tn-pro-num">02</span></div>
+          <h3>Nivel intermedio</h3><p>Mejora tu fluidez y comprensión.</p>
           <a href="#" class="abrir-login tn-pro-link">Ver más <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
       <div class="col-md-4">
         <div class="tarjeta-nivel-pro h-100">
-          <div class="tn-pro-top">
-            <span class="nivel-badge avanzado">Avanzado</span>
-            <span class="tn-pro-num">03</span>
-          </div>
-          <h3>Nivel avanzado</h3>
-          <p>Perfecciona gramática y conversación.</p>
+          <div class="tn-pro-top"><span class="nivel-badge avanzado">Avanzado</span><span class="tn-pro-num">03</span></div>
+          <h3>Nivel avanzado</h3><p>Perfecciona gramática y conversación.</p>
           <a href="#" class="abrir-login tn-pro-link">Ver más <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
@@ -157,7 +143,7 @@
   <div class="curva-inferior"></div>
 </section>
 
-<!-- ══ BENEFICIOS — dos columnas asimétricas (invertida) ═══════════════════ -->
+<!-- ══ BENEFICIOS ════════════════════════════════════════════════════════════ -->
 <section class="seccion-zigzag">
   <div class="container">
     <div class="zigzag-row zigzag-row--inversa">
@@ -166,7 +152,7 @@
           <div class="tarjeta-beneficio bf-1"><div class="icono-beneficio"><i class="fa-solid fa-video"></i></div><div><h3>Clases dinámicas</h3><p>Ejercicios modernos e interactivos.</p></div></div>
           <div class="tarjeta-beneficio bf-2"><div class="icono-beneficio"><i class="fa-solid fa-headphones"></i></div><div><h3>Audio y pronunciación</h3><p>Escucha y mejora tu speaking.</p></div></div>
           <div class="tarjeta-beneficio bf-3"><div class="icono-beneficio"><i class="fa-solid fa-mobile-screen"></i></div><div><h3>Desde cualquier lugar</h3><p>Celular, laptop o tablet.</p></div></div>
-          <div class="tarjeta-beneficio bf-4"><div class="icono-beneficio"><i class="fa-solid fa-certificate"></i></div><div><h3>Certificados</h3><p>Al completar tus cursos.</p></div></div>
+          <div class="tarjeta-beneficio bf-4"><div class="icono-beneficio"><i class="fa-solid fa-chalkboard-teacher"></i></div><div><h3>Docentes especializados</h3><p>Acompañamiento personalizado.</p></div></div>
         </div>
       </div>
       <div class="zigzag-texto">
@@ -179,7 +165,7 @@
   </div>
 </section>
 
-<!-- ══ FAQ — ancho contenido, fondo distinto ════════════════════════════════ -->
+<!-- ══ FAQ ════════════════════════════════════════════════════════════════════ -->
 <section class="seccion-faq">
   <div class="container">
     <div class="seccion-titulo text-center mb-4">
@@ -197,12 +183,12 @@
         <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Sí, puedes aprender desde cualquier dispositivo.</div></div>
       </div>
       <div class="accordion-item">
-        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">¿Recibiré certificado?</button></h2>
-        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Sí, algunos cursos incluyen certificado al finalizar.</div></div>
+        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">¿Puedo estudiar desde mi celular?</button></h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">La plataforma es 100% responsive y funciona en móviles.</div></div>
       </div>
       <div class="accordion-item">
-        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">¿Puedo estudiar desde mi celular?</button></h2>
-        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">La plataforma es 100% responsive y funciona en móviles.</div></div>
+        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">¿Cómo me inscribo a un curso?</button></h2>
+        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Crea una cuenta gratis, elige un curso público o ingresa el código que te dé tu docente.</div></div>
       </div>
     </div>
   </div>
@@ -224,7 +210,7 @@
   </div>
 </section>
 
-<!-- ══ SECCIÓN FINAL: UBICACIÓN + CTA ═══════════════════════════════════════ -->
+<!-- ══ CIERRE: UBICACIÓN + CTA ════════════════════════════════════════════════ -->
 <section class="seccion-cierre">
   <div class="container">
     <div class="row g-4 align-items-stretch">
@@ -246,7 +232,7 @@
   </div>
 </section>
 
-<!-- FAB -->
+<!-- ══ FAB ════════════════════════════════════════════════════════════════════ -->
 <div class="fab-wrap">
   <button class="fab-dot-btn" id="fabDot" aria-label="Contacto"><span></span><span></span><span></span></button>
   <div class="fab-items" id="fabMenu">
@@ -270,85 +256,15 @@
     </div>
   </div>
 </div>
-<script>
-  const fabDot = document.getElementById('fabDot');
-  const fabMenu = document.getElementById('fabMenu');
-  fabDot.addEventListener('click', () => { fabDot.classList.toggle('open'); fabMenu.classList.toggle('visible'); });
-  document.addEventListener('click', (e) => { if (!fabDot.contains(e.target) && !fabMenu.contains(e.target)) { fabDot.classList.remove('open'); fabMenu.classList.remove('visible'); } });
-</script>
 
-<!-- ══ POPUP PROMOCIÓN ══ -->
-<div id="popupPromo" style="
-  position:fixed; inset:0; z-index:99999;
-  background:rgba(0,0,0,.55); backdrop-filter:blur(4px);
-  display:flex; align-items:center; justify-content:center;
-  padding:1rem;
-  animation: fadeInOverlay .3s ease;
-">
-  <div style="
-    background:#fff; border-radius:24px; max-width:480px; width:100%;
-    overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.25);
-    animation: slideUpPopup .35s ease;
-    position:relative;
-  ">
-    <!-- Imagen -->
-    <div style="position:relative;">
-      <img src="/imagenes/popups/promo.jpg" alt="Promoción"
-        style="width:100%; height:220px; object-fit:cover; display:block;">
-      <button onclick="cerrarPopup()" style="
-        position:absolute; top:10px; right:10px;
-        width:34px; height:34px; border-radius:50%;
-        background:rgba(0,0,0,.45); border:none; color:#fff;
-        font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
-      ">✕</button>
-    </div>
-    <!-- Contenido -->
-    <div style="padding:1.6rem 1.8rem 1.8rem;">
-      <h2 style="font-family:'Paytone One',sans-serif; font-size:1.4rem; color:#2a1a33; margin-bottom:.6rem;">
-        🎉 ¡Oferta especial!
-      </h2>
-      <p style="color:#6b5478; font-size:.93rem; line-height:1.6; margin-bottom:1.3rem;">
-        Descubre nuestros cursos de inglés y empieza hoy mismo. Aprende a tu ritmo, desde cualquier lugar.
-      </p>
-      <div style="display:flex; gap:.8rem; flex-wrap:wrap;">
-        <a href="#cursos" onclick="cerrarPopup()" style="
-          flex:1; text-align:center;
-          padding:.75rem 1.2rem;
-          background:linear-gradient(135deg,#ff4fa0,#8b5cf6);
-          color:#fff; border-radius:50px; font-weight:800;
-          font-size:.9rem; text-decoration:none;
-        ">Ver cursos</a>
-        <button onclick="cerrarPopup()" style="
-          flex:1; padding:.75rem 1.2rem;
-          border:1.5px solid #e0d0e8; background:#fff;
-          color:#6b5478; border-radius:50px; font-weight:700;
-          font-size:.9rem; cursor:pointer;
-        ">Ahora no</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="popupPromo" style="display:none;"></div>
 
-<style>
-@keyframes fadeInOverlay { from{opacity:0} to{opacity:1} }
-@keyframes slideUpPopup  { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-</style>
-
-<script>
-function cerrarPopup() {
-  const p = document.getElementById("popupPromo");
-  if (p) { p.style.opacity="0"; p.style.transition="opacity .25s"; setTimeout(()=>p.remove(), 250); }
-}
-// Cerrar con ESC
-document.addEventListener("keydown", e => { if(e.key==="Escape") cerrarPopup(); });
-// Cerrar al hacer click fuera
-document.getElementById("popupPromo").addEventListener("click", e => {
-  if(e.target.id==="popupPromo") cerrarPopup();
-});
-</script>
 
 <footer id="footer"></footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/fab_menu.js"></script>
+<script type="module" src="/js/popup_promo.js"></script>
 <script type="module" src="/js/header_footer.js"></script>
 <script type="module" src="/js/login.js"></script>
 <script type="module" src="/js/reset-password.js"></script>

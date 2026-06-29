@@ -1,281 +1,58 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recuperar contraseña — ENIT Academy</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --rosa:      #ff4fa0;
-      --lila:      #8b5cf6;
-      --amarillo:  #ffd84d;
-      --fondo:     #fff8fc;
-      --blanco:    #fff;
-      --borde:     #f0d6e8;
-      --gradiente: linear-gradient(135deg, var(--rosa), var(--lila));
-      --sombra:    rgba(255, 79, 160, 0.12);
-      --texto:     #1a1a2e;
-      --muted:     #888;
-      --error:     #e53e3e;
-      --success:   #38a169;
-      --radius:    12px;
-    }
-
-    html, body {
-      min-height: 100dvh;
-      background: var(--fondo);
-      color: var(--texto);
-      font-family: 'Inter', system-ui, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card {
-      background: var(--blanco);
-      border: 1px solid var(--borde);
-      border-radius: 20px;
-      padding: 48px 40px 40px;
-      width: 100%;
-      max-width: 420px;
-      margin: 24px;
-      text-align: center;
-      box-shadow: 0 8px 32px var(--sombra);
-    }
-
-    .logo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      background: var(--gradiente);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    .icon-wrap {
-      width: 64px; height: 64px;
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg, rgba(255,79,160,0.12), rgba(139,92,246,0.12));
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .icon-wrap svg { width: 28px; height: 28px; stroke: var(--rosa); }
-
-    h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; color: var(--texto); }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    .input-wrap {
-      text-align: left;
-      margin-bottom: 20px;
-    }
-    .input-wrap label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--texto);
-      margin-bottom: 6px;
-    }
-    .input-wrap input {
-      width: 100%;
-      padding: 13px 16px;
-      background: var(--fondo);
-      border: 1.5px solid var(--borde);
-      border-radius: var(--radius);
-      color: var(--texto);
-      font-size: 0.95rem;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .input-wrap input:focus {
-      border-color: var(--rosa);
-      box-shadow: 0 0 0 3px rgba(255,79,160,0.12);
-      background: var(--blanco);
-    }
-    .input-wrap input.error-state {
-      border-color: var(--error);
-      box-shadow: 0 0 0 3px rgba(229,62,62,0.1);
-    }
-
-    .feedback {
-      height: 22px;
-      font-size: 0.82rem;
-      margin-bottom: 16px;
-      text-align: left;
-    }
-    .feedback.error   { color: var(--error); }
-    .feedback.success { color: var(--success); }
-
-    .btn {
-      width: 100%;
-      padding: 15px;
-      background: var(--gradiente);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: opacity 0.2s, transform 0.1s;
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px;
-    }
-    .btn:hover:not(:disabled) { opacity: 0.88; }
-    .btn:active:not(:disabled) { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.35);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .btn.loading .spinner   { display: block; }
-    .btn.loading .btn-label { display: none; }
-
-    .back-link {
-      display: block;
-      margin-top: 24px;
-      font-size: 0.85rem;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--rosa); }
-
-    .success-overlay {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0 4px;
-    }
-    .check-circle {
-      width: 64px; height: 64px;
-      background: rgba(56,161,105,0.12);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .check-circle svg {
-      width: 30px; height: 30px;
-      stroke: var(--success);
-      stroke-dasharray: 40;
-      stroke-dashoffset: 40;
-      animation: draw 0.5s ease forwards 0.1s;
-    }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    .success-overlay p     { color: var(--success); font-weight: 600; font-size: 1rem; }
-    .success-overlay small { color: var(--muted); font-size: 0.82rem; line-height: 1.6; }
-
-    @media (max-width: 400px) {
-      .card { padding: 36px 20px 28px; }
-    }
-  </style>
+  <script>const dm=localStorage.getItem("modoOscuro")==="true";if(dm){document.documentElement.setAttribute("data-bs-theme","dark");document.documentElement.classList.add("dark");}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Paytone+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/header_footer.css">
+  <link rel="stylesheet" href="/css/verificar-email.css">
 </head>
 <body>
 
-<div class="card">
-  <div class="logo">ENIT Academy</div>
+<header id="header"></header>
 
-  <div id="form-view">
-    <div class="icon-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
+<main class="verificar-main">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-logo">ENIT Academy</div>
+      <div class="icon-wrap">🔒</div>
+      <h1>¿Olvidaste tu contraseña?</h1>
+      <p>Ingresa tu correo y te enviaremos<br>un enlace para restablecerla.</p>
     </div>
 
-    <h1>¿Olvidaste tu contraseña?</h1>
-    <p class="subtitle">Ingresa tu correo y te enviaremos un enlace para restablecerla.</p>
-
-    <div class="input-wrap">
-      <label for="email">Correo electrónico</label>
-      <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email" />
+    <div class="card-body" id="form-view">
+      <div class="campo" style="text-align:left; margin-bottom: 1.2rem;">
+        <label for="email" style="display:block; font-size:0.81rem; font-weight:700; color:var(--texto); margin-bottom:0.4rem;">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email"
+          style="width:100%; padding:0.62rem 0.9rem; border:1.8px solid var(--borde); border-radius:10px; font-family:'Nunito',sans-serif; font-size:0.9rem; color:var(--texto); background:var(--blanco); outline:none; transition:border-color 0.2s, box-shadow 0.2s;">
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="btn-verify" id="btn-send">
+        <span class="spinner"></span>
+        <span class="btn-label"><i class="fa-solid fa-paper-plane"></i> Enviar enlace</span>
+      </button>
+      <div class="resend">
+        <a href="/index.html" style="color:var(--texto-claro); text-decoration:none; font-weight:700; font-size:0.85rem;">
+          <i class="fa-solid fa-arrow-left"></i> Volver al inicio de sesión
+        </a>
+      </div>
     </div>
 
-    <div class="feedback" id="feedback"></div>
-
-    <button class="btn" id="btn-send">
-      <span class="spinner"></span>
-      <span class="btn-label">Enviar enlace</span>
-    </button>
-
-    <a href="index.html" class="back-link">← Volver al inicio de sesión</a>
+    <div class="success-overlay" id="success-view">
+      <div class="check-circle">✓</div>
+      <h2>¡Correo enviado!</h2>
+      <p>Revisa tu bandeja de entrada y sigue el enlace para crear tu nueva contraseña.</p>
+    </div>
   </div>
+</main>
 
-  <div class="success-overlay" id="success-view">
-    <div class="check-circle">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
-    </div>
-    <p>¡Correo enviado!</p>
-    <small>Revisa tu bandeja de entrada<br>y sigue el enlace para crear tu nueva contraseña.</small>
-  </div>
-</div>
+<footer id="footer"></footer>
 
-<script type="module">
-  import { supabase } from '../js/supabase.js';
-
-  const emailInput  = document.getElementById('email');
-  const btnSend     = document.getElementById('btn-send');
-  const feedbackEl  = document.getElementById('feedback');
-  const formView    = document.getElementById('form-view');
-  const successView = document.getElementById('success-view');
-
-  function setError(msg) {
-    feedbackEl.textContent = msg;
-    feedbackEl.className = 'feedback error';
-    emailInput.classList.add('error-state');
-  }
-  function clearFeedback() {
-    feedbackEl.textContent = '';
-    feedbackEl.className = 'feedback';
-    emailInput.classList.remove('error-state');
-  }
-  function setLoading(on) {
-    btnSend.classList.toggle('loading', on);
-    btnSend.disabled = on;
-    emailInput.disabled = on;
-  }
-
-  btnSend.addEventListener('click', async () => {
-    clearFeedback();
-    const email = emailInput.value.trim();
-    if (!email) { setError('Ingresa tu correo electrónico.'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('El correo no es válido.'); return; }
-
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/paginas/nueva-contrasena.html',
-    });
-    setLoading(false);
-
-    if (error) { setError('No se pudo enviar el correo. Intenta de nuevo.'); return; }
-
-    formView.style.display = 'none';
-    successView.style.display = 'flex';
-  });
-
-  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') btnSend.click(); });
-</script>
+<script type="module" src="../js/solicitar_reset.js"></script>
 <script type="module" src="/js/login.js"></script>
+<script type="module" src="/js/header_footer.js"></script>
 </body>
 </html>
