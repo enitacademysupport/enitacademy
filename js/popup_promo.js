@@ -45,7 +45,7 @@ function pintarPopup() {
         <h2 style="font-family:'Paytone One',sans-serif;font-size:1.9rem;color:#2a1a33;margin-bottom:.8rem;">${pub.titulo}</h2>
         ${pub.contenido ? `<p style="color:#6b5478;font-size:1.05rem;line-height:1.65;margin-bottom:1.5rem;">${pub.contenido}</p>` : ""}
         <div style="display:flex;gap:.9rem;flex-wrap:wrap;">
-          <a href="${enlace}" onclick="cerrarPopup()" style="flex:1;text-align:center;padding:.95rem 1.4rem;background:linear-gradient(135deg,#ff4fa0,#8b5cf6);color:#fff;border-radius:50px;font-weight:800;font-size:1rem;text-decoration:none;">Ver cursos</a>
+          <a href="${enlace}" onclick="cerrarPopup()" style="flex:1;text-align:center;padding:.95rem 1.4rem;background:linear-gradient(135deg,#ff4fa0,#8b5cf6);color:#fff;border-radius:50px;font-weight:800;font-size:1rem;text-decoration:none;">Ver</a>
           <button onclick="cerrarPopup()" style="flex:1;padding:.95rem 1.4rem;border:1.5px solid #e0d0e8;background:#fff;color:#6b5478;border-radius:50px;font-weight:700;font-size:1rem;cursor:pointer;">Ahora no</button>
         </div>
       </div>
