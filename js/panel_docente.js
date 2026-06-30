@@ -1,6 +1,3 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — panel_docente.js  (v3 — módulos + hero editable)
-   ════════════════════════════════════════════ */
 
 import { supabase } from "./supabase.js";
 
@@ -29,6 +26,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   initModalConfirmar();
   initFormPublicidad();
   cargarPublicidad();
+  initModalCalificar();
 });
 
 // ══ SESIÓN ════════════════════════════════════════════════════════════════════
@@ -1484,10 +1482,10 @@ async function cargarEntregasCurso(cursoId) {
 
   const tareaIds = tareas.map(t => t.id);
 
-  const { data: entregas, error: errE } = await supabase
-    .from("entregas").select("id, tarea_id, estudiante_id, url_archivo, comentario, entregado_at, visto")
-    .in("tarea_id", tareaIds)
-    .order("entregado_at", { ascending: false });
+const { data: entregas, error: errE } = await supabase
+  .from("entregas").select("id, tarea_id, estudiante_id, url_archivo, comentario, entregado_at, visto, nota, feedback")
+  .in("tarea_id", tareaIds)
+  .order("entregado_at", { ascending: false });
 
   if (errE) { el.innerHTML = `<p class="sin-datos">Error al cargar entregas: ${errE.message}</p>`; return; }
 
@@ -1523,39 +1521,60 @@ async function cargarEntregasCurso(cursoId) {
       const sinVer = tarea.entregas.filter(e => !e.visto).length;
 
       const entregasHtml = tarea.entregas.length
-        ? tarea.entregas.map(e => {
-            const nombre = `${e.perfiles?.nombre || "?"} ${e.perfiles?.apellido || ""}`.trim();
-            const fecha  = formatFecha(e.entregado_at);
-            const comentarioEscapado = (e.comentario || "").replace(/\\/g,"\\\\").replace(/`/g,"\\`").replace(/'/g,"\\'");
-            return `
-            <div class="entrega-fila ${!e.visto ? "entrega-nueva" : ""}" data-entrega-id="${e.id}">
-              <div class="entrega-fila-izq">
-                <div class="avatar-mini"><i class="fa-solid fa-user-graduate"></i></div>
-                <div class="entrega-fila-info">
-                  <strong>${nombre}</strong>
-                  <span class="entrega-fila-fecha">
-                    <i class="fa-regular fa-clock"></i> ${fecha}
-                    ${!e.visto ? `<span class="badge-nueva">Nuevo</span>` : ""}
-                  </span>
-                </div>
-              </div>
-              <div class="entrega-fila-der">
-                ${e.url_archivo
-                  ? `<a href="${e.url_archivo}" target="_blank" rel="noopener"
-                       class="btn-entrega-archivo" onclick="marcarVisto('${e.id}')">
-                       <i class="fa-solid fa-file-arrow-down"></i> Ver archivo
-                     </a>`
-                  : `<span style="font-size:0.78rem;color:var(--texto-claro);font-weight:600;">Sin archivo</span>`}
-                ${e.comentario
-                  ? `<button class="btn-icono" title="Ver comentario"
-                       onclick="verComentarioEntrega('${e.id}','${comentarioEscapado}','${nombre.replace(/'/g,"\\'")}')">
-                       <i class="fa-solid fa-comment-dots"></i>
-                     </button>`
-                  : ""}
-              </div>
-            </div>`;
-          }).join("")
-        : `<p class="sin-datos" style="padding:0.7rem 1rem;">Nadie ha entregado esta tarea aún.</p>`;
+  ? tarea.entregas.map(e => {
+      const nombre = `${e.perfiles?.nombre || "?"} ${e.perfiles?.apellido || ""}`.trim();
+      const fecha  = formatFecha(e.entregado_at);
+      const comentarioEscapado = (e.comentario || "").replace(/\\/g,"\\\\").replace(/`/g,"\\`").replace(/'/g,"\\'");
+      const feedbackEscapado   = (e.feedback || "").replace(/\\/g,"\\\\").replace(/`/g,"\\`").replace(/'/g,"\\'");
+      const nombreEscapado     = nombre.replace(/'/g,"\\'");
+      const yaCalificada       = e.nota !== null && e.nota !== undefined;
+
+      return `
+      <div class="entrega-fila ${!e.visto ? "entrega-nueva" : ""}" data-entrega-id="${e.id}">
+        <div class="entrega-fila-izq">
+          <div class="avatar-mini"><i class="fa-solid fa-user-graduate"></i></div>
+          <div class="entrega-fila-info">
+            <strong>${nombre}</strong>
+            <span class="entrega-fila-fecha">
+              <i class="fa-regular fa-clock"></i> ${fecha}
+              ${!e.visto ? `<span class="badge-nueva">Nuevo</span>` : ""}
+            </span>
+          </div>
+        </div>
+        <div class="entrega-fila-der">
+          ${yaCalificada
+  ? `<span style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.78rem;font-weight:800;color:var(--lila);
+       background:#f0ecff;border:1.3px solid #d4c4fb;border-radius:20px;
+       padding:0.25rem 0.7rem;">
+       <i class="fa-solid fa-circle-check"></i> Calificado · ${e.nota}${tarea.puntos ? `/${tarea.puntos}` : ""}
+     </span>`
+  : `<span style="font-size:0.75rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:20px;
+       background:#fff4e0;color:#b8860b;">Sin calificar</span>`}
+${e.url_archivo
+  ? `<a href="${e.url_archivo}" target="_blank" rel="noopener"
+       class="btn-entrega-archivo" onclick="marcarVisto('${e.id}')">
+       <i class="fa-solid fa-file-arrow-down"></i> Ver archivo
+     </a>`
+  : ""}
+${e.comentario
+  ? `<button class="btn-icono" title="Ver comentario"
+       onclick="verComentarioEntrega('${e.id}','${comentarioEscapado}','${nombreEscapado}')">
+       <i class="fa-solid fa-comment-dots"></i>
+     </button>`
+  : ""}
+${yaCalificada
+  ? `<button class="btn-icono" title="Editar calificación"
+       onclick="abrirModalCalificar('${e.id}','${nombreEscapado}','${fecha}','${e.url_archivo || ""}','${comentarioEscapado}',${e.nota},'${feedbackEscapado}',${tarea.puntos || "null"})">
+       <i class="fa-solid fa-pen"></i>
+     </button>`
+  : `<button class="btn-primario btn-pequeno" title="Calificar"
+       onclick="abrirModalCalificar('${e.id}','${nombreEscapado}','${fecha}','${e.url_archivo || ""}','${comentarioEscapado}',null,'${feedbackEscapado}',${tarea.puntos || "null"})">
+       <i class="fa-solid fa-star"></i> Calificar
+     </button>`}
+        </div>
+      </div>`;
+    }).join("")
+  : `<p class="sin-datos" style="padding:0.7rem 1rem;">Nadie ha entregado esta tarea aún.</p>`;
 
       return `
       <div class="entrega-tarea-bloque">
@@ -1884,5 +1903,91 @@ function initFormPublicidad() {
  
     cancelarEdicionPublicidad();
     await cargarPublicidad();
+  });
+}
+
+// ══ CALIFICAR ENTREGA ═════════════════════════════════════════════════════════
+let entregaCalificandoData = null; // guarda los datos de la entrega abierta
+
+window.abrirModalCalificar = function (entregaId, nombreEst, fecha, urlArchivo, comentario, notaActual, feedbackActual, puntosMax) {
+  entregaCalificandoData = { entregaId };
+
+  document.getElementById("calificarEntregaId").value = entregaId;
+  document.getElementById("calificarNombreEst").textContent = nombreEst;
+  document.getElementById("calificarFecha").textContent = fecha;
+
+  const archivoWrap = document.getElementById("calificarArchivoWrap");
+  const archivoLink = document.getElementById("calificarArchivoLink");
+  if (urlArchivo) {
+    archivoWrap.style.display = "block";
+    archivoLink.href = urlArchivo;
+  } else {
+    archivoWrap.style.display = "none";
+  }
+
+  const comentarioWrap = document.getElementById("calificarComentarioWrap");
+  if (comentario) {
+    comentarioWrap.style.display = "block";
+    document.getElementById("calificarComentarioTexto").textContent = comentario;
+  } else {
+    comentarioWrap.style.display = "none";
+  }
+
+  document.getElementById("calificarNota").value = notaActual ?? "";
+  document.getElementById("calificarFeedback").value = feedbackActual || "";
+  document.getElementById("calificarPuntosMax").textContent = puntosMax ? `/ ${puntosMax} pts` : "";
+
+  setErr("errCalificarNota", "");
+  document.getElementById("alertaCalificar").className = "alerta";
+
+  document.getElementById("modalCalificarOverlay").style.display = "flex";
+  document.body.style.overflow = "hidden";
+};
+
+function cerrarModalCalificar() {
+  document.getElementById("modalCalificarOverlay").style.display = "none";
+  document.body.style.overflow = "";
+  entregaCalificandoData = null;
+}
+
+function initModalCalificar() {
+  document.getElementById("btnCerrarCalificar")?.addEventListener("click", cerrarModalCalificar);
+  document.getElementById("btnCancelarCalificar")?.addEventListener("click", cerrarModalCalificar);
+  document.getElementById("modalCalificarOverlay")?.addEventListener("click", e => {
+    if (e.target.id === "modalCalificarOverlay") cerrarModalCalificar();
+  });
+
+  document.getElementById("formCalificar")?.addEventListener("submit", async e => {
+    e.preventDefault();
+    const entregaId = document.getElementById("calificarEntregaId")?.value;
+    const notaRaw    = document.getElementById("calificarNota")?.value;
+    const feedback   = document.getElementById("calificarFeedback")?.value.trim();
+    const alerta     = document.getElementById("alertaCalificar");
+    const btn        = e.target.querySelector('[type="submit"]');
+
+    if (notaRaw === "" || isNaN(parseFloat(notaRaw))) {
+      setErr("errCalificarNota", "Ingresa una nota válida.");
+      return;
+    }
+    setErr("errCalificarNota", "");
+
+    if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando...`; }
+
+    const { error } = await supabase.from("entregas")
+      .update({ nota: parseFloat(notaRaw), feedback: feedback || null })
+      .eq("id", entregaId);
+
+    if (btn) { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Guardar calificación`; }
+
+    if (error) {
+      mostrarAlerta(alerta, "error", `Error al guardar: ${error.message || "intenta de nuevo."}`);
+      return;
+    }
+
+    mostrarAlerta(alerta, "ok", "¡Calificación guardada!");
+    mostrarToast("Nota guardada correctamente.", "ok");
+
+    if (cursoActivo) await cargarEntregasCurso(cursoActivo.id);
+    setTimeout(cerrarModalCalificar, 700);
   });
 }

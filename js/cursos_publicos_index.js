@@ -1,6 +1,3 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — cursos_publicos_index.js
-   ════════════════════════════════════════════ */
 
 import { supabase } from "./supabase.js";
 

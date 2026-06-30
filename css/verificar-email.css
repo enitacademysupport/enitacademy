@@ -1,7 +1,4 @@
-/* ============================================================
-   verificar-email.css — página de verificación OTP
-   Depende de header_footer.css para las variables :root
-   ============================================================ */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 /* ── Layout de página ── */
 body {

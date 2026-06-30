@@ -1,6 +1,5 @@
 import { supabase } from "./supabase.js";
 
-// ══ Selección de rol ══════════════════════════════════════════════════════════
 
 let rolActual = null;
 

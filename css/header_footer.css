@@ -1,7 +1,3 @@
-/* ============================================================
-   ENIT Academy — header_footer.css
-   ============================================================ */
-
 :root {
   --rosa:        #ff4fa0;
   --lila:        #8b5cf6;
@@ -14,7 +10,6 @@
   --sombra:      rgba(255, 79, 160, 0.12);
 }
 
-/* ── ENCABEZADO ─────────────────────────────── */
 .encabezado {
   background: var(--blanco);
   border-bottom: 1.5px solid var(--borde);
@@ -33,7 +28,6 @@
   gap: 1.5rem;
 }
 
-/* ── LOGO ──────────────────────────────────── */
 .logo {
   display: flex;
   align-items: center;
@@ -44,11 +38,6 @@
 
 .logo img { height: 36px; width: auto; }
 
-/*
- * Cada letra tiene su propio color y sube/crece al hover.
- * NO usamos background-clip:text porque eso impide colorear
- * letras individualmente — cada span lleva su color directo.
- */
 .logo-texto {
   font-family: 'Paytone One', sans-serif;
   font-size: 1.1rem;
@@ -59,10 +48,8 @@
 .logo-texto span {
   display: inline-block;
   transition: transform 0.22s ease, color 0.22s ease;
-  /* Color base: degradado distribuido entre las letras */
 }
 
-/* Colores base (degradado rosa→lila distribuido en 11 letras) */
 .logo-texto span:nth-child(1)  { color: #ff4fa0; }  /* E */
 .logo-texto span:nth-child(2)  { color: #f94aaa; }  /* N */
 .logo-texto span:nth-child(3)  { color: #e84bb8; }  /* I */
@@ -76,7 +63,6 @@
 .logo-texto span:nth-child(11) { color: #8b5cf6; }  /* m */
 .logo-texto span:nth-child(12) { color: #8b5cf6; }  /* y */
 
-/* Al hover: cada letra sube, crece Y cambia a un color vibrante distinto */
 .logo:hover .logo-texto span:nth-child(1)  { color: #ff006e; transform: translateY(-4px) scale(1.2); transition-delay: 0ms;   }
 .logo:hover .logo-texto span:nth-child(2)  { color: #ff4d00; transform: translateY(-4px) scale(1.2); transition-delay: 30ms;  }
 .logo:hover .logo-texto span:nth-child(3)  { color: #ff9500; transform: translateY(-4px) scale(1.2); transition-delay: 60ms;  }
@@ -90,7 +76,6 @@
 .logo:hover .logo-texto span:nth-child(11) { color: #ff4fa0; transform: translateY(-4px) scale(1.2); transition-delay: 270ms; }
 .logo:hover .logo-texto span:nth-child(12) { color: #00c896; transform: translateY(-4px) scale(1.2); transition-delay: 300ms; }
 
-/* ── MENÚ PRINCIPAL ────────────────────────── */
 .menu-nav {
   display: flex;
   align-items: center;
@@ -119,7 +104,6 @@
 .menu-nav > li > a:hover { background: #ffe0f0; color: var(--rosa); }
 .menu-nav .flecha { font-size: 0.65rem; margin-left: 0.2rem; }
 
-/* ── SUBMENÚ ───────────────────────────────── */
 .tiene-submenu { position: relative; }
 
 .submenu {
@@ -161,7 +145,6 @@
 }
 .tiene-submenu:hover > .submenu-lateral { display: block; }
 
-/* ── LADO DERECHO ──────────────────────────── */
 .nav-derecha {
   display: flex;
   align-items: center;
@@ -211,7 +194,6 @@
 }
 .btn-registrar:hover { opacity: 0.88; transform: translateY(-1px); }
 
-/* ── CAJA USUARIO ──────────────────────────── */
 .caja-usuario {
   position: relative;
   display: flex;
@@ -280,8 +262,6 @@
 
 .separador-dropdown { border: none; border-top: 1.5px solid var(--borde); margin: 0.3rem 0.5rem; }
 
-/* ── HAMBURGUESA ───────────────────────────── */
-/* Oculto en escritorio, visible en móvil */
 .btn-hamburguesa {
   display: none;
   flex-direction: column;
@@ -300,12 +280,10 @@
   transition: transform 0.3s, opacity 0.3s;
 }
 
-/* Animación a X cuando el menú está abierto */
 .btn-hamburguesa.activo span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
 .btn-hamburguesa.activo span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .btn-hamburguesa.activo span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
-/* ── ALERTAS ───────────────────────────────── */
 .form-alerta {
   display: none;
   align-items: center;
@@ -321,7 +299,6 @@
 .alerta-error { background: #fff0f5; border-color: #f9b8d4; color: #d6185a; }
 .alerta-ok    { background: #effaf5; border-color: #a3e6c8; color: #1aaa6b; }
 
-/* ── MODAL LOGIN ───────────────────────────── */
 .modal-fondo {
   display: none;
   position: fixed;
@@ -424,7 +401,6 @@
 .link-registro a { color: var(--rosa); font-weight: 700; text-decoration: none; }
 .link-registro a:hover { text-decoration: underline; }
 
-/* ── FONDO MENÚ MÓVIL ──────────────────────── */
 .fondo-menu {
   display: none;
   position: fixed;
@@ -434,28 +410,22 @@
 }
 .fondo-menu.visible { display: block; }
 
-/* =============================================================
-   RESPONSIVE — MÓVIL  ≤ 768px
-   ============================================================= */
 @media (max-width: 768px) {
 
-  /* Mostrar hamburguesa */
   .btn-hamburguesa { display: flex; }
 
-  /* ── Botones auth: siempre visibles en móvil ─
-     Se mueven DENTRO del panel lateral          */
+       */
   .botones-auth {
-    display: none;          /* ocultar de la barra top */
+    display: none;          
   }
 
-  /* Sección de auth dentro del panel */
   .menu-auth-movil {
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
     padding: 1rem 1.2rem 0.5rem;
     border-top: 1.5px solid var(--borde);
-    margin-top: auto;       /* empuja hacia abajo del panel */
+    margin-top: auto;       
   }
 
   .menu-auth-movil .btn-ingresar,
@@ -468,7 +438,6 @@
     font-size: 0.92rem;
   }
 
-  /* ── Panel lateral deslizante ──────────────── */
   .menu-nav {
     position: fixed;
     top: 0;
@@ -491,7 +460,6 @@
 
   .menu-nav.abierto { right: 0; }
 
-  /* Items del menú en columna */
   .menu-nav > li { width: 100%; }
 
   .menu-nav > li > a {
@@ -503,7 +471,6 @@
     box-sizing: border-box;
   }
 
-  /* Submenús: estáticos, se abren con tap */
   .submenu {
     position: static;
     box-shadow: none;
@@ -515,7 +482,6 @@
     display: none;
   }
 
-  /* Quitar hover de escritorio en móvil */
   .tiene-submenu:hover > .submenu    { display: none; }
   .tiene-submenu.abierto > .submenu  { display: block; }
 
@@ -535,31 +501,26 @@
     font-size: 0.88rem;
   }
 
-  /* Info usuario compacta */
   .info-usuario  { display: none; }
   .chevron-usuario { display: none; }
   .caja-usuario  { padding: 0.3rem; }
 
-  /* Modal a pantalla completa */
   .login-contenido { flex-direction: column; }
   .login-bienvenida { display: none; }
   .login-formulario { padding: 2rem 1.2rem; }
 }
 
-/* ── Extra pequeño ≤ 380px ─────────────────── */
 @media (max-width: 380px) {
   .barra-nav  { padding: 0 4%; gap: 0.8rem; }
   .logo img   { height: 30px; }
   .logo-texto { font-size: 0.95rem; }
 }
 
-/* ── Auth móvil: ocultar en escritorio ─────── */
 .menu-auth-movil {
-  display: none;   /* solo se muestra vía el @media 768px de arriba */
+  display: none;   
   width: 100%;
 }
 
-/* ─── FOOTER ─────────────────────────────────── */
 .footer-main {
   background: var(--blanco);
   color: rgba(192, 179, 179, 0.8);
@@ -575,7 +536,6 @@
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-/* Marca */
 .footer-brand { display: flex; flex-direction: column; gap: 16px; }
 
 .footer-logo {
@@ -624,7 +584,6 @@
   transform: translateY(-3px);
 }
 
-/* Columnas */
 .footer-col h4 {
   font-size: .78rem;
   font-weight: 800;
@@ -656,7 +615,6 @@
   padding-left: 4px;
 }
 
-/* Contacto con iconos */
 .footer-contacto li {
   display: flex;
   align-items: flex-start;
@@ -672,7 +630,6 @@
   flex-shrink: 0;
 }
 
-/* Bottom bar */
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -688,7 +645,6 @@
   color: var(--rosa);
 }
 
-/* ── Responsive ─────────────────────────────── */
 @media (max-width: 900px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -712,9 +668,7 @@
     display: none !important;
   }
 }
-/* ══════════════════════════════════════════════
-   MODO OSCURO — Header y Footer
-   ══════════════════════════════════════════════ */
+
 body.dark .barra-nav,
 body.dark .encabezado { background: #1a1a2e !important; border-color: #2d2d4a !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
 body.dark .menu-nav li a { color: #c4b5fd !important; }
@@ -733,22 +687,18 @@ body.dark .fondo-menu { background: rgba(0,0,0,0.7) !important; }
 body.dark .btn-hamburguesa span { background: #e2e8f0 !important; }
 
 
-/* ── html root dark (anti-flash) ── */
 html.dark body { background: #0f0f1a !important; }
 body.dark .footer-main { background: #0a0a14 !important; border-color: #2d2d4a !important; }
 
-/* ── Textos del footer ── */
 body.dark .footer-brand p       { color: #c4b5fd !important; }
 body.dark .footer-col ul li a   { color: #c4b5fd !important; }
 body.dark .footer-col ul li a:hover { color: #e879f9 !important; }
 body.dark .footer-contacto li   { color: #c4b5fd !important; }
 body.dark .footer-bottom        { color: #9178a6 !important; }
 
-/* ── Bordes ── */
 body.dark .footer-grid          { border-color: #2d2d4a !important; }
 body.dark .footer-bottom        { border-color: #2d2d4a !important; }
 
-/* ── Iconos sociales ── */
 body.dark .footer-sociales a {
   background: #2d2d4a !important;
   border-color: #3d3d6a !important;

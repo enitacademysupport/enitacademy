@@ -1,7 +1,3 @@
-/* ════════════════════════════════════════════
-   ENIT Academy — panel_estudiante.js
-   (v3 — aside detallado con breadcrumbs curso/módulo)
-   ════════════════════════════════════════════ */
 
 import { supabase } from "./supabase.js";
 
@@ -188,9 +184,6 @@ async function cargarDatos() {
   await renderMiniCursosDisponibles();
 }
 
-// ══ NORMALIZAR ANUNCIOS (aplanar join de módulo) ══════════════════════════════
-// La query puede traer anuncios con o sin modulo_id.
-// Normalizamos para tener siempre .curso_nombre y .modulo_nombre.
 function normalizarAnuncios(anuncios) {
   return anuncios.map(a => ({
     ...a,
@@ -768,14 +761,24 @@ function renderTareasVista(tareas) {
       const vence       = t.fecha_entrega ? `<span class="vence-tag ${urgencia(t.fecha_entrega)}">Vence: ${formatFecha(t.fecha_entrega)}</span>` : "";
       const modTag      = t.modulo_nombre ? `<span class="curso-tag" style="background:#fff0f8;color:var(--rosa);">${t.modulo_nombre}</span>` : "";
 
-      const btnEntrega  = yaEntrego
-        ? `<span style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:800;color:var(--color-ok,#1aaa6b);background:#effaf5;border:1.3px solid #a3e6c8;border-radius:50px;padding:0.3rem 0.9rem;margin-left:auto;">
-             <i class="fa-solid fa-circle-check"></i> Entregado
-           </span>`
-        : `<button class="btn-primario btn-pequeno" style="margin-left:auto;"
-             onclick="abrirModalEntrega('${t.id}','${(t.titulo||'').replace(/'/g,"\\'")}','${t.fecha_entrega||''}')">
-             <i class="fa-solid fa-paper-plane"></i> Entregar
-           </button>`;
+      const notaTarea = window.__mapaNotasEst?.[t.id];
+const tieneNota = notaTarea !== null && notaTarea !== undefined;
+
+const btnEntrega  = yaEntrego
+  ? `<button onclick="verDetalleEntrega('${t.id}')"
+       style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:800;
+         color:${tieneNota ? "var(--lila)" : "var(--color-ok,#1aaa6b)"};
+         background:${tieneNota ? "#f0ecff" : "#effaf5"};
+         border:1.3px solid ${tieneNota ? "#d4c4fb" : "#a3e6c8"};
+         border-radius:50px;padding:0.3rem 0.9rem;margin-left:auto;cursor:pointer;
+         font-family:'Nunito',sans-serif;">
+       <i class="fa-solid ${tieneNota ? "fa-star" : "fa-circle-check"}"></i>
+       ${tieneNota ? `Nota: ${notaTarea}${t.puntos ? `/${t.puntos}` : ""}` : "Entregado"}
+     </button>`
+  : `<button class="btn-primario btn-pequeno" style="margin-left:auto;"
+     onclick="abrirModalEntrega('${t.id}','${(t.titulo||'').replace(/'/g,"\\'")}','${t.fecha_entrega||''}')">
+     <i class="fa-solid fa-paper-plane"></i> Entregar
+   </button>`;
 
       return `
       <div class="item-tarea">
@@ -802,8 +805,10 @@ async function cargarEntregasEstudiante() {
   if (!user) return new Set();
   const { data } = await supabase
     .from("entregas")
-    .select("tarea_id")
+    .select("tarea_id, nota")
     .eq("estudiante_id", user.id);
+  window.__mapaNotasEst = {};
+  (data || []).forEach(e => { window.__mapaNotasEst[e.tarea_id] = e.nota; });
   return new Set((data || []).map(e => e.tarea_id));
 }
 
@@ -1225,9 +1230,8 @@ window.abrirModalEntrega = function(tareaId, tareaTitulo, fechaEntrega) {
   document.getElementById("modalEntregaOverlay").style.display = "flex";
   document.body.style.overflow = "hidden";
 };
-// Refrescar la vista de tareas para mostrar "Entregado"
-const { tareas } = await cargarItemsModulosPorCursos(cursosInscritos.map(c => c.id));
-renderTareasVista(tareas);
+
+
 function cerrarModalEntrega() {
   document.getElementById("modalEntregaOverlay").style.display = "none";
   document.body.style.overflow = "";
@@ -1382,7 +1386,7 @@ window.verDetalleEntrega = async function(tareaId) {
   const { data: { user } } = await supabase.auth.getUser();
   const { data: entrega } = await supabase
     .from("entregas")
-    .select("url_archivo, comentario, entregado_at")
+    .select("url_archivo, comentario, entregado_at, nota, feedback")
     .eq("tarea_id", tareaId)
     .eq("estudiante_id", user.id)
     .single();
@@ -1414,18 +1418,42 @@ window.verDetalleEntrega = async function(tareaId) {
     comentarioWrap.style.display = "none";
   }
 
+  // Calificación
+  const notaEl    = document.getElementById("detalleEntregaNota");
+  const estadoEl  = document.getElementById("detalleEntregaEstadoCalif");
+  const feedbackEl = document.getElementById("detalleEntregaFeedback");
+  const yaCalificada = entrega.nota !== null && entrega.nota !== undefined;
+
+  if (yaCalificada) {
+    notaEl.textContent = entrega.nota;
+    estadoEl.textContent = "Calificado";
+    estadoEl.style.background = "#effaf5";
+    estadoEl.style.color = "var(--color-ok,#1aaa6b)";
+  } else {
+    notaEl.textContent = "Pendiente";
+    estadoEl.textContent = "Sin calificar";
+    estadoEl.style.background = "#fff4e0";
+    estadoEl.style.color = "#b8860b";
+  }
+
+  if (entrega.feedback) {
+    feedbackEl.textContent = entrega.feedback;
+    feedbackEl.style.display = "block";
+  } else {
+    feedbackEl.style.display = "none";
+  }
+
   document.getElementById("modalDetalleEntregaOverlay").style.display = "flex";
   document.body.style.overflow = "hidden";
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const cerrar = () => {
+  const cerrarDetalleEntrega = () => {
     document.getElementById("modalDetalleEntregaOverlay").style.display = "none";
     document.body.style.overflow = "";
   };
-  document.getElementById("btnCerrarDetalleEntrega")?.addEventListener("click", cerrar);
-  document.getElementById("btnCerrarDetalleEntrega2")?.addEventListener("click", cerrar);
+  document.getElementById("btnCerrarDetalleEntrega")?.addEventListener("click", cerrarDetalleEntrega);
   document.getElementById("modalDetalleEntregaOverlay")?.addEventListener("click", e => {
-    if (e.target === e.currentTarget) cerrar();
+    if (e.target === e.currentTarget) cerrarDetalleEntrega();
   });
 });

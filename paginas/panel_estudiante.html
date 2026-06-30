@@ -40,7 +40,7 @@
 
       <!-- NAV — sin "Unirse a curso" -->
       <nav class="nav-sidebar">
-        <button class="nav-btn" data-vista="perfil">
+         <button class="nav-btn" data-vista="perfil">
           <span class="nav-btn-icono"><i class="fa-solid fa-user-pen"></i></span>
           <span class="nav-btn-texto">Mi perfil</span>
         </button>
@@ -74,10 +74,7 @@
             <span class="badge-sidebar" id="badgeDisponibles"></span>
           </span>
         </button>
-        <button class="nav-btn" data-vista="perfil">
-          <span class="nav-btn-icono"><i class="fa-solid fa-user-pen"></i></span>
-          <span class="nav-btn-texto">Mi perfil</span>
-        </button>
+       
       </nav>
 
       <!-- Footer sidebar -->
@@ -413,6 +410,32 @@
              style="background:var(--fondo);border:1.5px solid var(--borde);
                border-radius:10px;padding:0.75rem 1rem;font-size:0.88rem;
                color:var(--texto);line-height:1.6;white-space:pre-wrap;">
+        </div>
+      </div>
+
+      <!-- Calificación del docente -->
+      <div id="detalleEntregaCalificacionWrap">
+        <p style="font-size:0.82rem;font-weight:700;color:var(--texto);margin-bottom:0.4rem;">
+          <i class="fa-solid fa-star" style="color:#f5a623;margin-right:0.3rem;"></i> Calificación
+        </p>
+        <div id="detalleEntregaCalificacionBox"
+             style="background:var(--fondo);border:1.5px solid var(--borde);
+               border-radius:10px;padding:0.75rem 1rem;
+               display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
+          <span id="detalleEntregaNota"
+                style="font-size:1.3rem;font-weight:800;color:var(--lila);">
+            Pendiente
+          </span>
+          <span id="detalleEntregaEstadoCalif"
+                style="font-size:0.78rem;font-weight:700;padding:0.3rem 0.7rem;border-radius:20px;
+                  background:#fff4e0;color:#b8860b;">
+            Sin calificar
+          </span>
+        </div>
+        <div id="detalleEntregaFeedback"
+             style="margin-top:0.6rem;background:var(--fondo);border:1.5px solid var(--borde);
+               border-radius:10px;padding:0.75rem 1rem;font-size:0.85rem;
+               color:var(--texto);line-height:1.6;white-space:pre-wrap;display:none;">
         </div>
       </div>
 

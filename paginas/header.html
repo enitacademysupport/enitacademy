@@ -1,7 +1,6 @@
 <header class="encabezado">
   <nav class="barra-nav">
 
-    <!-- Logo -->
     <a href="/index.html" class="logo">
       <img src="/imagenes/logo.png" alt="ENIT Academy">
       <span class="logo-texto">
@@ -11,7 +10,6 @@
       </span>
     </a>
 
-    <!-- Menú principal -->
 <ul class="menu-nav" id="menuPrincipal">
 
   <li><a href="/index.html"><i class="fa-solid fa-house"></i> Inicio</a></li>
@@ -25,8 +23,6 @@
 
       <li><a href="/paginas/contactanos.html"><i class="fa-solid fa-envelope"></i> Contacto</a></li>
 
-      <!-- Botones Iniciar sesión / Registrarse dentro del panel móvil -->
-      <!-- Solo se muestran en móvil (CSS los oculta en escritorio) -->
       <li class="menu-auth-movil" id="menuAuthMovil">
         <a href="#" class="btn-ingresar abrir-login">
           <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
@@ -38,19 +34,16 @@
 
     </ul>
 
-    <!-- Botones derecha (barra superior) -->
     <div class="nav-derecha">
       <button id="modoOscuro" class="btn-modo" aria-label="Modo oscuro">
         <i class="fa-solid fa-moon"></i>
       </button>
 
-      <!-- Sin sesión — visible en escritorio -->
       <div id="botonesAuth" class="botones-auth">
         <a href="#" class="btn-ingresar abrir-login">Iniciar sesión</a>
         <a href="/paginas/registrarse.html" target="_blank" class="btn-registrar">Registrarse</a>
       </div>
 
-      <!-- Con sesión -->
       <div id="cajaUsuario" class="caja-usuario" style="display:none;">
         <img id="fotoUsuario" class="foto-usuario" src="" alt="Foto">
         <div class="info-usuario">
@@ -69,7 +62,6 @@
         </div>
       </div>
 
-      <!-- Hamburguesa — ÚNICA X la genera el CSS con .activo -->
       <button id="botonMenu" class="btn-hamburguesa" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -78,5 +70,4 @@
   </nav>
 </header>
 
-<!-- Fondo oscuro menú móvil -->
 <div id="fondoMenu" class="fondo-menu"></div>
