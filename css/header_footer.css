@@ -737,12 +737,3 @@ ix fab tapa links modal · PATCH
 @@ -288,8 +288,8 @@
  .btn-cierre-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.15); color: var(--rosa); }
  
- /* ── FAB ────────────────────────────────────────────────────  */
--.fab-wrap { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column-reverse; align-items:flex-end; gap:10px; }
--.fab-dot-btn { width:48px; height:48px; border-radius:50%; background:#222; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:3px; transition:background .2s,transform .2s; }
-+.fab-wrap { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column-reverse; align-items:flex-end; gap:10px; pointer-events:none; }
-+.fab-dot-btn { width:48px; height:48px; border-radius:50%; background:#222; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:3px; transition:background .2s,transform .2s; pointer-events:auto; }
- .fab-dot-btn:hover { background:#333; transform:scale(1.06); }
- .fab-dot-btn span { width:5px; height:5px; border-radius:50%; background:#fff; display:block; }
- .fab-items { display:flex; flex-direction:column-reverse; gap:8px; opacity:0; pointer-events:none; transform:translateY(10px); transition:opacity .22s,transform .22s; }
- 
