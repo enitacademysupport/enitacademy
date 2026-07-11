@@ -704,3 +704,30 @@ body.dark .footer-sociales a {
   border-color: #3d3d6a !important;
   color: #c4b5fd !important;
 }
+
+--- a/css/header_footer.css	2026-07-11 00:04:02.386526162 +0000
++++ b/css/header_footer.css	2026-07-11 00:04:02.393893315 +0000
+@@ -411,6 +411,11 @@
+ }
+ .fondo-menu.visible { display: block; }
+ 
++.menu-auth-movil {
++  display: none;
++  width: 100%;
++}
++
+ @media (max-width: 768px) {
+ 
+   .btn-hamburguesa { display: flex; }
+@@ -517,11 +522,6 @@
+   .logo-texto { font-size: 0.95rem; }
+ }
+ 
+-.menu-auth-movil {
+-  display: none;   
+-  width: 100%;
+-}
+-
+ .footer-main {
+   background: var(--blanco);
+   color: rgba(192, 179, 179, 0.8);
